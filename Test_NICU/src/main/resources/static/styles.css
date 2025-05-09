@@ -1,0 +1,30 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+}
+
+form{
+    display: grid;
+    gap: 1rem;
+    max-width: 500px;
+}
+
+h1{
+    text-allign: center;
+    color: dodgerblue;
+}
+
+label{
+    font-weight: bold;
+}
+
+button{
+    background-color: dodgerblue;
+    color: white;
+    cursor: pointer;
+    transition: background-color;
+}
+
+button:hover{
+    background-color: deepskyblue;
+}
