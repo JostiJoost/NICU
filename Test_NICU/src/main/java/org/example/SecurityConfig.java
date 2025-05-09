@@ -26,7 +26,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/css/**", "/js/**").permitAll()
                         .requestMatchers("/invulPagStudie.html").hasRole("STUDIE")
-                        .requestMatchers("/dashboard.html").hasRole("ALGEMEEN")
+                        //.requestMatchers("/dashboard.html").hasRole("ALGEMEEN")
                         .requestMatchers("/invulPagProtocol.html").hasRole("PROTOCOLMAKER")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
