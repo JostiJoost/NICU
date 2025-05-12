@@ -1,4 +1,4 @@
-package org.example;
+package org.example.studie;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

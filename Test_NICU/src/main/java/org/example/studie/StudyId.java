@@ -1,4 +1,4 @@
-package org.example;
+package org.example.studie;
 import java.io.Serializable;
 
 public class StudyId implements Serializable{

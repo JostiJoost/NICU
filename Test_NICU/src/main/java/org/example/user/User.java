@@ -1,5 +1,10 @@
-package org.example;
+package org.example.user;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -24,21 +29,25 @@ public class User {
     @Column(nullable = false)
     private boolean enabled = true;
 
+    public Collection<? extends GrantedAuthority> getAuthorities(){
+        return List.of(new SimpleGrantedAuthority(role));
+    }
+
     public Long getID(){return id;}
-    public void setId(){this.id = id;}
+    public void setId(Long id){this.id = id;}
 
     public String getUsername(){return username;}
-    public void setUsername(){this.username = username;}
+    public void setUsername(String username){this.username = username;}
 
     public String getPassword(){return password;}
-    public void setPassword(){this.password = password;}
+    public void setPassword(String password){this.password = password;}
 
     public String getRole(){return role;}
-    public void setRole(){this.role = role;}
+    public void setRole(String role){this.role = role;}
 
     public String getStudie(){return studie;}
-    public void setStudie(){this.studie = studie;}
+    public void setStudie(String studie){this.studie = studie;}
 
     public boolean isEnabled(){return enabled;}
-    public void setEnabled(){this.enabled = enabled;}
+    public void setEnabled(boolean enabled){this.enabled = enabled;}
 }

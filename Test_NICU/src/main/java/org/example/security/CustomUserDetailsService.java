@@ -1,11 +1,14 @@
-package org.example;
+package org.example.security;
 
+import org.example.user.User;
+import org.example.user.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -20,7 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
         User user = userRepository.findByUsername(username) .orElseThrow(() -> new UsernameNotFoundException("Gebruiker niet gevonden"));
-        System.out.println("Gebruiker ingelogd: " + user.getUsername() + ", rol: " + user.getRole());
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
@@ -29,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 true,
                 true,
                 true,
-                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
+                Collections.singletonList(new SimpleGrantedAuthority(user.getRole()))
         );
     }
 }

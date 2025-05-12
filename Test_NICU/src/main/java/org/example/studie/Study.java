@@ -1,5 +1,6 @@
-package org.example;
+package org.example.studie;
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
 //TODO primary key's koppelen
