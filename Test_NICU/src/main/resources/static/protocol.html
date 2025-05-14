@@ -1,10 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Protocol</title>
+    <title>Protocol formulier</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<h1>Protocol</h1>
+<form id="protocolForm">
+    <h1>Protocol aanmaken/ gegevens aanpassen</h1>
+    <label for="protocolSelectie">Protocol: </label>
+    <select id="protocolSelectie" name="protocolSelectie">
+        <option value="">-- Selecteer een bestaand protocol of voeg een nieuw protocol toe --</option>
+    </select> <br/>
+
+    <div id="nieuwProtocol" style="display: none;">
+        <label for="nieuweProtocolNaam">Naam nieuw protocol: </label>
+        <input type="text" id="nieuweProtocolNaam" name="nieuweProtocolNaam" maxlength="50"/> <br/>
+    </div>
+
+    <label>Naam centrum: </label>
+    <select id="centrumSelectie" name="centrum" required>
+        <option value=""> -- Selecteer een centrum -- </option>
+        <option>AUMC</option>
+        <option>EMCR</option>
+        <option>UMCG</option>
+        <option>ISALA</option>
+        <option>LUMC</option>
+        <option>WKZ</option>
+        <option>RUMC</option>
+        <option>MUMC</option>
+        <option>MMC</option>
+    </select> <br/>
+
+    <label>Datum aanvraag: </label>
+    <input type ="date" id="datumAanvraag" name="datumAanvraag"> <br/>
+
+    <label>Naam primaire penvoerder: </label>
+    <textarea id="naamPenvoerder" name="naamPenvoerder" maxlength="255" rows="4" placeholder="Wie was de primaire penvoerder? (max. 255 tekens) ..."></textarea>
+
+    <label>Functie primaire penvoerder: </label>
+    <select id="functiePenvoerder" name="functiePenvoerder" >
+        <option value=""> -- Selecteer een functie -- </option>
+        <option>Fellow</option>
+        <option>Staff</option>
+        <option>PA</option>
+    </select> <br/>
+
+    <label>Naam tegenlezer: </label>
+    <textarea id="naamTegenlezer" name="naamTegenlezer" maxlength="255" rows="4" placeholder="Wie was de tegenlezer? (max. 255 tekens) ..." required></textarea>
+
+    <label>Functie tegenlezer: </label>
+    <select id="functieTegenlezer" name="functieTegenlezer" >
+        <option value=""> -- Selecteer een functie -- </option>
+        <option>Fellow</option>
+        <option>Staff</option>
+        <option>PA</option>
+    </select> <br/>
+
+    <label>Centrum van tegenlezer: </label>
+    <select id="centrumTegenlezer" name="centrumTegenlezer" >
+        <option value=""> -- Selecteer een centrum -- </option>
+        <option>AUMC</option>
+        <option>EMCR</option>
+        <option>UMCG</option>
+        <option>ISALA</option>
+        <option>LUMC</option>
+        <option>WKZ</option>
+        <option>RUMC</option>
+        <option>MUMC</option>
+        <option>MMC</option>
+    </select> <br/>
+
+    <label>Datum eerste versie: </label>
+    <input type ="date" id="datumEersteVersie" name="datumEersteVersie"> <br/>
+
+    <label>Datum accordering: </label>
+    <input type ="date" id="datumAccordering" name="datumAccordering"> <br/>
+
+    <button type="submit">Opslaan</button>
+
+    <button type="button" id="verwijderProtocol" style="display: none"> Verwijder protocol</button>
+</form>
+
+<script src="js/protocol.js"></script>
 </body>
 </html>
