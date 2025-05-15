@@ -108,6 +108,8 @@ var areaChart = new ApexCharts(document.querySelector("#area-chart"), areaChartO
 areaChart.render();
 
 
+
+
 // POGING TOT STACKED BAR CHART
 
 function stackedBarChart(doorlooptijden) {
@@ -251,7 +253,6 @@ async function laadDataStudie(naamStudie, naamCentrum) {
 
         const data = await response.json();
         console.log("opgehaalde data: " + data[0]);
-        console.log("Juridische data: " + data[0].juridisch_start);
         return data;
     } catch (error) {
         alert("Fout bij ophalen: " + error.message);
@@ -275,5 +276,88 @@ verzamelDoorlooptijden().then((doorlooptijden) => {
     console.log("Juridisc: " + doorlooptijden.juridisch)
     stackedBarChart(doorlooptijden);
 });
+
+async function laadInclusionChart(naamStudie) {
+    try {
+        const studie = naamStudie;
+        const url = `http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/${studie}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Fout bij ophalen...")
+
+        const data = await response.json();
+        console.log("opgehaalde data: ", data);
+        return data;
+    } catch (error) {
+        alert("Fout bij ophalen: " + error.message);
+        console.log(error.message);
+    }
+}
+
+
+laadInclusionChart("ABC3").then((data) => {
+    const centra = [...new Set(data.map(item => item.naamCentrum))];
+
+    const series = centra.map(centrum => {
+        return {
+            name: centrum,
+            data: data
+                .filter(item => item.naamCentrum === centrum)
+                .map(item => ({
+                    x: item.datum,
+                    y: item.geincludeerd
+                }))
+        };
+    });
+    console.log("Series: ", series);
+    console.log("Test")
+
+    var lineChartOptions = {
+        series: series,
+        chart: {
+            height: 350,
+            type: 'line',
+            toolbar: {
+                show: false,
+            },
+        },
+        dataLabels: {
+            enabled: false,
+        },
+        stroke: {
+            curve: 'smooth'
+        },
+        xaxis: {
+            type: 'datetime'
+        },
+        yaxis: [
+            {
+                title: {
+                    text: 'Purchase Orders',
+                },
+            },
+        ],
+        tooltip: {
+            shared: true,
+            intersect: false,
+        }
+    };
+
+    var lineChart = new ApexCharts(document.querySelector("#line-chart"), lineChartOptions);
+    lineChart.render();
+
+
+
+});
+
+
+
+
+
+
+
+
+// Klaar om te gebruiken in je chart library
+console.log({ labels, datasets });
+
 
 console.log("Script werkt! ");
