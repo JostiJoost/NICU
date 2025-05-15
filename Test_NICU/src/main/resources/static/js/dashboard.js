@@ -1,22 +1,3 @@
-// SIDEBAR
-
-var sidebarOpen = false;
-var sidebar = document.getElementById("sidebar");
-
-function openSidebar() {
-    if(!sidebarOpen) {
-        sidebar.classList.add("sidebar-responsive");
-        sidebarOpen = true;
-    }
-}
-
-function closeSidebar() {
-    if(sidebarOpen) {
-        sidebar.classList.remove("sidebar-responsive");
-        sidebarOpen = false;
-    }
-}
-
 
 // POGING TOT DYNAMISCHE DATA
 
@@ -289,7 +270,6 @@ laadDataInclusie("ABC3", "MUMC", "aantal-mumc");
 laadDataInclusie("ABC3", "RUMC", "aantal-rumc");
 laadDataInclusie("ABC3", "UMCG", "aantal-umcg");
 laadDataInclusie("ABC3", "WKZ", "aantal-wkz");
-
 
 verzamelDoorlooptijden().then((doorlooptijden) => {
     console.log("Juridisc: " + doorlooptijden.juridisch)

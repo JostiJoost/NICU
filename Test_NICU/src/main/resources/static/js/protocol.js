@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', async function(){
     const nieuwProtocol = document.getElementById('nieuwProtocol');
     const nieuweProtocolNaam = document.getElementById('nieuweProtocolNaam')
     const verwijderButton = document.getElementById('verwijderProtocol');
+
 //Todo mogelijk nog zorgen voor bevestiging als je een protocol aan het overschrijven bent
     try{
         const response = await fetch("http://localhost:8080/api/protocollen");
@@ -163,3 +164,5 @@ document.addEventListener('DOMContentLoaded', async function(){
         if(el) el.value = value ?? "";
     }
 });
+
+

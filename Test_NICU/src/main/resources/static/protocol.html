@@ -4,85 +4,120 @@
     <meta charset="UTF-8">
     <title>Protocol formulier</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- LETTERTYPE -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <!-- ICONS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-<form id="protocolForm">
-    <h1>Protocol aanmaken/ gegevens aanpassen</h1>
-    <label for="protocolSelectie">Protocol: </label>
-    <select id="protocolSelectie" name="protocolSelectie">
-        <option value="">-- Selecteer een bestaand protocol of voeg een nieuw protocol toe --</option>
-    </select> <br/>
+<div class ="grid-container">
+    <header class="header">
+        <div class="menu-icon" onclick="openSidebar()">
+            <span class="material-icons-outlined">menu</span>
+        </div>
+        <div class="header-left">
+            <span class="material-icons-outlined">search</span>
+        </div>
+        <div class="header-right">
+            <span class="material-icons-outlined">notifications</span>
+            <span class="material-icons-outlined">email</span>
+            <span class="material-icons-outlined">person</span>
+        </div>
 
-    <div id="nieuwProtocol" style="display: none;">
-        <label for="nieuweProtocolNaam">Naam nieuw protocol: </label>
-        <input type="text" id="nieuweProtocolNaam" name="nieuweProtocolNaam" maxlength="50"/> <br/>
-    </div>
+    </header>
+    <aside id="sidebar">
+        <div class="sidebar-title">
+            <div class="sidebar-brand">
+                <span class="material-icons-outlined">inventory</span> NICU Benchmarking
+            </div>
+            <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
+        </div>
+        <ul class ="sidebar-list" id="sidebarMenu"></ul>
+    </aside>
 
-    <label>Naam centrum: </label>
-    <select id="centrumSelectie" name="centrum" required>
-        <option value=""> -- Selecteer een centrum -- </option>
-        <option>AUMC</option>
-        <option>EMCR</option>
-        <option>UMCG</option>
-        <option>ISALA</option>
-        <option>LUMC</option>
-        <option>WKZ</option>
-        <option>RUMC</option>
-        <option>MUMC</option>
-        <option>MMC</option>
-    </select> <br/>
+    <main class = "main-container">
 
-    <label>Datum aanvraag: </label>
-    <input type ="date" id="datumAanvraag" name="datumAanvraag"> <br/>
+        <form id="protocolForm">
+            <h1>Protocol aanmaken/ gegevens aanpassen</h1>
+            <label for="protocolSelectie">Protocol: </label>
+            <select id="protocolSelectie" name="protocolSelectie">
+                <option value="">-- Selecteer een bestaand protocol of voeg een nieuw protocol toe --</option>
+            </select> <br/>
 
-    <label>Naam primaire penvoerder: </label>
-    <textarea id="naamPenvoerder" name="naamPenvoerder" maxlength="255" rows="4" placeholder="Wie was de primaire penvoerder? (max. 255 tekens) ..."></textarea>
+            <div id="nieuwProtocol" style="display: none;">
+                <label for="nieuweProtocolNaam">Naam nieuw protocol: </label>
+                <input type="text" id="nieuweProtocolNaam" name="nieuweProtocolNaam" maxlength="50"/> <br/>
+            </div>
 
-    <label>Functie primaire penvoerder: </label>
-    <select id="functiePenvoerder" name="functiePenvoerder" >
-        <option value=""> -- Selecteer een functie -- </option>
-        <option>Fellow</option>
-        <option>Staff</option>
-        <option>PA</option>
-    </select> <br/>
+            <label>Naam centrum: </label>
+            <select id="centrumSelectie" name="centrum" required>
+                <option value=""> -- Selecteer een centrum -- </option>
+                <option>AUMC</option>
+                <option>EMCR</option>
+                <option>UMCG</option>
+                <option>ISALA</option>
+                <option>LUMC</option>
+                <option>WKZ</option>
+                <option>RUMC</option>
+                <option>MUMC</option>
+                <option>MMC</option>
+            </select> <br/>
 
-    <label>Naam tegenlezer: </label>
-    <textarea id="naamTegenlezer" name="naamTegenlezer" maxlength="255" rows="4" placeholder="Wie was de tegenlezer? (max. 255 tekens) ..." required></textarea>
+            <label>Datum aanvraag: </label>
+            <input type ="date" id="datumAanvraag" name="datumAanvraag"> <br/>
 
-    <label>Functie tegenlezer: </label>
-    <select id="functieTegenlezer" name="functieTegenlezer" >
-        <option value=""> -- Selecteer een functie -- </option>
-        <option>Fellow</option>
-        <option>Staff</option>
-        <option>PA</option>
-    </select> <br/>
+            <label>Naam primaire penvoerder: </label>
+            <textarea id="naamPenvoerder" name="naamPenvoerder" maxlength="255" rows="4" placeholder="Wie was de primaire penvoerder? (max. 255 tekens) ..."></textarea>
 
-    <label>Centrum van tegenlezer: </label>
-    <select id="centrumTegenlezer" name="centrumTegenlezer" >
-        <option value=""> -- Selecteer een centrum -- </option>
-        <option>AUMC</option>
-        <option>EMCR</option>
-        <option>UMCG</option>
-        <option>ISALA</option>
-        <option>LUMC</option>
-        <option>WKZ</option>
-        <option>RUMC</option>
-        <option>MUMC</option>
-        <option>MMC</option>
-    </select> <br/>
+            <label>Functie primaire penvoerder: </label>
+            <select id="functiePenvoerder" name="functiePenvoerder" >
+                <option value=""> -- Selecteer een functie -- </option>
+                <option>Fellow</option>
+                <option>Staff</option>
+                <option>PA</option>
+            </select> <br/>
 
-    <label>Datum eerste versie: </label>
-    <input type ="date" id="datumEersteVersie" name="datumEersteVersie"> <br/>
+            <label>Naam tegenlezer: </label>
+            <textarea id="naamTegenlezer" name="naamTegenlezer" maxlength="255" rows="4" placeholder="Wie was de tegenlezer? (max. 255 tekens) ..." required></textarea>
 
-    <label>Datum accordering: </label>
-    <input type ="date" id="datumAccordering" name="datumAccordering"> <br/>
+            <label>Functie tegenlezer: </label>
+            <select id="functieTegenlezer" name="functieTegenlezer" >
+                <option value=""> -- Selecteer een functie -- </option>
+                <option>Fellow</option>
+                <option>Staff</option>
+                <option>PA</option>
+            </select> <br/>
 
-    <button type="submit">Opslaan</button>
+            <label>Centrum van tegenlezer: </label>
+            <select id="centrumTegenlezer" name="centrumTegenlezer" >
+                <option value=""> -- Selecteer een centrum -- </option>
+                <option>AUMC</option>
+                <option>EMCR</option>
+                <option>UMCG</option>
+                <option>ISALA</option>
+                <option>LUMC</option>
+                <option>WKZ</option>
+                <option>RUMC</option>
+                <option>MUMC</option>
+                <option>MMC</option>
+            </select> <br/>
 
-    <button type="button" id="verwijderProtocol" style="display: none"> Verwijder protocol</button>
-</form>
+            <label>Datum eerste versie: </label>
+            <input type ="date" id="datumEersteVersie" name="datumEersteVersie"> <br/>
+
+            <label>Datum accordering: </label>
+            <input type ="date" id="datumAccordering" name="datumAccordering"> <br/>
+
+            <button type="submit">Opslaan</button>
+
+            <button type="button" id="verwijderProtocol" style="display: none"> Verwijder protocol</button>
+        </form>
+    </main>
 
 <script src="js/protocol.js"></script>
+    <script src="js/sidebar.js"></script>
+</div>
 </body>
 </html>

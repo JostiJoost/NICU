@@ -1,5 +1,6 @@
 document.getElementById('studieForm').addEventListener('submit', async function(event) {
     event.preventDefault();
+    
     var formData = {
         centrum : document.getElementById('centrumSelectie').value,
         studie : document.getElementById('studieSelectie').value,
@@ -36,4 +37,4 @@ document.getElementById('studieForm').addEventListener('submit', async function(
     } catch(err){
         alert("Fout bij opslaan: " + err.message);
     }
-})
+});

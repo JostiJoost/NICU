@@ -1,21 +1,32 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(white, lightblue, dodgerblue);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    background: linear-gradient(to bottom, white, lightblue, dodgerblue);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
     margin: 0;
 }
 
 form{
     display: grid;
     gap: 1rem;
-    max-width: 100%;
+    max-width: 2000px;
     padding: 2rem;
+    margin-top: 1rem;
     background-color: white;
     border-radius: 12px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.main-container {
+    grid-area: main;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    overflow-y: auto;
+    padding: 3rem 2rem 2rem 2rem;
+    margin-top: 1rem;
+    box-sizing: border-box;
 }
 
 h1{

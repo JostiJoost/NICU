@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args) {
 
         //BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        //String rawPassword = "Ka216!vG";
+        //String rawPassword = "2Sgt6!h";
         //String encodedPassword = encoder.encode(rawPassword);
         //System.out.println(encodedPassword);
 

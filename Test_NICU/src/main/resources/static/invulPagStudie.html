@@ -1,14 +1,45 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <title>Invoer studie</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8">
+  <title>Invoer studie</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- LETTERTYPE -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <!-- ICONS -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-  <h1>Nieuwe gegevens invoeren</h1>
+<div class ="grid-container">
+  <header class="header">
+    <div class="menu-icon" onclick="openSidebar()">
+      <span class="material-icons-outlined">menu</span>
+    </div>
+    <div class="header-left">
+      <span class="material-icons-outlined">search</span>
+    </div>
+    <div class="header-right">
+      <span class="material-icons-outlined">notifications</span>
+      <span class="material-icons-outlined">email</span>
+      <span class="material-icons-outlined">person</span>
+    </div>
+
+  </header>
+<aside id="sidebar">
+  <div class="sidebar-title">
+    <div class="sidebar-brand">
+      <span class="material-icons-outlined">inventory</span> NICU Benchmarking
+    </div>
+    <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
+  </div>
+  <ul class ="sidebar-list" id="sidebarMenu"></ul>
+</aside>
+
+<main class = "main-container">
   <form id="studieForm">
+    <h1>Nieuwe gegevens invoeren</h1>
     <label>Naam centrum: </label>
     <select id="centrumSelectie" name="centrum" required>
       <option value=""> -- Selecteer een centrum -- </option>
@@ -78,6 +109,9 @@
     <button type="submit">Opslaan</button>
 
   </form>
+</main>
   <script src="js/invulPagStudie.js"></script>
+  <script src="js/sidebar.js"></script>
+</div>
 </body>
 </html>
