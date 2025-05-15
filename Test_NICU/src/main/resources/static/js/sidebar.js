@@ -1,0 +1,65 @@
+var sidebarOpen = false;
+var sidebar = document.getElementById("sidebar");
+
+function openSidebar() {
+    if(!sidebarOpen) {
+        sidebar.classList.add("sidebar-responsive");
+        sidebarOpen = true;
+    }
+}
+
+function closeSidebar() {
+    if(sidebarOpen) {
+        sidebar.classList.remove("sidebar-responsive");
+        sidebarOpen = false;
+    }
+}
+
+(async function() {
+    const menuElement = document.getElementById('sidebarMenu');
+    if (!menuElement) return;
+
+    try {
+        const response = await fetch('/api/user');
+        if (!response.ok) throw new Error('Niet ingelogd');
+
+        const user = await response.json();
+        const role = user.role;
+
+        let html =
+            `<li class="sidebar-list-item">
+                <span class="material-icons-outlined">dashboard</span> <a href="dashboard.html">Dashboard</a>
+            </li>`;
+
+        if (role === 'ROLE_ADMIN') {
+            html += `
+                <li class="sidebar-list-item">
+                    <span class="material-icons-outlined">fact_check</span> <a href="invulPagStudie.html">Studie invoer</a>
+                </li>
+                <li class="sidebar-list-item">
+                    <span class="material-icons-outlined">inventory_2</span> <a href="protocol.html">Protocolbeheer</a>
+                </li>
+                <li class="sidebar-list-item">
+                    <span class="material-icons-outlined">add</span> <a href="admin.html">Nieuwe studie</a>
+                </li>`;
+        } else if (role === 'ROLE_STUDIE') {
+            html += `
+                <li class="sidebar-list-item">
+                    <span class="material-icons-outlined">fact_check</span> <a href="invulPagStudie.html">Studie invoer</a>
+                </li>`;
+        } else if (role === 'ROLE_PROTOCOLMAKER') {
+            html += `
+                <li class="sidebar-list-item">
+                    <span class="material-icons-outlined">inventory_2</span> <a href="protocol.html">Protocolbeheer</a>
+                </li>`;
+        }
+        menuElement.innerHTML = html;
+
+    } catch (err) {
+        console.error('Gebruikersinfo kon niet worden opgehaald: ', err);
+        menuElement.innerHTML = `
+            <li class="sidebar-list-item">
+                <a href="login.html">Inloggen</a>
+            </li>`;
+    }
+})();
