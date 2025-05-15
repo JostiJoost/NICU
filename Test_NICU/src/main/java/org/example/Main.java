@@ -29,8 +29,9 @@ public class Main {
 
     private static void openBrowser(String url) {
         try {
-            if (Desktop.isDesktopSupported()) {
-                Desktop.getDesktop().browse(new URI(url));
+            String os = System.getProperty("os.name").toLowerCase();
+            if (os.contains("win")) {
+                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
             } else {
                 // Fallback voor macOS
                 Runtime.getRuntime().exec(new String[]{"open", url});

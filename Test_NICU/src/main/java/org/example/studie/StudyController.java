@@ -3,8 +3,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/studies")
+@RequestMapping("/api/studie")
 public class StudyController {
     @Autowired
     private StudyRepository studyRepository;
@@ -16,8 +18,11 @@ public class StudyController {
         return ResponseEntity.ok(opgeslagen);
     }
 
-    @GetMapping
-    public ResponseEntity<?> krijgStudies() {
-        return ResponseEntity.ok(studyRepository.findAll());
+    @GetMapping("/{studie}/{centrum}")
+    public List<Study> krijgDoorlooptijd(
+            @PathVariable String studie,
+            @PathVariable String centrum) {
+
+        return studyRepository.findAllByStudyAndCenter(studie, centrum);
     }
 }
