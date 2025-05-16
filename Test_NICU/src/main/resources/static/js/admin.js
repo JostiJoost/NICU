@@ -33,9 +33,13 @@ document.getElementById('nieuwStudieForm').addEventListener('submit', async func
 
         if(!response.ok) {throw new Error("Gebruiker kon niet worden aangemaakt.");}
         const data = await response.json();
-        document.getElementById('resultaatUsername').textContent = data.username;
-        document.getElementById('resultaatPassword').textContent = data.password;
-        document.getElementById('gegevensMelding').style.display = 'block';
+        document.getElementById('popupMessage').innerHTML = `Nieuwe studiegebruiker aangemaakt<br><br>
+Gebruikersnaam: <strong>${data.username}</strong> <br>
+\nWachtwoord: <strong>${data.password}</strong>`;
+        document.getElementById('popup').style.display = 'flex';
+        document.getElementById('popupCloseButton').addEventListener('click', function(){
+            document.getElementById('popup').style.display = 'none';
+        });
         this.reset();
     } catch(err){
         alert("Fout: " + err.message);

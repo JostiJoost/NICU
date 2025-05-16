@@ -87,3 +87,29 @@ select:focus {
     color: darkslategrey;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
+body.popup-open{
+    filter: blur(3px);
+    pointer-events: none;
+    user-select: none;
+}
+
+.popup{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.popup-content{
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    text-align: center;
+}
