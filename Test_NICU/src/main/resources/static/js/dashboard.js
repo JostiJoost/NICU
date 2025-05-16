@@ -5,6 +5,17 @@ function getMostRecentInclusion(studie, centrum) {
 
 }
 
+// ---------- KLEUREN GENEREREN -----------
+
+function kleurenGenereren(aantal) {
+    const kleuren = [];
+    for (let i = 0; i < aantal; i++) {
+        const kleur = Math.round((360 / aantal) * i);
+        kleuren.push(`hsl(${kleur}, 70%, 50%`)
+    }
+    return kleuren;
+}
+
 
 // ---------- CHARTS ----------
 
@@ -308,8 +319,6 @@ laadInclusionChart("ABC3").then((data) => {
                 }))
         };
     });
-    console.log("Series: ", series);
-    console.log("Test")
 
     var lineChartOptions = {
         series: series,
@@ -320,6 +329,7 @@ laadInclusionChart("ABC3").then((data) => {
                 show: false,
             },
         },
+        colors: kleurenGenereren(centra.length),
         dataLabels: {
             enabled: false,
         },
@@ -329,13 +339,6 @@ laadInclusionChart("ABC3").then((data) => {
         xaxis: {
             type: 'datetime'
         },
-        yaxis: [
-            {
-                title: {
-                    text: 'Purchase Orders',
-                },
-            },
-        ],
         tooltip: {
             shared: true,
             intersect: false,
@@ -344,20 +347,52 @@ laadInclusionChart("ABC3").then((data) => {
 
     var lineChart = new ApexCharts(document.querySelector("#line-chart"), lineChartOptions);
     lineChart.render();
-
-
-
 });
 
+laadInclusionChart("ABC3").then((data) => {
+    const centra = [...new Set(data.map(item => item.naamCentrum))];
 
+    const series = centra.map(centrum => {
+        const centrumData = data.filter(item => item.naamCentrum === centrum);
 
+        const eersteDatum = new Date(
+            Math.min(...centrumData.map(item => new Date (item.datum)))
+        );
 
+        return {
+            name: centrum,
+            data: centrumData.map(item => ({
+                    x: verschilDatum(eersteDatum, new Date(item.datum)),
+                    y: item.geincludeerd
+                }))
+        };
+    });
 
+    var lineChartOptions = {
+        series: series,
+        chart: {
+            height: 350,
+            type: 'line',
+            toolbar: {
+                show: false,
+            },
+        },
+        colors: kleurenGenereren(centra.length),
+        dataLabels: {
+            enabled: false,
+        },
+        stroke: {
+            curve: 'smooth'
+        },
+        tooltip: {
+            shared: true,
+            intersect: false,
+        }
+    };
 
-
-
-// Klaar om te gebruiken in je chart library
-console.log({ labels, datasets });
+    var lineChart = new ApexCharts(document.querySelector("#line-chart-2"), lineChartOptions);
+    lineChart.render();
+});
 
 
 console.log("Script werkt! ");

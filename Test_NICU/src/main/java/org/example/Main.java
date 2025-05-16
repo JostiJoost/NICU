@@ -30,6 +30,7 @@ public class Main {
     private static void openBrowser(String url) {
         try {
             String os = System.getProperty("os.name").toLowerCase();
+            //Direct fallback voor Windows
             if (os.contains("win")) {
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
             } else {
