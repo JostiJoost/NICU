@@ -11,4 +11,11 @@ public interface InclusionRepository extends JpaRepository<Inclusion, InclusionI
 
     @Query("SELECT i FROM Inclusion i WHERE i.naam_studie = :naam_studie AND i.naam_centrum = :naam_centrum ORDER BY i.datum DESC")
     List<Inclusion> findAllByStudyAndCenterOrderByDatumDesc(@Param("naam_studie") String naamStudie, @Param("naam_centrum") String naamCentrum);
+
+    @Query("SELECT new org.example.inclusie.InclusionDTO(i.naam_centrum, i.datum, i.geincludeerd) " +
+            "FROM Inclusion i " +
+            "WHERE i.naam_studie = :studie " +
+            "ORDER BY i.naam_centrum, i.datum")
+    List<InclusionDTO> findInclusionByStudy(@Param("studie") String studie);
+
 }

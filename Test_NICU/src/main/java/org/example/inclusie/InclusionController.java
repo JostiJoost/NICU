@@ -17,4 +17,9 @@ public class InclusionController {
             @PathVariable String centrum) {
         return inclusionRepository.findAllByStudyAndCenterOrderByDatumDesc(studie, centrum).get(0).getGeincludeerd();
     }
+
+    @GetMapping("/chart/inclusies/{studie}")
+    public List<InclusionDTO> getInclusionChart(@PathVariable String studie) {
+        return inclusionRepository.findInclusionByStudy(studie);
+    }
 }

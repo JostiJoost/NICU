@@ -7,10 +7,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+<<<<<<< HEAD
 import java.util.Optional;
+=======
+import java.util.List;
+>>>>>>> a8474828492014e02b55993190e45f1cf568f295
 
 @RestController
-@RequestMapping("/api/studies")
+@RequestMapping("/api/studie")
 public class StudyController {
     @Autowired
     private StudyRepository studyRepository;
@@ -36,8 +40,11 @@ public class StudyController {
         return ResponseEntity.ok(opgeslagen);
     }
 
-    @GetMapping
-    public ResponseEntity<?> krijgStudies() {
-        return ResponseEntity.ok(studyRepository.findAll());
+    @GetMapping("/{studie}/{centrum}")
+    public List<Study> krijgDoorlooptijd(
+            @PathVariable String studie,
+            @PathVariable String centrum) {
+
+        return studyRepository.findAllByStudyAndCenter(studie, centrum);
     }
 }
