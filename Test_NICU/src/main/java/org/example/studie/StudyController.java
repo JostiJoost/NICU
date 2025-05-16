@@ -7,11 +7,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-<<<<<<< HEAD
+
 import java.util.Optional;
-=======
 import java.util.List;
->>>>>>> a8474828492014e02b55993190e45f1cf568f295
+
 
 @RestController
 @RequestMapping("/api/studie")
