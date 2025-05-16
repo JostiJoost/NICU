@@ -75,3 +75,15 @@ select:focus {
     border-color: dodgerblue;
     outline: none;
 }
+
+#gegevensMelding{
+    display: none;
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid lightgrey;
+    border-radius: 8px;
+    font-family: Roboto, sans-serif;
+    background: white;
+    color: darkslategrey;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}

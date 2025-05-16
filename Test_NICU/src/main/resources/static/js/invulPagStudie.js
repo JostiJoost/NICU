@@ -1,10 +1,52 @@
+document.addEventListener('DOMContentLoaded', async function(){
+    const studieSelectie = document.getElementById('studieSelectie');
+    try{
+        const response = await fetch('/api/user');
+        if(!response.ok) throw new Error("Kon gebruikersinformatie niet ophalen");
+
+        const gebruiker = await response.json();
+        const role = gebruiker.role;
+        const username = gebruiker.username;
+
+        if(role === 'ROLE_ADMIN'){
+            document.getElementById('studieSelectie').style.display = 'block';
+            const studiesResultaten = await fetch('/api/user-studies');
+            if(!studiesResultaten.ok) {throw new Error("Kon studies niet ophalen.")}
+            const studies = await studiesResultaten.json();
+            for(const s of studies){
+                const optie = document.createElement('option')
+                optie.value = s;
+                optie.textContent = s;
+                studieSelectie.appendChild(optie);
+            }
+        }else if(role === 'ROLE_STUDIE'){
+            document.getElementById('studieSelectie').style.display = 'none';
+            document.getElementById('naamStudieLabel').style.display = 'none';
+            studieSelectie.removeAttribute('required');
+
+            const studieResultaten = await fetch('/api/user/studienaam');
+            if(!studieResultaten.ok) throw new Error("Kon studienaamniet ophalen.")
+            const{juridisch, apotheek, metc, laboratorium} = await studieResultaten.json();
+            if(!juridisch) document.getElementById('juridischeFase').style.display = 'none';
+            if(!apotheek) document.getElementById('apotheekFase').style.display = 'none';
+            if(!metc) document.getElementById('metcFase').style.display = 'none';
+            if(!laboratorium) document.getElementById('laboratoriumFase').style.display = 'none';
+
+
+        }
+    }catch(err){
+        console.error("Fout bij ophalen van studies: ", err);
+        alert("Fout bij ophalen van studie gegevens: " + err.message);
+    }
+})
+
 document.getElementById('studieForm').addEventListener('submit', async function(event) {
     event.preventDefault();
-    
+
     var formData = {
         centrum : document.getElementById('centrumSelectie').value,
         studie : document.getElementById('studieSelectie').value,
-        startdatum_studie : document.getElementById('start').value,
+        startdatum : document.getElementById('start').value,
         initiatiedatum : document.getElementById('initiatie').value,
         juridisch_start : document.getElementById('juridisch_start').value,
         juridisch_eind : document.getElementById('juridisch_eind').value,

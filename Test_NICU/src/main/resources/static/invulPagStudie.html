@@ -39,7 +39,7 @@
 
 <main class = "main-container">
   <form id="studieForm">
-    <h1>Nieuwe gegevens invoeren</h1>
+    <h1>Nieuwe studie gegevens invoeren</h1>
     <label>Naam centrum: </label>
     <select id="centrumSelectie" name="centrum" required>
       <option value=""> -- Selecteer een centrum -- </option>
@@ -54,48 +54,48 @@
       <option>MMC</option>
     </select> <br/>
 
-    <label>Naam studie: </label>
+    <label id="naamStudieLabel">Naam studie: </label>
     <select id="studieSelectie" name="studie" required>
       <option value=""> -- Selecteer een studie -- </option>
-      <option>STOPBPD</option>
-      <option>Pharmacool</option>
-      <option>BeNeDuctus</option>
-      <option>HIPPO</option>
-      <option>ABC3</option>
-      <option>SOS BPD</option>
-      <option>Dolphin</option>
-      <option>Doxa</option>
     </select> <br/>
 
     <label>Startdatum studie: </label>
-    <input type ="date" id="start" name="startdatum_studie"> <br/>
+    <input type ="date" id="start" name="startdatum"> <br/>
 
     <label>Initiatie datum: </label>
     <input type ="date" id="initiatie" name="initiatie_datum"> <br/>
 
-    <label>Startdatum juridische fase: </label>
-    <input type="date" id="juridisch_start" name="startdatum_juridisch"> <br/>
+    <div id="juridischeFase">
+      <label>Startdatum juridische fase: </label>
+      <input type="date" id="juridisch_start" name="startdatum_juridisch"> <br/>
 
-    <label>Eindatum juridische fase: </label>
-    <input type="date" id="juridisch_eind" name="einddatum_juridisch"> <br/>
+      <label>Eindatum juridische fase: </label>
+      <input type="date" id="juridisch_eind" name="einddatum_juridisch"> <br/>
+    </div> <br/>
 
-    <label>Startdatum apotheek fase: </label>
-    <input type="date" id="apotheek_start" name="startdatum_apotheek"> <br/>
+    <div id = "apotheekFase">
+      <label>Startdatum apotheek fase: </label>
+      <input type="date" id="apotheek_start" name="startdatum_apotheek"> <br/>
 
-    <label>Eindatum apotheek fase: </label>
-    <input type="date" id="apotheek_eind" name="einddatum_apotheek"> <br/>
+      <label>Eindatum apotheek fase: </label>
+      <input type="date" id="apotheek_eind" name="einddatum_apotheek"> <br/>
+    </div> <br/>
 
-    <label>Startdatum METC fase: </label>
-    <input type="date" id="metc_start" name="startdatum_metc"> <br/>
+    <div id="metcFase">
+      <label>Startdatum METC fase: </label>
+      <input type="date" id="metc_start" name="startdatum_metc"> <br/>
 
-    <label>Eindatum METC fase: </label>
-    <input type="date" id="metc_eind" name="einddatum_metc"> <br/>
+      <label>Eindatum METC fase: </label>
+      <input type="date" id="metc_eind" name="einddatum_metc"> <br/>
+    </div> <br/>
 
-    <label>Startdatum laboratorium fase: </label>
-    <input type="date" id="lab_start" name="startdatum_laboratorium"> <br/>
+    <div id="laboratoriumFase">
+      <label>Startdatum laboratorium fase: </label>
+      <input type="date" id="lab_start" name="startdatum_laboratorium"> <br/>
 
-    <label>Eindatum laboratorium fase: </label>
-    <input type="date" id="lab_eind" name="einddatum_laboratorium"> <br/>
+      <label>Eindatum laboratorium fase: </label>
+      <input type="date" id="lab_eind" name="einddatum_laboratorium"> <br/>
+    </div> <br/>
 
     <label>Aantal geïncludeerde kinderen: </label>
     <input type="number" id="geincludeerde_kinderen" name="geincludeerde_kinderen" min="0" required> <br/>

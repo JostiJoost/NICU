@@ -45,7 +45,7 @@ function closeSidebar() {
         } else if (role === 'ROLE_STUDIE') {
             html += `
                 <li class="sidebar-list-item">
-                    <span class="material-icons-outlined">fact_check</span> <a href="invulPagStudie.html">Studie invoer</a>
+                    <span class="material-icons-outlined">fact_check</span> <a href="invulPagStudie.html">Studie beheer</a>
                 </li>`;
         } else if (role === 'ROLE_PROTOCOLMAKER') {
             html += `

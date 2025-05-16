@@ -35,8 +35,51 @@
         </div>
         <ul class ="sidebar-list" id="sidebarMenu"></ul>
     </aside>
-    <script src="js/sidebar.js"></script>
 
+    <main class = "main-container">
+        <form id="nieuwStudieForm">
+            <h1>Maak een nieuwe studie aan</h1>
+
+            <label>Naam nieuwe studie: </label>
+            <textarea id="naamNieuweStudie" name="naamNieuweStudie" maxlength="255" rows="4" placeholder="Schrijf de naam van de studie (max. 255 tekens) ..." required></textarea>
+
+            <fieldset>
+                <legend>Doorlooptijden van toepassing op de studie: </legend>
+                <label>
+                    <input type="checkbox" name="doorlooptijden" value="juridisch">Juridisch
+                </label> <br>
+                <label>
+                    <input type="checkbox" name="doorlooptijden" value="apotheek">Apotheek
+                </label> <br>
+                <label>
+                    <input type="checkbox" name="doorlooptijden" value="metc">METC
+                </label> <br>
+                <label>
+                    <input type="checkbox" name="doorlooptijden" value="Laboratorium">Laboratorium
+                </label> <br>
+            </fieldset>
+
+            <button type="submit">Studie aanmaken </button>
+
+        </form>
+        <div id="gegevensMelding" class ="result-box">
+            <h2>Nieuwe gebruiker succesvol aangemaakt</h2>
+            <p>
+                <strong>Gebruikersnaam: </strong>
+                <span id="resultaatUsername"></span>
+            </p>
+            <p>
+                <strong>Wachtwoord: </strong>
+                <span id="resultaatPassword"></span>
+            </p>
+            <p style="color: darkred;">
+                <strong>Let op: </strong>
+                Dit wachtwoord wordt niet opnieuw getoond.
+            </p>
+        </div>
+    </main>
+    <script src="js/sidebar.js"></script>
+    <script src="js/admin.js"></script>
 </div>
 </body>
 </html>

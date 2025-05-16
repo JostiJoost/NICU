@@ -1,5 +1,7 @@
 package org.example.user;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -28,6 +30,26 @@ public class User {
 
     @Column(nullable = false)
     private boolean enabled = true;
+
+    @Getter
+    @Setter
+    @Column(name="doorlooptijd_juridisch")
+    private Boolean doorlooptijdJuridisch;
+
+    @Getter
+    @Setter
+    @Column(name="doorlooptijd_apotheek")
+    private Boolean doorlooptijdApotheek;
+
+    @Getter
+    @Setter
+    @Column(name="doorlooptijd_metc")
+    private Boolean doorlooptijdMetc;
+
+    @Getter
+    @Setter
+    @Column(name="doorlooptijd_laboratorium")
+    private Boolean doorlooptijdLaboratorium;
 
     public Collection<? extends GrantedAuthority> getAuthorities(){
         return List.of(new SimpleGrantedAuthority(role));
