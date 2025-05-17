@@ -46,4 +46,9 @@ public class StudyController {
 
         return studyRepository.findAllByStudyAndCenter(studie, centrum);
     }
+
+    @GetMapping("/studies")
+    public List<String> krijgStudies() {
+        return studyRepository.findAllDistinctStudies();
+    }
 }

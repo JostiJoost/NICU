@@ -203,7 +203,6 @@ function verschilDatum(datum1, datum2) {
     } else {
         const startDatum = new Date(datum1);
         const eindDatum = new Date(datum2);
-        console.log("Startdatum: " + startDatum + ", Einddatum: " + eindDatum);
         const verschil = (eindDatum - startDatum) / (1000 * 60 * 60 * 24);
         return verschil;
     }
@@ -218,7 +217,6 @@ async function laadDataInclusie(naamStudie, naamCentrum, ID) {
         if (!response.ok) throw new Error("Fout bij ophalen...");
 
         const data = await response.json();
-        console.log("opgehaalde data:", data);
 
         document.getElementById(ID).textContent = data;
     } catch (error) {
@@ -234,7 +232,7 @@ async function verzamelDoorlooptijden() {
     let lab = [];
 
     for (const centrum of centra) {
-        const data = await laadDataStudie("ABC3", centrum);
+        const data = await laadDataStudie(geselecteerdeStudie, centrum);
         const studie = data[0];
 
         juridisch.push(verschilDatum(studie.juridisch_start, studie.juridisch_eind));
@@ -242,10 +240,6 @@ async function verzamelDoorlooptijden() {
         metc.push(verschilDatum(studie.metc_start, studie.metc_eind));
         lab.push(verschilDatum(studie.lab_start, studie.lab_eind));
     }
-    console.log("Array juridisch: " + juridisch);
-    console.log("Array apotheek: " + apotheek);
-    console.log("Array metc: " + metc);
-    console.log("Array lab: " + lab);
     return {
         juridisch: juridisch,
         apotheek: apotheek,
@@ -263,7 +257,6 @@ async function laadDataStudie(naamStudie, naamCentrum) {
         if (!response.ok) throw new Error("Fout bij ophalen...")
 
         const data = await response.json();
-        console.log("opgehaalde data: " + data[0]);
         return data;
     } catch (error) {
         alert("Fout bij ophalen: " + error.message);
@@ -272,32 +265,29 @@ async function laadDataStudie(naamStudie, naamCentrum) {
 }
 
 const centra = ["AUMC", "EMCR", "ISALA", "LUMC", "MMC", "MUMC", "RUMC", "UMCG", "WKZ"];
+let geselecteerdeStudie = null;
 
-laadDataInclusie("ABC3", "AUMC", "aantal-aumc");
-laadDataInclusie("ABC3", "EMCR", "aantal-emcr");
-laadDataInclusie("ABC3", "ISALA", "aantal-isala");
-laadDataInclusie("ABC3", "LUMC", "aantal-lumc");
-laadDataInclusie("ABC3", "MMC", "aantal-mmc");
-laadDataInclusie("ABC3", "MUMC", "aantal-mumc");
-laadDataInclusie("ABC3", "RUMC", "aantal-rumc");
-laadDataInclusie("ABC3", "UMCG", "aantal-umcg");
-laadDataInclusie("ABC3", "WKZ", "aantal-wkz");
+// laadDataInclusie(geselecteerdeStudie, "AUMC", "aantal-aumc");
+// laadDataInclusie(geselecteerdeStudie, "EMCR", "aantal-emcr");
+// laadDataInclusie(geselecteerdeStudie, "ISALA", "aantal-isala");
+// laadDataInclusie(geselecteerdeStudie, "LUMC", "aantal-lumc");
+// laadDataInclusie(geselecteerdeStudie, "MMC", "aantal-mmc");
+// laadDataInclusie(geselecteerdeStudie, "MUMC", "aantal-mumc");
+// laadDataInclusie(geselecteerdeStudie, "RUMC", "aantal-rumc");
+// laadDataInclusie(geselecteerdeStudie, "UMCG", "aantal-umcg");
+// laadDataInclusie(geselecteerdeStudie, "WKZ", "aantal-wkz");
 
-verzamelDoorlooptijden().then((doorlooptijden) => {
-    console.log("Juridisc: " + doorlooptijden.juridisch)
-    stackedBarChart(doorlooptijden);
-});
+// verzamelDoorlooptijden().then((doorlooptijden) => {
+//     stackedBarChart(doorlooptijden);
+// });
 
 async function laadInclusionChart(naamStudie) {
     try {
-        const studie = naamStudie;
-        const url = `http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/${studie}`;
+        const url = `http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/${naamStudie}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("Fout bij ophalen...")
 
-        const data = await response.json();
-        console.log("opgehaalde data: ", data);
-        return data;
+        return await response.json();
     } catch (error) {
         alert("Fout bij ophalen: " + error.message);
         console.log(error.message);
@@ -305,94 +295,191 @@ async function laadInclusionChart(naamStudie) {
 }
 
 
-laadInclusionChart("ABC3").then((data) => {
-    const centra = [...new Set(data.map(item => item.naamCentrum))];
+// laadInclusionChart(geselecteerdeStudie).then((data) => {
+//     const centra = [...new Set(data.map(item => item.naamCentrum))];
+//
+//     const series = centra.map(centrum => {
+//         return {
+//             name: centrum,
+//             data: data
+//                 .filter(item => item.naamCentrum === centrum)
+//                 .map(item => ({
+//                     x: item.datum,
+//                     y: item.geincludeerd
+//                 }))
+//         };
+//     });
+//
+//     var lineChartOptions = {
+//         series: series,
+//         chart: {
+//             height: 350,
+//             type: 'line',
+//             toolbar: {
+//                 show: false,
+//             },
+//         },
+//         colors: kleurenGenereren(centra.length),
+//         dataLabels: {
+//             enabled: false,
+//         },
+//         stroke: {
+//             curve: 'smooth'
+//         },
+//         xaxis: {
+//             type: 'datetime'
+//         },
+//         tooltip: {
+//             shared: true,
+//             intersect: false,
+//         }
+//     };
+//
+//     var lineChart = new ApexCharts(document.querySelector("#line-chart"), lineChartOptions);
+//     lineChart.render();
+// });
 
-    const series = centra.map(centrum => {
-        return {
-            name: centrum,
+// laadInclusionChart(geselecteerdeStudie).then((data) => {
+//     const centra = [...new Set(data.map(item => item.naamCentrum))];
+//
+//     const series = centra.map(centrum => {
+//         const centrumData = data.filter(item => item.naamCentrum === centrum);
+//
+//         const eersteDatum = new Date(
+//             Math.min(...centrumData.map(item => new Date (item.datum)))
+//         );
+//
+//         return {
+//             name: centrum,
+//             data: centrumData.map(item => ({
+//                     x: verschilDatum(eersteDatum, new Date(item.datum)),
+//                     y: item.geincludeerd
+//                 }))
+//         };
+//     });
+//
+//     var lineChartOptions = {
+//         series: series,
+//         chart: {
+//             height: 350,
+//             type: 'line',
+//             toolbar: {
+//                 show: false,
+//             },
+//         },
+//         colors: kleurenGenereren(centra.length),
+//         dataLabels: {
+//             enabled: false,
+//         },
+//         stroke: {
+//             curve: 'smooth'
+//         },
+//         tooltip: {
+//             shared: true,
+//             intersect: false,
+//         }
+//     };
+//
+//     var lineChart = new ApexCharts(document.querySelector("#line-chart-2"), lineChartOptions);
+//     lineChart.render();
+// });
+
+
+function populateStudieDropdown(studies) {
+    const select = document.getElementById("studieSelect")
+
+    select.innerHTML = '<option value="" disabled selected>-- Selecteer een studie --</option>';
+
+    studies.forEach(naam => {
+        const option = document.createElement("option");
+        option.value = naam;
+        option.textContent = naam;
+        select.appendChild(option);
+    });
+
+    select.addEventListener("change", (e) => {
+        geselecteerdeStudie = e.target.value;
+        console.log("Geselecteerde studie: ", geselecteerdeStudie);
+        herlaadDashboard();
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    fetch(`http://localhost:8080/api/studie/studies`)
+        .then(response => response.json())
+        .then(data => {
+            populateStudieDropdown(data);
+        })
+        .catch(error => {
+            console.error("Fout bij ophalen studies: ", error);
+        });
+});
+
+async function herlaadDashboard() {
+    if(!geselecteerdeStudie) return;
+    centra.forEach(centrum => {
+        const id = `aantal-${centrum.toLocaleLowerCase()}`;
+        laadDataInclusie(geselecteerdeStudie, centrum, id);
+    });
+
+    verzamelDoorlooptijden().then((doorlooptijden) => {
+        document.querySelector("#stacked-bar-chart").innerHTML = "";
+        stackedBarChart(doorlooptijden);
+    });
+
+    laadInclusionChart(geselecteerdeStudie).then((data) => {
+        const centra = [...new Set(data.map(item => item.naamCentrum))];
+        const series = centra.map(centrum => ({
+            naam: centrum,
             data: data
                 .filter(item => item.naamCentrum === centrum)
                 .map(item => ({
                     x: item.datum,
                     y: item.geincludeerd
                 }))
-        };
+        }));
+
+        document.querySelector("#line-chart").innerHTML = "";
+
+        var lineChart = new ApexCharts(document.querySelector("#line-chart"), {
+            series: series,
+            chart: { height: 350, type: 'line', toolbar: { show: false } },
+            colors: kleurenGenereren(centra.length),
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth' },
+            xaxis: { type: 'datetime' },
+            tooltip: { shared: true, intersect: false }
+        });
+        lineChart.render();
     });
 
-    var lineChartOptions = {
-        series: series,
-        chart: {
-            height: 350,
-            type: 'line',
-            toolbar: {
-                show: false,
-            },
-        },
-        colors: kleurenGenereren(centra.length),
-        dataLabels: {
-            enabled: false,
-        },
-        stroke: {
-            curve: 'smooth'
-        },
-        xaxis: {
-            type: 'datetime'
-        },
-        tooltip: {
-            shared: true,
-            intersect: false,
-        }
-    };
-
-    var lineChart = new ApexCharts(document.querySelector("#line-chart"), lineChartOptions);
-    lineChart.render();
-});
-
-laadInclusionChart("ABC3").then((data) => {
-    const centra = [...new Set(data.map(item => item.naamCentrum))];
-
-    const series = centra.map(centrum => {
-        const centrumData = data.filter(item => item.naamCentrum === centrum);
-
-        const eersteDatum = new Date(
-            Math.min(...centrumData.map(item => new Date (item.datum)))
-        );
-
-        return {
-            name: centrum,
-            data: centrumData.map(item => ({
+    laadInclusionChart(geselecteerdeStudie).then((data) => {
+        const centra = [...new Set(data.map(item => item.naamCentrum))];
+        const series = centra.map(centrum => {
+            const centrumData = data.filter(item => item.naamCentrum === centrum);
+            const eersteDatum = new Date(Math.min(...centrumData.map(item => new Date(item.datum))));
+            return {
+                name: centrum,
+                data: centrumData.map(item => ({
                     x: verschilDatum(eersteDatum, new Date(item.datum)),
                     y: item.geincludeerd
                 }))
-        };
+            };
+        });
+
+        document.querySelector("#line-chart-2").innerHTML = "";
+
+        var lineChartRelatief = new ApexCharts(document.querySelector("#line-chart-2"), {
+            series: series,
+            chart: { height: 350, type: 'line', toolbar: { show: false } },
+            colors: kleurenGenereren(centra.length),
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth' },
+            tooltip: { shared: true, intersect: false }
+        });
+        lineChartRelatief.render();
     });
-
-    var lineChartOptions = {
-        series: series,
-        chart: {
-            height: 350,
-            type: 'line',
-            toolbar: {
-                show: false,
-            },
-        },
-        colors: kleurenGenereren(centra.length),
-        dataLabels: {
-            enabled: false,
-        },
-        stroke: {
-            curve: 'smooth'
-        },
-        tooltip: {
-            shared: true,
-            intersect: false,
-        }
-    };
-
-    var lineChart = new ApexCharts(document.querySelector("#line-chart-2"), lineChartOptions);
-    lineChart.render();
-});
+}
 
 
 console.log("Script werkt! ");
