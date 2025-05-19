@@ -14,4 +14,10 @@ public interface StudyRepository extends JpaRepository<Study, StudyId>{
 
     @Query("SELECT DISTINCT i.studie from Study i")
     List<String> findAllDistinctStudies();
+
+    @Query("SELECT DISTINCT i.centrum FROM Study i ORDER BY i.centrum")
+    List<String> findAllDistinctCentra();
+
+    @Query("SELECT DISTINCT i.studie FROM Study i WHERE i.centrum = :naam_centrum")
+    List<String> findAllDistinctStudiesFromCentrum(@Param("naam_centrum") String centrum);
 }

@@ -5,6 +5,8 @@ function getMostRecentInclusion(studie, centrum) {
 
 }
 
+let stackedBarChartInstance = null;
+
 // ---------- KLEUREN GENEREREN -----------
 
 function kleurenGenereren(aantal) {
@@ -17,113 +19,15 @@ function kleurenGenereren(aantal) {
 }
 
 
-// ---------- CHARTS ----------
-
-// BAR CHART
-
-var barChartOptions = {
-    series: [{
-        data: [10, 8, 6, 4, 2]
-    }],
-    chart: {
-        type: 'bar',
-        height: 350,
-        toolbar: {
-            show: false
-        },
-    },
-    colors: [
-        "#246dec",
-        "#cc3c43",
-        "#367952",
-        "#f5b74f",
-        "#4f35a1"
-    ],
-    plotOptions: {
-        bar: {
-            distributed: true,
-            borderRadius: 4,
-            borderRadiusApplication: 'end',
-            horizontal: false,
-            columnWidth: '40%',
-        }
-    },
-    dataLabels: {
-        enabled: false
-    },
-    legend: {
-        show: false
-    },
-    xaxis: {
-        categories: ["Laptop", "Phone", "Monitor", "Headphones", "Camera"],
-    },
-    yaxis: {
-        title: {
-            text: "Count"
-        }
-    }
-};
-
-var barChart = new ApexCharts(document.querySelector("#bar-chart"), barChartOptions);
-barChart.render();
-
-//AREA CHART
-
-var areaChartOptions = {
-    series: [{
-        name: 'Purchase Orders',
-        data: [31, 40, 28, 51, 42, 109, 100]
-    }, {
-        name: 'SalesOrders',
-        data: [11, 32, 45, 32, 34, 52, 41]
-    }],
-    chart: {
-        height: 350,
-        type: 'area',
-        toolbar: {
-            show: false,
-        },
-    },
-    colors: ["#4f35a1", "#246dec"],
-    dataLabels: {
-        enabled: false,
-    },
-    stroke: {
-        curve: 'smooth'
-    },
-
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-    markers: {
-        size: 0
-    },
-    yaxis: [
-        {
-            title: {
-                text: 'Purchase Orders',
-            },
-        },
-        {
-            opposite: true,
-            title: {
-                text: 'Sales Orders',
-            },
-        },
-    ],
-    tooltip: {
-        shared: true,
-        intersect: false,
-    }
-};
-
-var areaChart = new ApexCharts(document.querySelector("#area-chart"), areaChartOptions);
-areaChart.render();
-
-
-
-
 // POGING TOT STACKED BAR CHART
 
 function stackedBarChart(doorlooptijden) {
+    if (stackedBarChartInstance) {
+        stackedBarChartInstance.destroy();
+    }
+    document.querySelector("#stacked-bar-chart").innerHTML = "";
+
+
     var stackedBarChartOptions = {
         series: [{
             name: 'Juridisch',
@@ -192,8 +96,8 @@ function stackedBarChart(doorlooptijden) {
         }
     };
 
-    var stackedBarChart = new ApexCharts(document.querySelector("#stacked-bar-chart"), stackedBarChartOptions);
-    stackedBarChart.render();
+    stackedBarChartInstance = new ApexCharts(document.querySelector("#stacked-bar-chart"), stackedBarChartOptions);
+    stackedBarChartInstance.render();
 }
 
 
@@ -214,14 +118,23 @@ async function laadDataInclusie(naamStudie, naamCentrum, ID) {
         const centrum = naamCentrum;
         const url = `http://localhost:8080/api/aantal_geincludeerd/${studie}/${centrum}`;
         const response = await fetch(url);
-        if (!response.ok) throw new Error("Fout bij ophalen...");
+        if (!response.ok) {
+            if (response.status === 404) {
+                console.warn(`Geen data voor ${naamStudie} - ${naamCentrum}`);
+                document.getElementById(ID).textContent = "0";
+            }
+            throw new Error(`Fout bij ophalen (status: ${response.status}`);
+        }
 
         const data = await response.json();
-
-        document.getElementById(ID).textContent = data;
+        if (!data || data.length === 0) {
+            document.getElementById(ID).textContent = "0";
+        } else {
+            document.getElementById(ID).textContent = data;
+        }
     } catch (error) {
-        alert("Fout bij ophalen: " + error.message);
-        console.log(error.message);
+        console.log(`Fout bij ophalen data`, error.message);
+        document.getElementById(ID).textContent = "0";
     }
 }
 
@@ -232,13 +145,21 @@ async function verzamelDoorlooptijden() {
     let lab = [];
 
     for (const centrum of centra) {
-        const data = await laadDataStudie(geselecteerdeStudie, centrum);
-        const studie = data[0];
+        try {
+            const data = await laadDataStudie(geselecteerdeStudie, centrum);
+            const studie = (data && data.length > 0) ? data[0] : {};
 
-        juridisch.push(verschilDatum(studie.juridisch_start, studie.juridisch_eind));
-        apotheek.push(verschilDatum(studie.apotheek_start, studie.apotheek_eind));
-        metc.push(verschilDatum(studie.metc_start, studie.metc_eind));
-        lab.push(verschilDatum(studie.lab_start, studie.lab_eind));
+            juridisch.push(verschilDatum(studie.juridisch_start, studie.juridisch_eind));
+            apotheek.push(verschilDatum(studie.apotheek_start, studie.apotheek_eind));
+            metc.push(verschilDatum(studie.metc_start, studie.metc_eind));
+            lab.push(verschilDatum(studie.lab_start, studie.lab_eind));
+        } catch (error) {
+            console.warn(`Geen data voor dit centrum '${centrum}' beschikbaar`)
+            juridisch.push(0);
+            apotheek.push(0);
+            metc.push(0);
+            lab.push(0);
+        }
     }
     return {
         juridisch: juridisch,
@@ -283,7 +204,7 @@ let geselecteerdeStudie = null;
 
 async function laadInclusionChart(naamStudie) {
     try {
-        const url = `http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/${naamStudie}`;
+        const url = `http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/studie/${naamStudie}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("Fout bij ophalen...")
 
@@ -423,14 +344,13 @@ async function herlaadDashboard() {
     });
 
     verzamelDoorlooptijden().then((doorlooptijden) => {
-        document.querySelector("#stacked-bar-chart").innerHTML = "";
         stackedBarChart(doorlooptijden);
     });
 
     laadInclusionChart(geselecteerdeStudie).then((data) => {
         const centra = [...new Set(data.map(item => item.naamCentrum))];
         const series = centra.map(centrum => ({
-            naam: centrum,
+            name: centrum,
             data: data
                 .filter(item => item.naamCentrum === centrum)
                 .map(item => ({
@@ -446,7 +366,10 @@ async function herlaadDashboard() {
             chart: { height: 350, type: 'line', toolbar: { show: false } },
             colors: kleurenGenereren(centra.length),
             dataLabels: { enabled: false },
-            stroke: { curve: 'smooth' },
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
             xaxis: { type: 'datetime' },
             tooltip: { shared: true, intersect: false }
         });
@@ -471,15 +394,35 @@ async function herlaadDashboard() {
 
         var lineChartRelatief = new ApexCharts(document.querySelector("#line-chart-2"), {
             series: series,
-            chart: { height: 350, type: 'line', toolbar: { show: false } },
+            chart: {
+                height: 350,
+                type: 'line',
+                zoom: { enabled: true },
+                toolbar: { show: false }
+            },
             colors: kleurenGenereren(centra.length),
             dataLabels: { enabled: false },
-            stroke: { curve: 'smooth' },
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            xaxis: {
+                type: 'numeric',
+                title: { text: 'aantal dagen' },
+                labels: {
+                    formatter: function (val) {
+                        return Math.round(val);
+                    }
+                },
+                tickAmount: 10,
+                forceNiceScale: true
+            },
             tooltip: { shared: true, intersect: false }
         });
         lineChartRelatief.render();
     });
 }
+
 
 
 console.log("Script werkt! ");
