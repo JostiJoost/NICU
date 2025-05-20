@@ -2,6 +2,7 @@ package org.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.awt.*;
@@ -11,7 +12,7 @@ import java.net.URI;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 @SpringBootApplication
-public class Main {
+public class Main extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
 

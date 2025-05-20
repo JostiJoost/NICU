@@ -23,7 +23,15 @@
             <div class="header-right">
                 <span class="material-icons-outlined">notifications</span>
                 <span class="material-icons-outlined">email</span>
-                <span class="material-icons-outlined">person</span>
+
+                <div class="profile-container">
+                    <span id="profielIcoon" class="material-icons-outlined">person</span>
+                    <div id="logoutMenu" class="dropdown-menu">
+                        <form method="POST" action="/logout">
+                            <button type="submit">Log uit </button>
+                        </form>
+                    </div>
+                </div>
             </div>
 
         </header>

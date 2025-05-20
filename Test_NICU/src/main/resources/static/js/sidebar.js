@@ -63,3 +63,15 @@ function closeSidebar() {
             </li>`;
     }
 })();
+
+const profielIcoon = document.getElementById('profielIcoon');
+const dropdown = document.getElementById('logoutMenu');
+
+profielIcoon.addEventListener('click', function (event){
+    const isOpen = dropdown.style.display === 'block';
+    dropdown.style.display = isOpen ? 'none' : 'block';
+});
+
+document.addEventListener('click', function(event){
+    if(!dropdown.contains(event.target) ){dropdown.style.display = 'none';}
+});

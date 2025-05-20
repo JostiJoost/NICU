@@ -58,3 +58,8 @@ button[type="submit"]:hover{
 .toggle-password:hover{
     text-decoration: underline;
 }
+
+#error-message{
+    font-weight: bold;
+    font-size: small;
+}
