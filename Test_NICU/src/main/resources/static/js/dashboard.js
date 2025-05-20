@@ -5,6 +5,8 @@ function getMostRecentInclusion(studie, centrum) {
 
 }
 
+let stackedBarChartInstance = null;
+
 // ---------- KLEUREN GENEREREN -----------
 
 function kleurenGenereren(aantal) {
@@ -17,113 +19,15 @@ function kleurenGenereren(aantal) {
 }
 
 
-// ---------- CHARTS ----------
-
-// BAR CHART
-
-var barChartOptions = {
-    series: [{
-        data: [10, 8, 6, 4, 2]
-    }],
-    chart: {
-        type: 'bar',
-        height: 350,
-        toolbar: {
-            show: false
-        },
-    },
-    colors: [
-        "#246dec",
-        "#cc3c43",
-        "#367952",
-        "#f5b74f",
-        "#4f35a1"
-    ],
-    plotOptions: {
-        bar: {
-            distributed: true,
-            borderRadius: 4,
-            borderRadiusApplication: 'end',
-            horizontal: false,
-            columnWidth: '40%',
-        }
-    },
-    dataLabels: {
-        enabled: false
-    },
-    legend: {
-        show: false
-    },
-    xaxis: {
-        categories: ["Laptop", "Phone", "Monitor", "Headphones", "Camera"],
-    },
-    yaxis: {
-        title: {
-            text: "Count"
-        }
-    }
-};
-
-var barChart = new ApexCharts(document.querySelector("#bar-chart"), barChartOptions);
-barChart.render();
-
-//AREA CHART
-
-var areaChartOptions = {
-    series: [{
-        name: 'Purchase Orders',
-        data: [31, 40, 28, 51, 42, 109, 100]
-    }, {
-        name: 'SalesOrders',
-        data: [11, 32, 45, 32, 34, 52, 41]
-    }],
-    chart: {
-        height: 350,
-        type: 'area',
-        toolbar: {
-            show: false,
-        },
-    },
-    colors: ["#4f35a1", "#246dec"],
-    dataLabels: {
-        enabled: false,
-    },
-    stroke: {
-        curve: 'smooth'
-    },
-
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-    markers: {
-        size: 0
-    },
-    yaxis: [
-        {
-            title: {
-                text: 'Purchase Orders',
-            },
-        },
-        {
-            opposite: true,
-            title: {
-                text: 'Sales Orders',
-            },
-        },
-    ],
-    tooltip: {
-        shared: true,
-        intersect: false,
-    }
-};
-
-var areaChart = new ApexCharts(document.querySelector("#area-chart"), areaChartOptions);
-areaChart.render();
-
-
-
-
 // POGING TOT STACKED BAR CHART
 
 function stackedBarChart(doorlooptijden) {
+    if (stackedBarChartInstance) {
+        stackedBarChartInstance.destroy();
+    }
+    document.querySelector("#stacked-bar-chart").innerHTML = "";
+
+
     var stackedBarChartOptions = {
         series: [{
             name: 'Juridisch',
@@ -192,8 +96,8 @@ function stackedBarChart(doorlooptijden) {
         }
     };
 
-    var stackedBarChart = new ApexCharts(document.querySelector("#stacked-bar-chart"), stackedBarChartOptions);
-    stackedBarChart.render();
+    stackedBarChartInstance = new ApexCharts(document.querySelector("#stacked-bar-chart"), stackedBarChartOptions);
+    stackedBarChartInstance.render();
 }
 
 
@@ -203,7 +107,6 @@ function verschilDatum(datum1, datum2) {
     } else {
         const startDatum = new Date(datum1);
         const eindDatum = new Date(datum2);
-        console.log("Startdatum: " + startDatum + ", Einddatum: " + eindDatum);
         const verschil = (eindDatum - startDatum) / (1000 * 60 * 60 * 24);
         return verschil;
     }
@@ -215,15 +118,23 @@ async function laadDataInclusie(naamStudie, naamCentrum, ID) {
         const centrum = naamCentrum;
         const url = `http://localhost:8080/api/aantal_geincludeerd/${studie}/${centrum}`;
         const response = await fetch(url);
-        if (!response.ok) throw new Error("Fout bij ophalen...");
+        if (!response.ok) {
+            if (response.status === 404) {
+                console.warn(`Geen data voor ${naamStudie} - ${naamCentrum}`);
+                document.getElementById(ID).textContent = "0";
+            }
+            throw new Error(`Fout bij ophalen (status: ${response.status}`);
+        }
 
         const data = await response.json();
-        console.log("opgehaalde data:", data);
-
-        document.getElementById(ID).textContent = data;
+        if (!data || data.length === 0) {
+            document.getElementById(ID).textContent = "0";
+        } else {
+            document.getElementById(ID).textContent = data;
+        }
     } catch (error) {
-        alert("Fout bij ophalen: " + error.message);
-        console.log(error.message);
+        console.log(`Fout bij ophalen data`, error.message);
+        document.getElementById(ID).textContent = "0";
     }
 }
 
@@ -234,18 +145,22 @@ async function verzamelDoorlooptijden() {
     let lab = [];
 
     for (const centrum of centra) {
-        const data = await laadDataStudie("ABC3", centrum);
-        const studie = data[0];
+        try {
+            const data = await laadDataStudie(geselecteerdeStudie, centrum);
+            const studie = (data && data.length > 0) ? data[0] : {};
 
-        juridisch.push(verschilDatum(studie.juridisch_start, studie.juridisch_eind));
-        apotheek.push(verschilDatum(studie.apotheek_start, studie.apotheek_eind));
-        metc.push(verschilDatum(studie.metc_start, studie.metc_eind));
-        lab.push(verschilDatum(studie.lab_start, studie.lab_eind));
+            juridisch.push(verschilDatum(studie.juridisch_start, studie.juridisch_eind));
+            apotheek.push(verschilDatum(studie.apotheek_start, studie.apotheek_eind));
+            metc.push(verschilDatum(studie.metc_start, studie.metc_eind));
+            lab.push(verschilDatum(studie.lab_start, studie.lab_eind));
+        } catch (error) {
+            console.warn(`Geen data voor dit centrum '${centrum}' beschikbaar`)
+            juridisch.push(0);
+            apotheek.push(0);
+            metc.push(0);
+            lab.push(0);
+        }
     }
-    console.log("Array juridisch: " + juridisch);
-    console.log("Array apotheek: " + apotheek);
-    console.log("Array metc: " + metc);
-    console.log("Array lab: " + lab);
     return {
         juridisch: juridisch,
         apotheek: apotheek,
@@ -263,7 +178,6 @@ async function laadDataStudie(naamStudie, naamCentrum) {
         if (!response.ok) throw new Error("Fout bij ophalen...")
 
         const data = await response.json();
-        console.log("opgehaalde data: " + data[0]);
         return data;
     } catch (error) {
         alert("Fout bij ophalen: " + error.message);
@@ -272,32 +186,29 @@ async function laadDataStudie(naamStudie, naamCentrum) {
 }
 
 const centra = ["AUMC", "EMCR", "ISALA", "LUMC", "MMC", "MUMC", "RUMC", "UMCG", "WKZ"];
+let geselecteerdeStudie = null;
 
-laadDataInclusie("ABC3", "AUMC", "aantal-aumc");
-laadDataInclusie("ABC3", "EMCR", "aantal-emcr");
-laadDataInclusie("ABC3", "ISALA", "aantal-isala");
-laadDataInclusie("ABC3", "LUMC", "aantal-lumc");
-laadDataInclusie("ABC3", "MMC", "aantal-mmc");
-laadDataInclusie("ABC3", "MUMC", "aantal-mumc");
-laadDataInclusie("ABC3", "RUMC", "aantal-rumc");
-laadDataInclusie("ABC3", "UMCG", "aantal-umcg");
-laadDataInclusie("ABC3", "WKZ", "aantal-wkz");
+// laadDataInclusie(geselecteerdeStudie, "AUMC", "aantal-aumc");
+// laadDataInclusie(geselecteerdeStudie, "EMCR", "aantal-emcr");
+// laadDataInclusie(geselecteerdeStudie, "ISALA", "aantal-isala");
+// laadDataInclusie(geselecteerdeStudie, "LUMC", "aantal-lumc");
+// laadDataInclusie(geselecteerdeStudie, "MMC", "aantal-mmc");
+// laadDataInclusie(geselecteerdeStudie, "MUMC", "aantal-mumc");
+// laadDataInclusie(geselecteerdeStudie, "RUMC", "aantal-rumc");
+// laadDataInclusie(geselecteerdeStudie, "UMCG", "aantal-umcg");
+// laadDataInclusie(geselecteerdeStudie, "WKZ", "aantal-wkz");
 
-verzamelDoorlooptijden().then((doorlooptijden) => {
-    console.log("Juridisc: " + doorlooptijden.juridisch)
-    stackedBarChart(doorlooptijden);
-});
+// verzamelDoorlooptijden().then((doorlooptijden) => {
+//     stackedBarChart(doorlooptijden);
+// });
 
 async function laadInclusionChart(naamStudie) {
     try {
-        const studie = naamStudie;
-        const url = `http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/${studie}`;
+        const url = `http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/studie/${naamStudie}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("Fout bij ophalen...")
 
-        const data = await response.json();
-        console.log("opgehaalde data: ", data);
-        return data;
+        return await response.json();
     } catch (error) {
         alert("Fout bij ophalen: " + error.message);
         console.log(error.message);
@@ -305,11 +216,140 @@ async function laadInclusionChart(naamStudie) {
 }
 
 
-laadInclusionChart("ABC3").then((data) => {
-    const centra = [...new Set(data.map(item => item.naamCentrum))];
+// laadInclusionChart(geselecteerdeStudie).then((data) => {
+//     const centra = [...new Set(data.map(item => item.naamCentrum))];
+//
+//     const series = centra.map(centrum => {
+//         return {
+//             name: centrum,
+//             data: data
+//                 .filter(item => item.naamCentrum === centrum)
+//                 .map(item => ({
+//                     x: item.datum,
+//                     y: item.geincludeerd
+//                 }))
+//         };
+//     });
+//
+//     var lineChartOptions = {
+//         series: series,
+//         chart: {
+//             height: 350,
+//             type: 'line',
+//             toolbar: {
+//                 show: false,
+//             },
+//         },
+//         colors: kleurenGenereren(centra.length),
+//         dataLabels: {
+//             enabled: false,
+//         },
+//         stroke: {
+//             curve: 'smooth'
+//         },
+//         xaxis: {
+//             type: 'datetime'
+//         },
+//         tooltip: {
+//             shared: true,
+//             intersect: false,
+//         }
+//     };
+//
+//     var lineChart = new ApexCharts(document.querySelector("#line-chart"), lineChartOptions);
+//     lineChart.render();
+// });
 
-    const series = centra.map(centrum => {
-        return {
+// laadInclusionChart(geselecteerdeStudie).then((data) => {
+//     const centra = [...new Set(data.map(item => item.naamCentrum))];
+//
+//     const series = centra.map(centrum => {
+//         const centrumData = data.filter(item => item.naamCentrum === centrum);
+//
+//         const eersteDatum = new Date(
+//             Math.min(...centrumData.map(item => new Date (item.datum)))
+//         );
+//
+//         return {
+//             name: centrum,
+//             data: centrumData.map(item => ({
+//                     x: verschilDatum(eersteDatum, new Date(item.datum)),
+//                     y: item.geincludeerd
+//                 }))
+//         };
+//     });
+//
+//     var lineChartOptions = {
+//         series: series,
+//         chart: {
+//             height: 350,
+//             type: 'line',
+//             toolbar: {
+//                 show: false,
+//             },
+//         },
+//         colors: kleurenGenereren(centra.length),
+//         dataLabels: {
+//             enabled: false,
+//         },
+//         stroke: {
+//             curve: 'smooth'
+//         },
+//         tooltip: {
+//             shared: true,
+//             intersect: false,
+//         }
+//     };
+//
+//     var lineChart = new ApexCharts(document.querySelector("#line-chart-2"), lineChartOptions);
+//     lineChart.render();
+// });
+
+
+function populateStudieDropdown(studies) {
+    const select = document.getElementById("studieSelect")
+
+    select.innerHTML = '<option value="" disabled selected>-- Selecteer een studie --</option>';
+
+    studies.forEach(naam => {
+        const option = document.createElement("option");
+        option.value = naam;
+        option.textContent = naam;
+        select.appendChild(option);
+    });
+
+    select.addEventListener("change", (e) => {
+        geselecteerdeStudie = e.target.value;
+        console.log("Geselecteerde studie: ", geselecteerdeStudie);
+        herlaadDashboard();
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    fetch(`http://localhost:8080/api/studie/studies`)
+        .then(response => response.json())
+        .then(data => {
+            populateStudieDropdown(data);
+        })
+        .catch(error => {
+            console.error("Fout bij ophalen studies: ", error);
+        });
+});
+
+async function herlaadDashboard() {
+    if(!geselecteerdeStudie) return;
+    centra.forEach(centrum => {
+        const id = `aantal-${centrum.toLocaleLowerCase()}`;
+        laadDataInclusie(geselecteerdeStudie, centrum, id);
+    });
+
+    verzamelDoorlooptijden().then((doorlooptijden) => {
+        stackedBarChart(doorlooptijden);
+    });
+
+    laadInclusionChart(geselecteerdeStudie).then((data) => {
+        const centra = [...new Set(data.map(item => item.naamCentrum))];
+        const series = centra.map(centrum => ({
             name: centrum,
             data: data
                 .filter(item => item.naamCentrum === centrum)
@@ -317,82 +357,72 @@ laadInclusionChart("ABC3").then((data) => {
                     x: item.datum,
                     y: item.geincludeerd
                 }))
-        };
+        }));
+
+        document.querySelector("#line-chart").innerHTML = "";
+
+        var lineChart = new ApexCharts(document.querySelector("#line-chart"), {
+            series: series,
+            chart: { height: 350, type: 'line', toolbar: { show: false } },
+            colors: kleurenGenereren(centra.length),
+            dataLabels: { enabled: false },
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            xaxis: { type: 'datetime' },
+            tooltip: { shared: true, intersect: false }
+        });
+        lineChart.render();
     });
 
-    var lineChartOptions = {
-        series: series,
-        chart: {
-            height: 350,
-            type: 'line',
-            toolbar: {
-                show: false,
-            },
-        },
-        colors: kleurenGenereren(centra.length),
-        dataLabels: {
-            enabled: false,
-        },
-        stroke: {
-            curve: 'smooth'
-        },
-        xaxis: {
-            type: 'datetime'
-        },
-        tooltip: {
-            shared: true,
-            intersect: false,
-        }
-    };
-
-    var lineChart = new ApexCharts(document.querySelector("#line-chart"), lineChartOptions);
-    lineChart.render();
-});
-
-laadInclusionChart("ABC3").then((data) => {
-    const centra = [...new Set(data.map(item => item.naamCentrum))];
-
-    const series = centra.map(centrum => {
-        const centrumData = data.filter(item => item.naamCentrum === centrum);
-
-        const eersteDatum = new Date(
-            Math.min(...centrumData.map(item => new Date (item.datum)))
-        );
-
-        return {
-            name: centrum,
-            data: centrumData.map(item => ({
+    laadInclusionChart(geselecteerdeStudie).then((data) => {
+        const centra = [...new Set(data.map(item => item.naamCentrum))];
+        const series = centra.map(centrum => {
+            const centrumData = data.filter(item => item.naamCentrum === centrum);
+            const eersteDatum = new Date(Math.min(...centrumData.map(item => new Date(item.datum))));
+            return {
+                name: centrum,
+                data: centrumData.map(item => ({
                     x: verschilDatum(eersteDatum, new Date(item.datum)),
                     y: item.geincludeerd
                 }))
-        };
-    });
+            };
+        });
 
-    var lineChartOptions = {
-        series: series,
-        chart: {
-            height: 350,
-            type: 'line',
-            toolbar: {
-                show: false,
+        document.querySelector("#line-chart-2").innerHTML = "";
+
+        var lineChartRelatief = new ApexCharts(document.querySelector("#line-chart-2"), {
+            series: series,
+            chart: {
+                height: 350,
+                type: 'line',
+                zoom: { enabled: true },
+                toolbar: { show: false }
             },
-        },
-        colors: kleurenGenereren(centra.length),
-        dataLabels: {
-            enabled: false,
-        },
-        stroke: {
-            curve: 'smooth'
-        },
-        tooltip: {
-            shared: true,
-            intersect: false,
-        }
-    };
+            colors: kleurenGenereren(centra.length),
+            dataLabels: { enabled: false },
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            xaxis: {
+                type: 'numeric',
+                title: { text: 'aantal dagen' },
+                labels: {
+                    formatter: function (val) {
+                        return Math.round(val);
+                    }
+                },
+                tickAmount: 10,
+                forceNiceScale: true
+            },
+            tooltip: { shared: true, intersect: false }
+        });
+        lineChartRelatief.render();
+    });
+}
 
-    var lineChart = new ApexCharts(document.querySelector("#line-chart-2"), lineChartOptions);
-    lineChart.render();
-});
 
 
 console.log("Script werkt! ");

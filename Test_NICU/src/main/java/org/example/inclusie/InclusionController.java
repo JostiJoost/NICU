@@ -18,8 +18,13 @@ public class InclusionController {
         return inclusionRepository.findAllByStudyAndCenterOrderByDatumDesc(studie, centrum).get(0).getGeincludeerd();
     }
 
-    @GetMapping("/chart/inclusies/{studie}")
-    public List<InclusionDTO> getInclusionChart(@PathVariable String studie) {
+    @GetMapping("/chart/inclusies/studie/{studie}")
+    public List<InclusionDTO> getInclusionChartStudy(@PathVariable String studie) {
         return inclusionRepository.findInclusionByStudy(studie);
+    }
+
+    @GetMapping("/chart/inclusies/centrum/{centrum}")
+    public List<InclusionDTO> getInclusionChartCentrum(@PathVariable String centrum) {
+        return inclusionRepository.findInclusionByCentrum(centrum);
     }
 }
