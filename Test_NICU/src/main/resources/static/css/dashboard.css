@@ -62,66 +62,6 @@ body {
     display: none;
 }
 
-
-/* ----------- Profiel icoon ---------- */
-
-
-
-.profile-container{
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-}
-
-.dropdown-menu{
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: white;
-    border: 1px whitesmoke;
-    padding: 10px;
-    border-radius: 6px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    z-index: 1000;
-}
-
-.dropdown-menu.show{
-    display: block;
-}
-
-.logout-menu button:hover {
-    text-decoration: underline;
-}
-
-#logoutMenu button{
-    display:block;
-    width: 100%;
-    padding: 8px 12px;
-    background: none;
-    border: none;
-    text-align: left;
-    cursor: pointer;
-}
-
-#logoutMenu button:hover{
-    background-color: aliceblue;
-}
-
-.logout-link{
-    display: inline;
-    font-weight: bold;
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-}
-.logout-link{
-    text-decoration: underline;
-}
-
-
-
 /* ---------- MAIN ---------- */
 .main-container {
     grid-area: main;

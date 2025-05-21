@@ -24,9 +24,8 @@
             <div class="profile-container">
                 <span id="profielIcoon" class="material-icons-outlined">person</span>
                 <div id="logoutMenu" class="dropdown-menu">
-                    <form method="POST" action="/logout">
-                        <button type="submit" class="logout-link">Log&nbsp;uit </button>
-                    </form>
+                    <a href="/logout" class="logout-link" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Log uit</a>
+                    <form id="logoutForm", method="POST" action="/logout" style ="display: none;"></form>
                 </div>
             </div>
         </div>

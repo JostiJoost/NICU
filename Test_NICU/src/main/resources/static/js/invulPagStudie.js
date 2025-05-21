@@ -72,7 +72,7 @@ document.getElementById('studieForm').addEventListener('submit', async function(
     formData.opgenomen_kinderen = parseInt(formData.opgenomen_kinderen);
 
     try {
-        const response = await fetch('http://localhost:8080/api/studies', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(formData)});
+        const response = await fetch('http://localhost:8080/api/studie', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(formData)});
         if(!response.ok) throw new Error("Fout bij opslaan...");
         alert("Studiegegevens succesvol opgeslagen!");
         this.reset();

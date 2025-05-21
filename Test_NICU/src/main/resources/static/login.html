@@ -9,7 +9,10 @@
 <body>
 
   <form id="loginForm" method="POST" action="/login">
-      <h1>Inloggen N3 Benchmarking</h1>
+      <div class="inlog-header">
+          <h1>Inloggen N3 Benchmarking</h1>
+          <img src="/img/n3logo.jpeg" alt="Welkom">
+      </div>
       <label for="username">Gebruikersnaam: </label>
       <input type="text" id="username" name="username" placeholder="Voer je gebruikersnaam in" required>
 
@@ -18,7 +21,7 @@
       <p id="togglePassword" class="toggle-password">Toon wachtwoord</p>
 
       <p id="error-message" style="color: red;"></p>
-      <button type="submit">Log in</button>
+      <button type="submit" >Log in</button>
   </form>
 
 

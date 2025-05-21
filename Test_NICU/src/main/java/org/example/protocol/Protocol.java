@@ -9,16 +9,27 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
+/**
+ * Entiteit klasse die een protocol vertegenwoordigt in de database.
+ * De class is gekoppeld aan de databse tabel protocol.
+ * De velden worden automatisch voorzien van getters en setters via Lombok.
+ */
 @Entity
 @Table(name= "protocol")
 public class Protocol {
 
+    /**
+     * Unieke waarde in de tabel van het protocol.
+     */
     @Id
     @Getter
     @Setter
     @Column(name = "naam_protocol")
     private String naamProtocol;
 
+    /**
+     * De naam van het centrum dat het protocol indient (ook unieke waarde, dit wordt in studyId gedefinieerd)
+     */
     @Getter
     @Setter
     @Column(name = "naam_centrum")

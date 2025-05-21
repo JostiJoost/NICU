@@ -63,3 +63,15 @@ button[type="submit"]:hover{
     font-weight: bold;
     font-size: small;
 }
+
+.inlog-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.inlog-header img{
+    width: 150px;
+    height: auto;
+}

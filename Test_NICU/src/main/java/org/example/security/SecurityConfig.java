@@ -33,7 +33,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login.html", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/login.html", "/css/**", "/js/**", "/img/**").permitAll()
                         .requestMatchers("/invulPagStudie.html").hasAnyRole("STUDIE", "ADMIN")
                         .requestMatchers("/dashboard.html").hasAnyRole("ALGEMEEN", "STUDIE", "ADMIN", "PROTOCOLMAKER")
                         .requestMatchers("/dashboard2.html").hasAnyRole("ALGEMEEN", "STUDIE", "ADMIN", "PROTOCOLMAKER")
