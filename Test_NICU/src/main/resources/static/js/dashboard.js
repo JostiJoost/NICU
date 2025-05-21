@@ -240,17 +240,19 @@ async function gemiddeldeGrafieken() {
     });
 }
 
-function doorloopRenderen(soort, titel, gemiddelde, studie, kleur) {
+function doorloopRenderen(soort, titel, gemiddelde, studie, kleur, gekozenStudie) {
     const series = gemiddelde.map(d => Math.round(d.gemiddelde * 10) / 10);
     const xas = gemiddelde.map(d => d.centrum);
 
+    const ID = `#chart-${soort}`;
+    document.querySelector(ID).innerHTML = "";
     const options = {
         series: [{
             data: series,
             name: `gemiddelde doorlooptijd ${soort}`
         }, {
             data: studie,
-            name: `doorlooptijd ${soort} ${geselecteerdeStudie}`
+            name: `doorlooptijd ${soort} ${gekozenStudie}`
         }],
         chart: {
             type: 'bar',
@@ -271,12 +273,11 @@ function doorloopRenderen(soort, titel, gemiddelde, studie, kleur) {
         },
         colors: ["#69d2e7", `${kleur}`]
     }
-    const ID = `#chart-${soort}`;
     chartInstance = new ApexCharts(document.querySelector(ID), options);
     chartInstance.render();
 }
 
-async function grafieken() {
+async function grafieken(studie) {
     const response = await fetch(`http://localhost:8080/api/studie/doorlooptijden`);
     if (!response.ok) throw new Error("Fout bij ophalen...")
 
@@ -287,7 +288,7 @@ async function grafieken() {
     let i = 0;
     soorten.forEach(soort => {
         const gemiddelden = verzamelDoorlooptijdSoort(data, soort);
-        doorloopRenderen(soort, `Doorlooptijd ${soort} per centrum`, gemiddelden, studieData[soort.toLowerCase()], kleuren[i]);
+        doorloopRenderen(soort, `Doorlooptijd ${soort} per centrum`, gemiddelden, studieData[soort.toLowerCase()], kleuren[i], studie);
         i++;
     })
 
@@ -469,6 +470,7 @@ async function herlaadDashboard() {
         laadDataInclusie(geselecteerdeStudie, centrum, id);
     });
 
+    document.querySelector("#stacked-bar-chart").innerHTML = "";
     verzamelDoorlooptijden().then((doorlooptijden) => {
         stackedBarChart(doorlooptijden);
     });
@@ -547,7 +549,7 @@ async function herlaadDashboard() {
         });
         lineChartRelatief.render();
     });
-
+    document.querySelector("#totale-doorlooptijd").innerHTML = "";
     laadInclusionChart(geselecteerdeStudie).then(async (data) => {
         const serie = totaleDoorlooptijdBerekenen(data);
         const serieDeelnemend = await laadInitiatiedatum(geselecteerdeStudie);
@@ -593,7 +595,7 @@ async function herlaadDashboard() {
         totaleDoorlooptijd.render();
 
     })
-    grafieken();
+    grafieken(geselecteerdeStudie);
 
 
 }
