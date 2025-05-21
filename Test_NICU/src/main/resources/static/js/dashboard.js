@@ -169,6 +169,132 @@ async function verzamelDoorlooptijden() {
     };
 }
 
+function verzamelDoorlooptijdSoort(data, soort) {
+    const start = `start${soort}`;
+    const eind = `eind${soort}`;
+    const groepen = {};
+
+    data.forEach(item => {
+        const centrum = item.centrum;
+        const verschil = verschilDatum(item[start], item[eind]);
+
+        if (verschil !== 0) {
+            if (!groepen[centrum]) {
+                groepen[centrum] = [];
+            }
+            groepen[centrum].push(verschil);
+        }
+    });
+    return Object.entries(groepen)
+        .sort(([A], [B]) => A.localeCompare(B))
+        .map(([centrum, waardes]) => ({
+        centrum, gemiddelde: waardes.reduce((a, b) => a + b, 0) / waardes.length
+    }));
+}
+
+function chartRenderen(id, titel, data, kleur) {
+    const series = data.map(d => Math.round(d.gemiddelde * 10) / 10);
+    const xas = data.map(d => d.centrum);
+
+    const options = {
+        series: [{
+            data: series
+        }],
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false
+            }
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'left',
+            offsetX: 40
+        },
+        xaxis: {
+            categories: xas
+        },
+        colors: [`${kleur}`]
+    }
+    const ID = `#gem-chart-${id}`;
+    chartInstance = new ApexCharts(document.querySelector(`#gem-chart-${id}`), options);
+    chartInstance.render();
+}
+
+async function gemiddeldeGrafieken() {
+    const response = await fetch(`http://localhost:8080/api/studie/doorlooptijden`);
+    if (!response.ok) throw new Error("Fout bij ophalen...")
+
+    const data = await response.json();
+
+    const soorten = ['Juridisch', 'Apotheek', 'METC', 'Lab'];
+    const kleuren = ["#008FFB", "#00E396", "#FEB019", "#FF4560"];
+    let i = 0;
+    soorten.forEach(soort => {
+        const gemiddelden = verzamelDoorlooptijdSoort(data, soort);
+        chartRenderen(soort, `Gemiddelde doorlooptijd - ${soort}`, gemiddelden, kleuren[i]);
+        i++;
+    });
+}
+
+function doorloopRenderen(soort, titel, gemiddelde, studie, kleur) {
+    const series = gemiddelde.map(d => Math.round(d.gemiddelde * 10) / 10);
+    const xas = gemiddelde.map(d => d.centrum);
+
+    const options = {
+        series: [{
+            data: series,
+            name: `gemiddelde doorlooptijd ${soort}`
+        }, {
+            data: studie,
+            name: `doorlooptijd ${soort} ${geselecteerdeStudie}`
+        }],
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false
+            }
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'left',
+            offsetX: 40
+        },
+        xaxis: {
+            categories: xas
+        },
+        colors: ["#69d2e7", `${kleur}`]
+    }
+    const ID = `#chart-${soort}`;
+    chartInstance = new ApexCharts(document.querySelector(ID), options);
+    chartInstance.render();
+}
+
+async function grafieken() {
+    const response = await fetch(`http://localhost:8080/api/studie/doorlooptijden`);
+    if (!response.ok) throw new Error("Fout bij ophalen...")
+
+    const data = await response.json();
+    const studieData = await verzamelDoorlooptijden();
+    const soorten = ['Juridisch', 'Apotheek', 'METC', 'Lab'];
+    const kleuren = ["#008FFB", "#00E396", "#FEB019", "#FF4560"];
+    let i = 0;
+    soorten.forEach(soort => {
+        const gemiddelden = verzamelDoorlooptijdSoort(data, soort);
+        doorloopRenderen(soort, `Doorlooptijd ${soort} per centrum`, gemiddelden, studieData[soort.toLowerCase()], kleuren[i]);
+        i++;
+    })
+
+}
+
+gemiddeldeGrafieken();
+
 async function laadDataStudie(naamStudie, naamCentrum) {
     try {
         const studie = naamStudie;
@@ -199,8 +325,6 @@ async function laadGroupedBar() {
             name: studie,
             data: centra.map(centrum => {
                 const item = data.find(d => d.centrum === centrum && d.studie === studie);
-            console.log("Studie:", studie, "Centrum:", centrum);
-            console.log("Gevonden item:", item);
             if (!item) return 0;
             return verschilDatum(item.startdatum, item.initiatiedatum);
             })
@@ -242,20 +366,6 @@ async function laadGroupedBar() {
 
 const centra = ["AUMC", "EMCR", "ISALA", "LUMC", "MMC", "MUMC", "RUMC", "UMCG", "WKZ"];
 let geselecteerdeStudie = null;
-
-// laadDataInclusie(geselecteerdeStudie, "AUMC", "aantal-aumc");
-// laadDataInclusie(geselecteerdeStudie, "EMCR", "aantal-emcr");
-// laadDataInclusie(geselecteerdeStudie, "ISALA", "aantal-isala");
-// laadDataInclusie(geselecteerdeStudie, "LUMC", "aantal-lumc");
-// laadDataInclusie(geselecteerdeStudie, "MMC", "aantal-mmc");
-// laadDataInclusie(geselecteerdeStudie, "MUMC", "aantal-mumc");
-// laadDataInclusie(geselecteerdeStudie, "RUMC", "aantal-rumc");
-// laadDataInclusie(geselecteerdeStudie, "UMCG", "aantal-umcg");
-// laadDataInclusie(geselecteerdeStudie, "WKZ", "aantal-wkz");
-
-// verzamelDoorlooptijden().then((doorlooptijden) => {
-//     stackedBarChart(doorlooptijden);
-// });
 
 async function laadInclusionChart(naamStudie) {
     try {
@@ -484,6 +594,7 @@ async function herlaadDashboard() {
         totaleDoorlooptijd.render();
 
     })
+    grafieken();
 
 
 }
