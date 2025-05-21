@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+
 </head>
 <body>
 <div class="grid-container">
@@ -18,12 +20,16 @@
             <span class="material-icons-outlined">menu</span>
         </div>
         <div class="header-left">
-            <span class="material-icons-outlined">search</span>
         </div>
         <div class="header-right">
-            <span class="material-icons-outlined">notifications</span>
-            <span class="material-icons-outlined">email</span>
-            <span class="material-icons-outlined">person</span>
+            <div class="profile-container">
+                <span id="profielIcoon" class="material-icons-outlined">person</span>
+                <div id="logoutMenu" class="dropdown-menu">
+                    <form method="POST" action="/logout">
+                        <button type="submit" class="logout-link">Log&nbsp;uit </button>
+                    </form>
+                </div>
+            </div>
         </div>
 
     </header>
@@ -31,7 +37,7 @@
     <aside id="sidebar">
         <div class="sidebar-title">
             <div class="sidebar-brand">
-                <span class="material-icons-outlined">inventory</span> NICU Benchmarking
+                <span class="material-icons-outlined">inventory</span> N3 Benchmarking
             </div>
             <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
         </div>
@@ -77,5 +83,7 @@
 
 <script src="js/dashboard2.js"></script>
 <script src="js/sidebar.js"></script>
+<script src = "js/logout.js"></script>
+
 </body>
 </html>

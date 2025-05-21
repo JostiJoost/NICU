@@ -1,3 +1,4 @@
+document.addEventListener('DOMContentLoaded', function (){
 var sidebarOpen = false;
 var sidebar = document.getElementById("sidebar");
 
@@ -31,8 +32,8 @@ function closeSidebar() {
                 <span class="material-icons-outlined">dashboard</span> Dashboard
             </li> 
             <ul class="sidebar-sublist"> 
-                <li><span class="material-icons-outlined">fiber_manual_record</span><a href="dashboard.html">Per Centrum</a></li>
-                <li><span class="material-icons-outlined">fiber_manual_record</span><a href="dashboard2.html">Per Studie</a></li>
+                <li><span class="material-icons-outlined" >fiber_manual_record</span><a href="dashboard.html">Per Centrum</a></li>
+                <li><span class="material-icons-outlined" >fiber_manual_record</span><a href="dashboard2.html">Per Studie</a></li>
             </ul>`;
 
         if (role === 'ROLE_ADMIN') {
@@ -41,7 +42,7 @@ function closeSidebar() {
                     <span class="material-icons-outlined">fact_check</span> <a href="invulPagStudie.html">Studie invoer</a>
                 </li>
                 <li class="sidebar-list-item">
-                    <span class="material-icons-outlined">inventory_2</span> <a href="protocol.html">Protocolbeheer</a>
+                    <span class="material-icons-outlined">inventory_2</span> <a href="protocol.html">Protocol invoer</a>
                 </li>
                 <li class="sidebar-list-item">
                     <span class="material-icons-outlined">add</span> <a href="admin.html">Nieuwe studie</a>
@@ -78,4 +79,5 @@ profielIcoon.addEventListener('click', function (event){
 
 document.addEventListener('click', function(event){
     if(!dropdown.contains(event.target) ){dropdown.style.display = 'none';}
+});
 });

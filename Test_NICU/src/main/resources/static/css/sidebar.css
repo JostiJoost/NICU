@@ -1,0 +1,133 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+#sidebar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 260px;
+    padding: 20px 0;
+    background-color: white;
+    box-shadow: 0 5px 1px rgba(0,0,0,0.1);
+    z-index: 100;
+    transition: left 0.3s ease;
+}
+
+.sidebar-responsive{
+    left: 0;
+    box-shadow: 0 0 10px blue;
+}
+
+.sidebar-list{
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 20px 16px;
+    list-style: none;
+}
+
+.sidebar-list li{
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+    padding: 10px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background;
+}
+
+.sidebar-list li:hover{
+    background-color: dodgerblue;
+}
+
+.sidebar-list li .material-icons-outlined{
+    margin-right: 10px;
+    font-size: 18px;
+    color: grey;
+}
+.sidebar-list li span:last-child{
+    font-size: 15px;
+    color: grey;
+    font-weight: 400;
+}
+
+.sidebar-list li:hover .material-icons-outlined,
+.sidebar-list li:hover span:last-child{
+    color: white;
+}
+
+.sidebar-list li a{
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 6px;
+    color: grey;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all;
+}
+
+.sidebar-list li a:hover{
+    background-color: dodgerblue;
+    color: white;
+}
+
+.sidebar-list li a:hover .material-icons-outlined{
+    color: white;
+    text-decoration: underline;
+}
+
+.sidebar-title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.sidebar-title > span {
+    display: inline;
+    cursor: pointer;
+}
+
+.sidebar-sublist{
+    list-style-type: none;
+    padding-left: 30px;
+    margin-top: -4px;
+}
+
+.sidebar-sublist li{
+    display: flex;
+    align-items: center;
+    padding: 6px 0;
+}
+
+.sidebar-sublist li a{
+    color: grey;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.sidebar-sublist li:hover a{
+    color: white;
+    text-decoration: underline;
+}
+
+.sidebar-sublist li span.material-icons-outlined{
+    font-size: 8px;
+    margin-right: 8px;
+    color: grey;
+}
+

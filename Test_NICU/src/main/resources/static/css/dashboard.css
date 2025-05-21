@@ -63,98 +63,61 @@ body {
 }
 
 
-/* ----------- SIDEBAR ---------- */
-#sidebar {
-    grid-area: sidebar;
-    height: 100%;
-    background-color: #21232d;
-    color: #9799ab;
-    overflow-y: auto;
-    transition: all 0.5s;
-    -webkit-transition: all 0.5s;
-}
+/* ----------- Profiel icoon ---------- */
 
-.sidebar-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 20px 20px 20px;
-    margin-bottom: 30px;
-}
 
-.sidebar-title > span {
-    display: none;
-}
 
-.sidebar-brand {
-    margin-top: 15px;
-    font-size: 20px;
-    font-weight: 700;
-}
-
-.sidebar-list {
-    padding: 0;
-    margin-top: 15px;
-    list-style-type: none;
-}
-
-.sidebar-list-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 20px 20px 20px 20px;
-    color: #9799ab;
-}
-
-.sidebar-list-item:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    cursor: pointer;
-}
-
-.sidebar-responsive {
-    display: inline !important;
-    position: absolute;
-    z-index: 9999;
-}
-
-.sidebar-list-item a {
-    color: #9799ab;
-    text-decoration: none;
+.profile-container{
+    position: relative;
     display: inline-block;
-    width: 100%;
-    padding: 5px 10px;
-}
-
-.sidebar-list-item a:hover {
-    color: #ffffff;
-}
-
-.sidebar-sublist {
-    list-style-type: none;
-    padding-left: 20px;
-}
-
-.sidebar-sublist li {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    color: #9799ab;
-}
-
-.sidebar-sublist li a {
-    color: #9799ab;
-    text-decoration: none;
-    display: block;
-    width: 100%;
-}
-
-.sidebar-sublist li:hover {
-    background-color: rgba(255, 255, 255, 0.1);
     cursor: pointer;
 }
 
-.sidebar-sublist li a:hover {
-    color: #ffffff;
+.dropdown-menu{
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px whitesmoke;
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.dropdown-menu.show{
+    display: block;
+}
+
+.logout-menu button:hover {
+    text-decoration: underline;
+}
+
+#logoutMenu button{
+    display:block;
+    width: 100%;
+    padding: 8px 12px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+}
+
+#logoutMenu button:hover{
+    background-color: aliceblue;
+}
+
+.logout-link{
+    display: inline;
+    font-weight: bold;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+.logout-link{
+    text-decoration: underline;
 }
 
 

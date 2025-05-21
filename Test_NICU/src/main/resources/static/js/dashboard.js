@@ -334,6 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch(error => {
             console.error("Fout bij ophalen studies: ", error);
         });
+
 });
 
 async function herlaadDashboard() {
@@ -424,5 +425,5 @@ async function herlaadDashboard() {
 }
 
 
-
 console.log("Script werkt! ");
+
