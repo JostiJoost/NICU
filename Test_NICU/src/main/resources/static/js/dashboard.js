@@ -185,6 +185,61 @@ async function laadDataStudie(naamStudie, naamCentrum) {
     }
 }
 
+async function laadGroupedBar() {
+    const response = await fetch(`http://localhost:8080/api/studie/studies`);
+    if (!response.ok) throw new Error("Fout bij ophalen...")
+    const studies = await response.json();
+
+    const response2 = await fetch(`http://localhost:8080/api/studie/doorlooptijden`)
+    if (!response2.ok) throw new Error("Fout bij ophalen...")
+    const data = await response2.json()
+
+    const series = studies.map(studie => {
+        return {
+            name: studie,
+            data: centra.map(centrum => {
+                const item = data.find(d => d.centrum === centrum && d.studie === studie);
+            console.log("Studie:", studie, "Centrum:", centrum);
+            console.log("Gevonden item:", item);
+            if (!item) return 0;
+            return verschilDatum(item.startdatum, item.initiatiedatum);
+            })
+
+        }
+    })
+
+    var groupedBarChart = new ApexCharts(document.querySelector("#grouped-bar-chart"), {
+        series: series,
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                dataLabels: {
+                    position: 'top',
+                }
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        xaxis: {
+            categories: centra
+        },
+        colors: kleurenGenereren(studies.length),
+        legend: {
+            position: 'top',
+            horizontalAlign: 'left',
+            offsetX: 40
+        }
+    });
+    groupedBarChart.render()
+}
+
+
+
 const centra = ["AUMC", "EMCR", "ISALA", "LUMC", "MMC", "MUMC", "RUMC", "UMCG", "WKZ"];
 let geselecteerdeStudie = null;
 
@@ -214,96 +269,6 @@ async function laadInclusionChart(naamStudie) {
         console.log(error.message);
     }
 }
-
-
-// laadInclusionChart(geselecteerdeStudie).then((data) => {
-//     const centra = [...new Set(data.map(item => item.naamCentrum))];
-//
-//     const series = centra.map(centrum => {
-//         return {
-//             name: centrum,
-//             data: data
-//                 .filter(item => item.naamCentrum === centrum)
-//                 .map(item => ({
-//                     x: item.datum,
-//                     y: item.geincludeerd
-//                 }))
-//         };
-//     });
-//
-//     var lineChartOptions = {
-//         series: series,
-//         chart: {
-//             height: 350,
-//             type: 'line',
-//             toolbar: {
-//                 show: false,
-//             },
-//         },
-//         colors: kleurenGenereren(centra.length),
-//         dataLabels: {
-//             enabled: false,
-//         },
-//         stroke: {
-//             curve: 'smooth'
-//         },
-//         xaxis: {
-//             type: 'datetime'
-//         },
-//         tooltip: {
-//             shared: true,
-//             intersect: false,
-//         }
-//     };
-//
-//     var lineChart = new ApexCharts(document.querySelector("#line-chart"), lineChartOptions);
-//     lineChart.render();
-// });
-
-// laadInclusionChart(geselecteerdeStudie).then((data) => {
-//     const centra = [...new Set(data.map(item => item.naamCentrum))];
-//
-//     const series = centra.map(centrum => {
-//         const centrumData = data.filter(item => item.naamCentrum === centrum);
-//
-//         const eersteDatum = new Date(
-//             Math.min(...centrumData.map(item => new Date (item.datum)))
-//         );
-//
-//         return {
-//             name: centrum,
-//             data: centrumData.map(item => ({
-//                     x: verschilDatum(eersteDatum, new Date(item.datum)),
-//                     y: item.geincludeerd
-//                 }))
-//         };
-//     });
-//
-//     var lineChartOptions = {
-//         series: series,
-//         chart: {
-//             height: 350,
-//             type: 'line',
-//             toolbar: {
-//                 show: false,
-//             },
-//         },
-//         colors: kleurenGenereren(centra.length),
-//         dataLabels: {
-//             enabled: false,
-//         },
-//         stroke: {
-//             curve: 'smooth'
-//         },
-//         tooltip: {
-//             shared: true,
-//             intersect: false,
-//         }
-//     };
-//
-//     var lineChart = new ApexCharts(document.querySelector("#line-chart-2"), lineChartOptions);
-//     lineChart.render();
-// });
 
 
 function populateStudieDropdown(studies) {
@@ -336,6 +301,57 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 });
+
+function totaleDoorlooptijdBerekenen(data) {
+    const datums = [...new Set(data.map(item => item.datum))]
+        .sort((a, b) => new Date(a) - new Date(b));
+    const centraData = [...new Set(data.map(item => item.naamCentrum))];
+
+    const dataPerCentrum = {};
+    for (const centrum of centraData) {
+        dataPerCentrum[centrum] = data
+            .filter(item => item.naamCentrum === centrum)
+            .sort((a, b) => new Date(a.datum) - new Date(b.datum));
+    }
+
+    const laatsteWaarde = {};
+    const serie = [];
+
+    for (const datum of datums) {
+        for (const centrum of centraData) {
+            const centrumData = dataPerCentrum[centrum];
+            const entryOpDatum = centrumData.find(d => d.datum === datum);
+            if (entryOpDatum) {
+                laatsteWaarde[centrum] = entryOpDatum.geincludeerd;
+            }
+        }
+
+        const totaal = Object.values(laatsteWaarde).reduce((a, b) => a + b, 0);
+        serie.push({ x: datum, y: totaal});
+    }
+    return serie;
+}
+
+async function laadInitiatiedatum(studie) {
+    try {
+        const response = await fetch(`http://localhost:8080/api/studie/initiatiedatum/${studie}`);
+        if (!response.ok) throw new Error("Fout bij ophalen data...")
+        let deelnemendeCentra = 0;
+        const serie = [];
+        const data = await response.json();
+        for (const datum of data) {
+            deelnemendeCentra++;
+            serie.push({ x: datum, y: deelnemendeCentra});
+        }
+
+        return serie;
+    } catch (error) {
+        alert("Fout bij ophalen: " + error.message);
+        console.log(error.message);
+    }
+}
+
+laadGroupedBar();
 
 async function herlaadDashboard() {
     if(!geselecteerdeStudie) return;
@@ -422,6 +438,54 @@ async function herlaadDashboard() {
         });
         lineChartRelatief.render();
     });
+
+    laadInclusionChart(geselecteerdeStudie).then(async (data) => {
+        const serie = totaleDoorlooptijdBerekenen(data);
+        const serieDeelnemend = await laadInitiatiedatum(geselecteerdeStudie);
+        console.log("serieDeelnemend: ", serieDeelnemend);
+        const totaleDoorlooptijd = new ApexCharts(document.querySelector("#totale-doorlooptijd"), {
+            series: [
+                {
+                    name: 'totale inclusie',
+                    type: 'line',
+                    data: serie,
+                    yAxisIndex: 0
+                },
+                {
+                    name: 'Aantal deelnemende centra',
+                    type: 'line',
+                    data: serieDeelnemend,
+                    yAxisIndex: 1
+                },
+            ],
+            chart: {
+                height: 350,
+                type: 'line',
+                zoom: {enabled: true},
+                toolbar: {show: false}
+            },
+            dataLabels: {enabled: false},
+            stroke: {
+                curve: 'smooth'
+            },
+            xaxis: {type: 'datetime'},
+            yaxis: [
+                {
+                    title: {text: 'inclusies'},
+                    opposite: false
+                },
+                {
+                    title: {text: 'Aantal centra'},
+                    opposite: true
+                },
+            ],
+            tooltip: {shared: true, intersect: false}
+        });
+        totaleDoorlooptijd.render();
+
+    })
+
+
 }
 
 

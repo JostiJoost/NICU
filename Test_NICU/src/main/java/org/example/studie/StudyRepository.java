@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -20,4 +21,10 @@ public interface StudyRepository extends JpaRepository<Study, StudyId>{
 
     @Query("SELECT DISTINCT i.studie FROM Study i WHERE i.centrum = :naam_centrum")
     List<String> findAllDistinctStudiesFromCentrum(@Param("naam_centrum") String centrum);
+
+    @Query("SELECT new org.example.studie.StudyDTO(i.centrum, i.studie, i.startdatum, i.initiatiedatum) FROM Study i")
+    List<StudyDTO> findDoorlooptijd();
+
+    @Query("SELECT i.initiatiedatum FROM Study i WHERE i.studie = :naam_studie ORDER BY i.initiatiedatum")
+    List<LocalDate> findInitiatiedatum(@Param("naam_studie") String studie);
 }

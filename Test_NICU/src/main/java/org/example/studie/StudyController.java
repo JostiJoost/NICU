@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.List;
 
@@ -61,5 +62,16 @@ public class StudyController {
     public List<String> krijgStudiesVanCentrum(
             @PathVariable String centrum) {
         return studyRepository.findAllDistinctStudiesFromCentrum(centrum);
+    }
+
+    @GetMapping("/doorlooptijden")
+    public List<StudyDTO> krijgAlleStudies() {
+        return studyRepository.findDoorlooptijd();
+    }
+
+    @GetMapping("/initiatiedatum/{studie}")
+    public List<LocalDate> krijgInitiatiedatums(
+            @PathVariable String studie) {
+        return studyRepository.findInitiatiedatum(studie);
     }
 }
