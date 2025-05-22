@@ -1,5 +1,7 @@
 package org.example.user;
 
+import org.example.studie.Study;
+import org.example.studie.StudyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ public class NewUserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private StudyRepository studyRepository;
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserCreationDTO dto){
@@ -41,6 +45,14 @@ public class NewUserController {
         user.setDoorlooptijdMetc(dto.doorlooptijdMetc);
         user.setDoorlooptijdLaboratorium(dto.doorlooptijdLaboratorium);
         userRepository.save(user);
+
+        List<String> centra = studyRepository.findAllDistinctCentra();
+        for(String centrumNaam: centra){
+            Study nieuweStudie = new Study();
+            nieuweStudie.setStudie(dto.studieNaam);
+            nieuweStudie.setCentrum(centrumNaam);
+            studyRepository.save(nieuweStudie);
+        }
 
         return ResponseEntity.ok(new CreatedUserResponse(username, password));
     }
