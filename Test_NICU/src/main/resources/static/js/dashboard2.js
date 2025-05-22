@@ -39,6 +39,153 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 });
 
+async function laadGroupedBar() {
+    const response = await fetch(`http://localhost:8080/api/studie/centra`);
+    if (!response.ok) throw new Error("Fout bij ophalen...");
+    const centra = await response.json();
+
+    const response2 = await fetch(`http://localhost:8080/api/studie/studies`);
+    if (!response2.ok) throw new Error("Fout bij ophalen...");
+    const studies = await response2.json();
+
+    const response3 = await fetch(`http://localhost:8080/api/studie/doorlooptijden`);
+    if (!response3.ok) throw new Error("Fout bij ophalen...");
+    const data = await response3.json();
+
+    const series = centra.map(centrum => {
+        return {
+            name: centrum,
+            data: studies.map(studie => {
+                const item = data.find(d => d.studie === studie && d.centrum === centrum);
+                if (!item) return 0;
+                return verschilDatum(item.startdatum, item.initiatiedatum);
+            })
+        }
+    })
+    console.log("Series: ", series);
+
+    const groupedBarChart = {
+        series: series,
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                dataLabels: {
+                    position: 'top'
+                }
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        xaxis: {
+            categories: studies
+        },
+        colors: kleurenGenereren(centra.length),
+        legend: {
+            position: 'top',
+            horizontalAlign: 'left',
+            offsetX: 40
+        }
+    };
+    groupedBarChartInstance = new ApexCharts(document.querySelector("#grouped-bar-chart"), groupedBarChart);
+    groupedBarChartInstance.render();
+}
+
+laadGroupedBar();
+
+function verzamelDoorlooptijdSoort(data, soort) {
+    const start = `start${soort}`;
+    const eind = `eind${soort}`;
+    const groepen = {};
+
+    data.forEach(item => {
+        const studie = item.studie;
+        const verschil = verschilDatum(item[start], item[eind]);
+
+        if (verschil !== 0) {
+            if (!groepen[studie]) {
+                groepen[studie] = [];
+            }
+            groepen[studie].push(verschil);
+        }
+    });
+    return Object.entries(groepen)
+        .sort(([A], [B]) => A.localeCompare(B))
+        .map(([studie, waardes]) => ({
+            studie, gemiddelde: waardes.reduce((a, b) => a + b, 0) / waardes.length
+        }));
+}
+
+function chartRenderen(id, data, studieData = null, kleur, soort) {
+    const series =[{
+        data: data.map(d => Math.round(d.gemiddelde * 10) / 10),
+        name: `Gemmiddelde doorlooptijd ${soort}`
+    }];
+
+    if (studieData) {
+        series.push({
+            data: studieData,
+            name: `Doorlooptijd ${soort} ${geselecteerdCentrum}`
+        });
+        document.querySelector(`#${id}`).innerHTML = "";
+    }
+
+    const xas = data.map(d => d.studie);
+
+    const options = {
+        series: series,
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false
+            }
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'left',
+            offsetX: 40
+        },
+        xaxis: {
+            categories: xas
+        },
+        colors: studieData ? ["#69e2e7", kleur] : [kleur]
+    }
+    chartInstance = new ApexCharts(document.querySelector(`#${id}`), options);
+    chartInstance.render();
+}
+
+async function laadDoorlooptijdGrafieken(toonStudieData = false , studies) {
+    const response = await fetch(`http://localhost:8080/api/studie/doorlooptijden`);
+    if (!response.ok) throw new Error("Fout bij ophalen...");
+
+    const data = await response.json();
+    const studieData = toonStudieData ? await verzamelDoorlooptijden(studies) : null;
+
+    const soorten = ['Juridisch', 'Apotheek', 'METC', 'Lab'];
+    const kleuren = {
+        Juridisch: "#008FFB",
+        Apotheek: "#00E396",
+        METC: "#FEB019",
+        Lab: "#FF4560"
+    };
+    soorten.forEach(soort => {
+        const gemiddelden = verzamelDoorlooptijdSoort(data, soort);
+        const kleur = kleuren[soort];
+        const id = toonStudieData ? `chart-${soort}` : `gem-chart-${soort}`;
+        chartRenderen(id, gemiddelden, studieData ? studieData[soort.toLowerCase()] : null, kleur, soort);
+    })
+}
+
+laadDoorlooptijdGrafieken(false, "");
+
+
 async function laadStudies(naamCentrum) {
     try {
         const respons = await fetch(`http://localhost:8080/api/studie/${naamCentrum}/studies`)
@@ -52,10 +199,10 @@ async function laadStudies(naamCentrum) {
 }
 
 function kaartenMaken(studies) {
-    const container = document.getElementById("study-cards");
-    if (!container) return;
+    const id = document.getElementById("study-cards");
+    if (!id) return;
 
-    container.innerHTML = "";
+    id.innerHTML = "";
 
     studies.forEach(studie => {
         const card = document.createElement("card");
@@ -68,7 +215,7 @@ function kaartenMaken(studies) {
             <span id="aantal-${studie}" class="text-primary font-weight-bold">Laden...</span>
     `;
 
-    container.appendChild(card);
+    id.appendChild(card);
     })
 }
 
@@ -300,6 +447,8 @@ async function herlaadDashboard() {
             tooltip: { shared: true, intersect: false }
         });
         lineChartRelatief.render();
+
+        laadDoorlooptijdGrafieken(true, studies);
     });
 
 

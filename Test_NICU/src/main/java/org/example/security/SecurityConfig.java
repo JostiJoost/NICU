@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/invulPagStudie.html").hasAnyRole("STUDIE", "ADMIN")
                         .requestMatchers("/dashboard.html").hasAnyRole("ALGEMEEN", "STUDIE", "ADMIN", "PROTOCOLMAKER")
                         .requestMatchers("/dashboard2.html").hasAnyRole("ALGEMEEN", "STUDIE", "ADMIN", "PROTOCOLMAKER")
+                        .requestMatchers("/dashboard3.html").hasAnyRole("ALGEMEEN", "STUDIE", "ADMIN", "PROTOCOLMAKER")
                         .requestMatchers("/protocol.html").hasAnyRole("PROTOCOLMAKER", "ADMIN")
                         .requestMatchers("/admin.html").hasRole("ADMIN")
                         .requestMatchers("/wachtwoordbeheer").hasRole("ADMIN")
