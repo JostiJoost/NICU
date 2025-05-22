@@ -122,3 +122,6 @@ body.popup-open{
     user-select: all;
 }
 
+.user-row p{
+    margin-right: 3rem;
+}

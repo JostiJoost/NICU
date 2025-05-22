@@ -19,6 +19,33 @@ document.addEventListener('DOMContentLoaded', async function(){
                 optie.textContent = s;
                 studieSelectie.appendChild(optie);
             }
+            studieSelectie.addEventListener("change", async function () {
+                const gekozenStudie = studieSelectie.value;
+                if (!gekozenStudie) return;
+
+                try {
+                    const response = await fetch(`/api/studie-fasen?studie=${encodeURIComponent(gekozenStudie)}`);
+                    if (!response.ok) throw new Error("Fout bij ophalen fasen");
+
+                    const { juridisch, apotheek, metc, laboratorium } = await response.json();
+
+                    document.getElementById('juridischeFase').style.display = juridisch ? 'block' : 'none';
+                    document.getElementById('apotheekFase').style.display = apotheek ? 'block' : 'none';
+                    document.getElementById('metcFase').style.display = metc ? 'block' : 'none';
+                    document.getElementById('laboratoriumFase').style.display = laboratorium ? 'block' : 'none';
+
+
+                    if (!juridisch) document.getElementById('juridischeFase').style.display = 'none';
+                    if (!apotheek) document.getElementById('apotheekFase').style.display = 'none';
+                    if (!metc) document.getElementById('metcFase').style.display = 'none';
+                    if (!laboratorium) document.getElementById('laboratoriumFase').style.display = 'none';
+
+                } catch (err) {
+                    console.error("Fout bij ophalen fasen:", err);
+                    alert("Fout bij ophalen van de fasen voor deze studie.");
+                }
+            });
+
         }else if(role === 'ROLE_STUDIE'){
             document.getElementById('studieSelectie').style.display = 'none';
             document.getElementById('naamStudieLabel').style.display = 'none';
@@ -61,7 +88,7 @@ document.getElementById('studieForm').addEventListener('submit', async function(
         reden_weigering : document.getElementById('reden').value
     }
 
-    const datumVelden = ['startdatum_studie','initiatiedatum', 'juridisch_start', 'juridisch_eind', 'apotheek_start', 'apotheek_eind', 'metc_start', 'metc_eind', 'lab_start', 'lab_eind'];
+    const datumVelden = ['startdatum','initiatiedatum', 'juridisch_start', 'juridisch_eind', 'apotheek_start', 'apotheek_eind', 'metc_start', 'metc_eind', 'lab_start', 'lab_eind'];
     for(const veld of datumVelden){
         if(!formData[veld]){
             formData[veld] = null;

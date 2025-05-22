@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -81,6 +82,24 @@ public class UserController {
             response.put("laboratorium", gebruiker.getDoorlooptijdLaboratorium());
             return ResponseEntity.ok(response);
         } else {return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+    }
+
+    @GetMapping("/studie-fasen")
+    public ResponseEntity<?> getFasenVoorStudie(@RequestParam String studie){
+        Optional<User> user = userRepository.findByStudie(studie);
+
+        if(user.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Studie niet gevonden.");
+        }
+
+        Map<String, Boolean> fasen = new HashMap<>();
+        fasen.put("juridisch", user.get().getDoorlooptijdJuridisch());
+        fasen.put("apotheek", user.get().getDoorlooptijdApotheek());
+        fasen.put("metc", user.get().getDoorlooptijdMetc());
+        fasen.put("laboratorium", user.get().getDoorlooptijdLaboratorium());
+
+        return ResponseEntity.ok(fasen);
     }
 }
 

@@ -32,8 +32,8 @@ function closeSidebar() {
                 <span class="material-icons-outlined">dashboard</span> Dashboard
             </li> 
             <ul class="sidebar-sublist"> 
-                <li><span class="material-icons-outlined" >fiber_manual_record</span><a href="dashboard.html">Per Centrum</a></li>
-                <li><span class="material-icons-outlined" >fiber_manual_record</span><a href="dashboard2.html">Per Studie</a></li>
+                <li><span class="material-icons-outlined" >fiber_manual_record</span><a href="dashboard.html">Per Studie</a></li>
+                <li><span class="material-icons-outlined" >fiber_manual_record</span><a href="dashboard2.html">Per Centrum</a></li>
             </ul>`;
 
         if (role === 'ROLE_ADMIN') {
