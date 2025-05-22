@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wachtwoordbeheer</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+<div class ="grid-container">
+    <header class="header">
+        <div class="menu-icon" onclick="openSidebar()">
+            <span class="material-icons-outlined">menu</span>
+        </div>
+        <div class="header-left">
+        </div>
+        <div class="header-right">
+            <div class="profile-container">
+                <span id="profielIcoon" class="material-icons-outlined">person</span>
+                <div id="logoutMenu" class="dropdown-menu">
+                    <a href="/logout" class="logout-link" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Log uit</a>
+                    <form id="logoutForm", method="POST" action="/logout" style ="display: none;"></form>
+                </div>
+            </div>
+        </div>
+
+    </header>
+    <aside id="sidebar">
+        <div class="sidebar-title">
+            <div class="sidebar-brand">
+                <span class="material-icons-outlined">inventory</span> N3 Benchmarking
+            </div>
+            <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
+        </div>
+        <ul class ="sidebar-list" id="sidebarMenu"></ul>
+    </aside>
+
+    <main class="main-container">
+        <div id="userList" class="card">
+            <h1>Wachtwoordbeheer</h1>
+        </div>
+    </main>
+</div>
+
+<div id="resetPassword" class="popup" style="display: none;">
+    <div class="popup-content">
+        <h2>Reset wachtwoord</h2>
+        <p id="resetPasswordUsername"></p>
+        <p>
+            <strong>Nieuw wachtwoord: </strong>
+            <span id="generatedPassword"></span> <br>
+            <button onclick="closePopup()">Sluiten</button>
+        </p>
+    </div>
+</div>
+
+<script src="js/sidebar.js"></script>
+<script src="js/wachtwoordbeheer.js"></script>
+<script src="js/logout.js"></script>
+</body>
+</html>

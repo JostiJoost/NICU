@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/dashboard2.html").hasAnyRole("ALGEMEEN", "STUDIE", "ADMIN", "PROTOCOLMAKER")
                         .requestMatchers("/protocol.html").hasAnyRole("PROTOCOLMAKER", "ADMIN")
                         .requestMatchers("/admin.html").hasRole("ADMIN")
+                        .requestMatchers("/wachtwoordbeheer").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login.html")

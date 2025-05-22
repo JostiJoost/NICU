@@ -6,8 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/users")
@@ -44,6 +43,41 @@ public class NewUserController {
         userRepository.save(user);
 
         return ResponseEntity.ok(new CreatedUserResponse(username, password));
+    }
+
+    @PutMapping("/reset-password/{username}")
+    public ResponseEntity<?> resetPassword(@PathVariable String username){
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if(optionalUser.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gebruiker niet gevonden.");
+        }
+
+        User user = optionalUser.get();
+        String newPassword = generateRandomPassword(8);
+        String hashedPassword = passwordEncoder.encode(newPassword);
+
+        user.setPassword(hashedPassword);
+        userRepository.save(user);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("username", user.getUsername());
+        response.put("newPassword", newPassword);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllUsers() {
+        List<Map<String, String>> users = userRepository.findAll().stream()
+                .map(user -> {
+                    Map<String, String> u = new HashMap<>();
+                    u.put("username", user.getUsername());
+                    u.put("role", user.getRole());
+                    return u;
+                })
+                .toList();
+
+        return ResponseEntity.ok(users);
     }
 
     private String generateRandomPassword(int lengte){

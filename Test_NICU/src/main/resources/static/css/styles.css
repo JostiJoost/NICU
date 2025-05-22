@@ -113,3 +113,12 @@ body.popup-open{
     box-shadow: 0 0 15px rgba(0,0,0,0.3);
     text-align: center;
 }
+
+#generatedPassword{
+    font-family: monospace;
+    font-weight: bold;
+    color: #333;
+    word-break: break-word;
+    user-select: all;
+}
+
