@@ -1,20 +1,61 @@
 package org.example.studie;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
 public class StudyDTO {
+    @Getter
+    @Setter
     private String centrum;
+    @Getter
+    @Setter
     private String studie;
+    @Getter
+    @Setter
     private LocalDate startdatum;
+    @Getter
+    @Setter
     private LocalDate startJuridisch;
+    @Getter
+    @Setter
     private LocalDate eindJuridisch;
+    @Getter
+    @Setter
     private LocalDate startApotheek;
+    @Getter
+    @Setter
     private LocalDate eindApotheek;
+    @Getter
+    @Setter
     private LocalDate startMETC;
+    @Getter
+    @Setter
     private LocalDate eindMETC;
+    @Getter
+    @Setter
     private LocalDate startLab;
+    @Getter
+    @Setter
     private LocalDate eindLab;
+    @Getter
+    @Setter
     private LocalDate initiatiedatum;
+    @Getter
+    @Setter
+    private Integer geincludeerde_kinderen;
+    @Getter
+    @Setter
+    private LocalDate inclusie_datum;
+    @Getter
+    @Setter
+    private Integer opgenomen_kinderen;
+    @Getter
+    @Setter
+    private String reden_weigering;
+
+    public StudyDTO(){}
 
     public StudyDTO(String centrum, String studie, LocalDate startdatum,
                     LocalDate startJuridisch, LocalDate eindJuridisch, LocalDate startApotheek,
@@ -31,102 +72,6 @@ public class StudyDTO {
         this.eindMETC = eindMETC;
         this.startLab = startLab;
         this.eindLab = eindLab;
-        this.initiatiedatum = initiatiedatum;
-    }
-
-    public LocalDate getStartJuridisch() {
-        return startJuridisch;
-    }
-
-    public void setStartJuridisch(LocalDate startJuridisch) {
-        this.startJuridisch = startJuridisch;
-    }
-
-    public LocalDate getEindJuridisch() {
-        return eindJuridisch;
-    }
-
-    public void setEindJuridisch(LocalDate eindJuridisch) {
-        this.eindJuridisch = eindJuridisch;
-    }
-
-    public LocalDate getStartApotheek() {
-        return startApotheek;
-    }
-
-    public void setStartApotheek(LocalDate startApotheek) {
-        this.startApotheek = startApotheek;
-    }
-
-    public LocalDate getEindApotheek() {
-        return eindApotheek;
-    }
-
-    public void setEindApotheek(LocalDate eindApotheek) {
-        this.eindApotheek = eindApotheek;
-    }
-
-    public LocalDate getStartMETC() {
-        return startMETC;
-    }
-
-    public void setStartMETC(LocalDate startMETC) {
-        this.startMETC = startMETC;
-    }
-
-    public LocalDate getEindMETC() {
-        return eindMETC;
-    }
-
-    public void setEindMETC(LocalDate eindMETC) {
-        this.eindMETC = eindMETC;
-    }
-
-    public LocalDate getStartLab() {
-        return startLab;
-    }
-
-    public void setStartLab(LocalDate startLab) {
-        this.startLab = startLab;
-    }
-
-    public LocalDate getEindLab() {
-        return eindLab;
-    }
-
-    public void setEindLab(LocalDate eindLab) {
-        this.eindLab = eindLab;
-    }
-
-    public String getCentrum() {
-        return centrum;
-    }
-
-    public void setCentrum(String centrum) {
-        this.centrum = centrum;
-    }
-
-    public String getStudie() {
-        return studie;
-    }
-
-    public void setStudie(String studie) {
-        this.studie = studie;
-    }
-
-    public LocalDate getStartdatum() {
-        return startdatum;
-    }
-
-    public void setStartdatum(LocalDate startdatum) {
-        this.startdatum = startdatum;
-    }
-
-    public LocalDate getInitiatiedatum() {
-        return initiatiedatum;
-    }
-
-    public void setInitiatiedatum(LocalDate initiatiedatum) {
         this.initiatiedatum = initiatiedatum;
     }
 }

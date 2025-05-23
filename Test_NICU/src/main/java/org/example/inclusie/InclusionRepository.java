@@ -5,6 +5,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface InclusionRepository extends JpaRepository<Inclusion, InclusionId> {
@@ -23,4 +24,7 @@ public interface InclusionRepository extends JpaRepository<Inclusion, InclusionI
             "WHERE i.naam_centrum = :centrum " +
             "ORDER BY i.naam_studie, i.datum")
     List<InclusionDTO> findInclusionByCentrum(@Param("centrum") String centrum);
+
+    @Query("SELECT i FROM Inclusion i WHERE i.naam_studie = :studie AND i.naam_centrum = :centrum ORDER BY i.datum DESC")
+    List<Inclusion> findMostRecent(@Param("studie") String studie, @Param("centrum") String centrum);
 }

@@ -7,9 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface StudyRepository extends JpaRepository<Study, StudyId>{
+    List<Study> findByStudieIgnoreCaseAndCentrumIgnoreCase(String studie, String centrum);
+
     @Query("SELECT i FROM Study i WHERE i.studie = :naam_studie AND i.centrum = :naam_centrum")
     List<Study> findAllByStudyAndCenter(@Param("naam_studie") String studie, @Param("naam_centrum") String centrum);
 

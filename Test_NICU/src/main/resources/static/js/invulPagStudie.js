@@ -1,12 +1,13 @@
 document.addEventListener('DOMContentLoaded', async function(){
     const studieSelectie = document.getElementById('studieSelectie');
+    const centrumSelectie = document.getElementById('centrumSelectie');
     try{
         const response = await fetch('/api/user');
         if(!response.ok) throw new Error("Kon gebruikersinformatie niet ophalen");
-
         const gebruiker = await response.json();
         const role = gebruiker.role;
-        const username = gebruiker.username;
+        window.ingelogdeStudie = gebruiker.studie;
+        console.log("Ingelogde studie: ", gebruiker.studie);
 
         if(role === 'ROLE_ADMIN'){
             document.getElementById('studieSelectie').style.display = 'block';
@@ -19,32 +20,8 @@ document.addEventListener('DOMContentLoaded', async function(){
                 optie.textContent = s;
                 studieSelectie.appendChild(optie);
             }
-            studieSelectie.addEventListener("change", async function () {
-                const gekozenStudie = studieSelectie.value;
-                if (!gekozenStudie) return;
-
-                try {
-                    const response = await fetch(`/api/studie-fasen?studie=${encodeURIComponent(gekozenStudie)}`);
-                    if (!response.ok) throw new Error("Fout bij ophalen fasen");
-
-                    const { juridisch, apotheek, metc, laboratorium } = await response.json();
-
-                    document.getElementById('juridischeFase').style.display = juridisch ? 'block' : 'none';
-                    document.getElementById('apotheekFase').style.display = apotheek ? 'block' : 'none';
-                    document.getElementById('metcFase').style.display = metc ? 'block' : 'none';
-                    document.getElementById('laboratoriumFase').style.display = laboratorium ? 'block' : 'none';
-
-
-                    if (!juridisch) document.getElementById('juridischeFase').style.display = 'none';
-                    if (!apotheek) document.getElementById('apotheekFase').style.display = 'none';
-                    if (!metc) document.getElementById('metcFase').style.display = 'none';
-                    if (!laboratorium) document.getElementById('laboratoriumFase').style.display = 'none';
-
-                } catch (err) {
-                    console.error("Fout bij ophalen fasen:", err);
-                    alert("Fout bij ophalen van de fasen voor deze studie.");
-                }
-            });
+            studieSelectie.addEventListener("change", updateFormVelden);
+            centrumSelectie.addEventListener("change", updateFormVelden);
 
         }else if(role === 'ROLE_STUDIE'){
             document.getElementById('studieSelectie').style.display = 'none';
@@ -54,25 +31,88 @@ document.addEventListener('DOMContentLoaded', async function(){
             const studieResultaten = await fetch('/api/user/studienaam');
             if(!studieResultaten.ok) throw new Error("Kon studienaamniet ophalen.")
             const{juridisch, apotheek, metc, laboratorium} = await studieResultaten.json();
-            if(!juridisch) document.getElementById('juridischeFase').style.display = 'none';
-            if(!apotheek) document.getElementById('apotheekFase').style.display = 'none';
-            if(!metc) document.getElementById('metcFase').style.display = 'none';
-            if(!laboratorium) document.getElementById('laboratoriumFase').style.display = 'none';
 
+            toggleFase('juridischeFase', juridisch);
+            toggleFase('apotheekFase', apotheek);
+            toggleFase('metcFase', metc);
+            toggleFase('laboratoriumFase', laboratorium);
+
+            centrumSelectie.addEventListener("change", function (){
+                updateFormVelden({studieNaam: gebruiker.studie, vanuitStudie: true});
+            });
 
         }
     }catch(err){
         console.error("Fout bij ophalen van studies: ", err);
         alert("Fout bij ophalen van studie gegevens: " + err.message);
     }
-})
+
+    function toggleFase(id, zichtbaar){
+        document.getElementById(id).style.display = zichtbaar ? 'block' : 'none';
+    }
+
+    async function updateFormVelden({studieNaam = null, vanuitStudie = false} ={}){
+        try{
+            if(!studieNaam) studieNaam = studieSelectie.value;
+            const centrumNaam = centrumSelectie.value;
+            if(!studieNaam || !centrumNaam) return;
+
+            console.log("Fetch voo studie:", studieNaam, "en centrum:", centrumNaam);
+            const fasenResponse = await fetch(`/api/studie-fasen?studie=${encodeURIComponent(studieNaam)}`);
+            if(!fasenResponse.ok){throw new Error("Fout bij ophalen fasen")};
+            const{juridisch, apotheek, metc, laboratorium} = await fasenResponse.json();
+
+            toggleFase('juridischeFase', juridisch);
+            toggleFase('apotheekFase', apotheek);
+            toggleFase('metcFase', metc);
+            toggleFase('laboratoriumFase', laboratorium);
+
+            const response = await fetch(`/api/studie/laatste/${studieNaam}/${centrumNaam}`);
+            if(response.ok){
+                const inclusieResp = await fetch(`/api/aantal_geincludeerd/aantal_geincludeerd/${studieNaam}/${centrumNaam}`);
+                if (inclusieResp.ok) {
+                    const inclusie = await inclusieResp.json();
+                    setFieldValue('geincludeerde_kinderen', inclusie.geincludeerd);
+                    setFieldValue('inclusie_datum', inclusie.datum);
+                }
+
+                const data = await response.json();
+                setFieldValue('start', data.startdatum);
+                setFieldValue('initiatie', data.initiatiedatum);
+                setFieldValue('juridisch_start', data.juridisch_start);
+                setFieldValue('juridisch_eind', data.juridisch_eind);
+                setFieldValue('apotheek_start', data.apotheek_start);
+                setFieldValue('apotheek_eind', data.apotheek_eind);
+                setFieldValue('metc_start', data.metc_start);
+                setFieldValue('metc_eind', data.metc_eind);
+                setFieldValue('lab_start', data.lab_start);
+                setFieldValue('lab_eind', data.lab_eind);
+                setFieldValue('inclusie_datum', data.inclusie_datum);
+                setFieldValue('opgenomen_kinderen', data.opgenomen_kinderen);
+                setFieldValue('reden', data.reden_weigering);
+            }
+
+        } catch(err){
+            console.error("Fout bij inladen formuliergegevens: ", err);
+            alert("Fout bij laden van bestaande studie gegevens.");
+        }
+    }
+
+    function setFieldValue(id, value){
+        if(value !== null && value !== undefined){
+            document.getElementById(id).value = value;
+        }
+    }
+});
 
 document.getElementById('studieForm').addEventListener('submit', async function(event) {
     event.preventDefault();
 
+    const inclusie_datum = document.getElementById('inclusie_datum').value;
+
     var formData = {
         centrum : document.getElementById('centrumSelectie').value,
-        studie : document.getElementById('studieSelectie').value,
+        studie : document.getElementById('studieSelectie').value || window.ingelogdeStudie,
         startdatum : document.getElementById('start').value,
         initiatiedatum : document.getElementById('initiatie').value,
         juridisch_start : document.getElementById('juridisch_start').value,
@@ -84,19 +124,30 @@ document.getElementById('studieForm').addEventListener('submit', async function(
         lab_start : document.getElementById('lab_start').value,
         lab_eind : document.getElementById('lab_eind').value,
         geincludeerde_kinderen : document.getElementById('geincludeerde_kinderen').value,
+        inclusie_datum : inclusie_datum,
         opgenomen_kinderen : document.getElementById('opgenomen_kinderen').value,
         reden_weigering : document.getElementById('reden').value
-    }
+    };
+    formData.geincludeerde_kinderen = parseInt(formData.geincludeerde_kinderen);
+    formData.opgenomen_kinderen = parseInt(formData.opgenomen_kinderen);
+    if(isNaN(formData.geincludeerde_kinderen)) formData.geincludeerde_kinderen = null;
+    if(isNaN(formData.opgenomen_kinderen)) formData.opgenomen_kinderen = null;
 
-    const datumVelden = ['startdatum','initiatiedatum', 'juridisch_start', 'juridisch_eind', 'apotheek_start', 'apotheek_eind', 'metc_start', 'metc_eind', 'lab_start', 'lab_eind'];
+    const datumVelden = ['startdatum','initiatiedatum', 'juridisch_start', 'juridisch_eind', 'apotheek_start', 'apotheek_eind', 'metc_start', 'metc_eind', 'lab_start', 'lab_eind', 'inclusie_datum'];
     for(const veld of datumVelden){
         if(!formData[veld]){
             formData[veld] = null;
         }
     }
 
-    formData.geincludeerde_kinderen = parseInt(formData.geincludeerde_kinderen);
-    formData.opgenomen_kinderen = parseInt(formData.opgenomen_kinderen);
+    const aantal = document.getElementById('geincludeerde_kinderen').value;
+    if(aantal && !inclusie_datum){
+        alert("Als je een aantal geïncludeerde kinderen invult, moet je ook de bijbehorende datum invullen.");
+        return;
+    } else if(!aantal && inclusie_datum){
+        alert("Als je een datum invult, moet je ook de bijbehorende aantal inclusies invullen.");
+        return;
+    }
 
     try {
         const response = await fetch('http://localhost:8080/api/studie', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(formData)});

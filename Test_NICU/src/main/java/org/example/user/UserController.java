@@ -24,20 +24,29 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<?> getUserInfo(Authentication authenticatie){
-        if(authenticatie == null){return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
-        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authenticatie.getPrincipal();
+    public ResponseEntity<UserDTO> getUserInfo(Authentication authenticatie) {
+        if (authenticatie == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
-        String role = user.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst()
-                .orElse("NONE");
+        org.springframework.security.core.userdetails.User springUser =
+                (org.springframework.security.core.userdetails.User) authenticatie.getPrincipal();
 
-        Map<String, String> result = new HashMap<>();
-        result.put("username", user.getUsername());
-        result.put("role", role);
-        return ResponseEntity.ok(result);
+        Optional<User> optionalUser = userRepository.findByUsername(springUser.getUsername());
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        User gebruiker = optionalUser.get();
+
+        UserDTO dto = new UserDTO();
+        dto.setUsername(gebruiker.getUsername());
+        dto.setRole(gebruiker.getRole());
+        dto.setStudie(gebruiker.getStudie()); 
+
+        return ResponseEntity.ok(dto);
     }
+
     @GetMapping("/user-studies")
     public ResponseEntity<?> getStudies(Authentication authentication){
         if(authentication == null){
