@@ -81,4 +81,18 @@ public class ProtocolController {
         return ResponseEntity.ok("Verwijderd");
     }
 
+    @GetMapping("/protocollen/count")
+    public List<Object[]> getProtocolCount() {
+        return protocolRepository.findProtocolCount();
+    }
+
+    @GetMapping("/protocollen/count/finished")
+    public List<Object[]> getFinishedProtocolCount() {
+        return protocolRepository.findProtocolFinishedCount();
+    }
+
+    @GetMapping("/protocollen/datums")
+    public List<ProtocolDTO> getDatums() {
+        return protocolRepository.findAllDatums();
+    }
 }

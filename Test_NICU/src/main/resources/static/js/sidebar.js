@@ -34,6 +34,7 @@ function closeSidebar() {
             <ul class="sidebar-sublist"> 
                 <li><span class="material-icons-outlined" >fiber_manual_record</span><a href="dashboard.html">Per Studie</a></li>
                 <li><span class="material-icons-outlined" >fiber_manual_record</span><a href="dashboard2.html">Per Centrum</a></li>
+                <li><span class="material-icons-outlined" >fiber_manual_record</span><a href="dashboard3.html">Protocollen</a></li>
             </ul>`;
 
         if (role === 'ROLE_ADMIN') {

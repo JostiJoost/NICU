@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard NICU</title>
+  <!-- LETTERTYPE -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <!-- ICONS -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+
+</head>
+<body>
+<div class="grid-container">
+  <header class="header">
+    <div class="menu-icon" onclick="openSidebar()">
+      <span class="material-icons-outlined">menu</span>
+    </div>
+    <div class="header-left">
+    </div>
+    <div class="header-right">
+      <div class="profile-container">
+        <span id="profielIcoon" class="material-icons-outlined">person</span>
+        <div id="logoutMenu" class="dropdown-menu">
+          <form method="POST" action="/logout">
+            <button type="submit" class="logout-link">Log&nbsp;uit </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </header>
+
+  <aside id="sidebar">
+    <div class="sidebar-title">
+      <div class="sidebar-brand">
+        <span class="material-icons-outlined">inventory</span> N3 Benchmarking
+      </div>
+      <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
+    </div>
+    <ul class ="sidebar-list" id="sidebarMenu"></ul>
+  </aside>
+
+  <main class="main-container">
+
+    <div class="main-title">
+      <p class="font-weight-bold">DASHBOARD - PROTOCOLLEN</p>
+    </div>
+
+    <div class="main-select">
+      <label for="centrumSelect" class="font-weight-bold">Kies een centrum:</label>
+      <select id="centrumSelect" class="text-primary">
+        <option value="" disabled selected>-- Selecteer een centrum --</option>
+      </select>
+    </div>
+
+    <div class="charts">
+
+      <div class="charts-card">
+        <p class="charts-title">Verdeling protocollen inclusief lopende</p>
+        <div id="percentage-protocollen"></div>
+      </div>
+
+      <div class="charts-card">
+        <p class="charts-title">Verdeling protocollen afgerond</p>
+        <div id="percentage-protocollen-afgerond"></div>
+      </div>
+
+      <div class="charts-card">
+        <p class="charts-title">Gemiddelde doorlooptijd tot accordering</p>
+        <div id="gem-aanvraag-accordering"></div>
+      </div>
+
+      <div class="charts-card">
+        <p class="charts-title">Gemiddelde doorlooptijd tot eerste versie</p>
+        <div id="gem-aanvraag-eerste"></div>
+      </div>
+
+      <div class="charts-card">
+        <p class="charts-title">Gemiddelde doorlooptijd van eerste versie tot accordering</p>
+        <div id="gem-eerste-accordering"></div>
+      </div>
+
+    </div>
+
+    <div class="main-cards" id="centrum-cards"></div>
+
+    <div class="charts">
+
+      <div class="charts-card">
+        <p class="charts-title">Doorlooptijd tot accordering per protocol</p>
+        <div id="aanvraag-accordering"></div>
+      </div>
+
+      <div class="charts-card">
+        <p class="charts-title">Doorlooptijd tot eerste versie per protocol</p>
+        <div id="aanvraag-eerste"></div>
+      </div>
+
+      <div class="charts-card">
+        <p class="charts-title">Doorlooptijd van eerste versie tot accordering per protocol</p>
+        <div id="eerste-accordering"></div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.5.0/apexcharts.min.js"></script>
+
+<script src="js/dashboard3.js"></script>
+<script src="js/sidebar.js"></script>
+<script src = "js/logout.js"></script>
+
+
+</body>
+</html>

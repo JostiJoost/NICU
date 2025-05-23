@@ -1,10 +1,6 @@
 
 // POGING TOT DYNAMISCHE DATA
 
-function getMostRecentInclusion(studie, centrum) {
-
-}
-
 let stackedBarChartInstance = null;
 
 // ---------- KLEUREN GENEREREN -----------
@@ -240,7 +236,7 @@ async function gemiddeldeGrafieken() {
     });
 }
 
-function doorloopRenderen(soort, titel, gemiddelde, studie, kleur, gekozenStudie) {
+function doorloopRenderen(soort, titel, gemiddelde, studie, kleur) {
     const series = gemiddelde.map(d => Math.round(d.gemiddelde * 10) / 10);
     const xas = gemiddelde.map(d => d.centrum);
 
@@ -252,7 +248,7 @@ function doorloopRenderen(soort, titel, gemiddelde, studie, kleur, gekozenStudie
             name: `gemiddelde doorlooptijd ${soort}`
         }, {
             data: studie,
-            name: `doorlooptijd ${soort} ${gekozenStudie}`
+            name: `doorlooptijd ${soort} ${geselecteerdeStudie}`
         }],
         chart: {
             type: 'bar',
@@ -277,7 +273,7 @@ function doorloopRenderen(soort, titel, gemiddelde, studie, kleur, gekozenStudie
     chartInstance.render();
 }
 
-async function grafieken(studie) {
+async function grafieken() {
     const response = await fetch(`http://localhost:8080/api/studie/doorlooptijden`);
     if (!response.ok) throw new Error("Fout bij ophalen...")
 
@@ -288,7 +284,7 @@ async function grafieken(studie) {
     let i = 0;
     soorten.forEach(soort => {
         const gemiddelden = verzamelDoorlooptijdSoort(data, soort);
-        doorloopRenderen(soort, `Doorlooptijd ${soort} per centrum`, gemiddelden, studieData[soort.toLowerCase()], kleuren[i], studie);
+        doorloopRenderen(soort, `Doorlooptijd ${soort} per centrum`, gemiddelden, studieData[soort.toLowerCase()], kleuren[i]);
         i++;
     })
 
@@ -326,10 +322,9 @@ async function laadGroupedBar() {
             name: studie,
             data: centra.map(centrum => {
                 const item = data.find(d => d.centrum === centrum && d.studie === studie);
-            if (!item) return 0;
-            return verschilDatum(item.startdatum, item.initiatiedatum);
+                if (!item) return 0;
+                return verschilDatum(item.startdatum, item.initiatiedatum);
             })
-
         }
     })
 
@@ -343,7 +338,7 @@ async function laadGroupedBar() {
             bar: {
                 horizontal: false,
                 dataLabels: {
-                    position: 'top',
+                    position: 'top'
                 }
             }
         },
@@ -596,7 +591,7 @@ async function herlaadDashboard() {
         totaleDoorlooptijd.render();
 
     })
-    grafieken(geselecteerdeStudie);
+    grafieken();
 
 
 }
