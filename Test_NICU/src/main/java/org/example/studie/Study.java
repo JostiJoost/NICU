@@ -1,95 +1,148 @@
 package org.example.studie;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
-//TODO primary key's koppelen
+/**
+ *Entiteit die een studie representeert binnen een specifiek centrum.
+ *
+ * @author Anne Beumer
+ * @version 1.0
+ * @since 09-05-2025
+ */
 @Entity
 @IdClass(StudyId.class)
 @Table(name = "studie")
 public class Study {
+
+    /**
+     * Naam van de studie (samen met centrum de primaire sleutel)
+     */
     @Id
     @Column(name = "naam_studie", length = 50)
+    @Getter
+    @Setter
     private String studie;
 
+    /**
+     * Naam van het centrum (deel van de primaire sleutel samen met studie)
+     */
     @Id
     @Column(name = "naam_centrum", length = 50)
+    @Getter
+    @Setter
     private String centrum;
+
+    /**
+     * Startdatum van de studie in het centrum
+     */
     @Column(name = "startdatum_studie")
+    @Getter
+    @Setter
     private LocalDate startdatum;
+
+    /**
+     * Datum waarop de studie geïnitieerd werd.
+     */
     @Column(name = "initiatiedatum")
+    @Getter
+    @Setter
     private LocalDate initiatiedatum;
+
+    /**
+     * Startdatum juridische fase (als deze aanwezig is bij de studie)
+     */
     @Column(name = "startdatum_juridisch")
+    @Getter
+    @Setter
     private LocalDate juridisch_start;
+
+    /**
+     * Einddatum juridische fase (als deze aanwezig is bij de studie)
+     */
     @Column(name = "einddatum_juridisch")
+    @Getter
+    @Setter
     private LocalDate juridisch_eind;
+
+    /**
+     * Startdatum apotheek fase (als deze aanwezig is bij de studie)
+     */
     @Column(name = "startdatum_apotheek")
+    @Getter
+    @Setter
     private LocalDate apotheek_start;
+
+    /**
+     * Einddatum apotheek fase (als deze aanwezig is bij de studie)
+     */
     @Column(name = "einddatum_apotheek")
+    @Getter
+    @Setter
     private LocalDate apotheek_eind;
+
+    /**
+     * Startdatum METC fase (als deze aanwezig is bij de studie)
+     */
     @Column(name = "startdatum_metc")
+    @Getter
+    @Setter
     private LocalDate metc_start;
+
+    /**
+     * Einddatum METC fase (als deze aanwezig is bij de studie)
+     */
     @Column(name = "einddatum_metc")
+    @Getter
+    @Setter
     private LocalDate metc_eind;
+
+    /**
+     * Startdatum laboratorium fase (als deze aanwezig is bij de studie)
+     */
     @Column(name = "startdatum_laboratorium")
+    @Getter
+    @Setter
     private LocalDate lab_start;
+
+    /**
+     * Einddatum laboratorium fase (als deze aanwezig is bij de studie)
+     */
     @Column(name = "einddatum_laboratorium")
+    @Getter
+    @Setter
     private LocalDate lab_eind;
+
+    /**
+     * Aantal kinderen dat geïncludeerd is in deze studie binnen dit centrum.
+     */
     @Column(name = "geincludeerde_kinderen")
+    @Getter
+    @Setter
     private Integer geincludeerde_kinderen;
+
+    /**
+     * Aantal kinderen dat opgenomen is binne het centrum.
+     */
     @Column(name = "opgenomen_kinderen")
+    @Getter
+    @Setter
     private Integer opgenomen_kinderen;
+
+    /**
+     * Eventuele reden voor weigering van deelname in dit centrum.
+     */
     @Column(name = "reden_van_weigeren")
+    @Getter
+    @Setter
     private String reden_weigering;
 
+    /**
+     * Lege constructor.
+     * Vereist door de JPA.
+     */
     public Study(){}
-
-
-    //TODO evt dit nog ombouwen in 3 functies om code duplicatie te voorkomen?
-    public String getStudie(){return studie;}
-    public void setStudie(String studie) {this.studie = studie;}
-
-    public String getCentrum(){return centrum;}
-    public void setCentrum(String centrum) {this.centrum = centrum;}
-
-    public LocalDate getStartdatum(){return startdatum;}
-    public void setStartdatum(LocalDate startdatum) {this.startdatum = startdatum;}
-
-    public LocalDate getInitiatiedatum(){return initiatiedatum;}
-    public void setInitiatiedatum(LocalDate initiatiedatum) {this.initiatiedatum = initiatiedatum;}
-
-    public LocalDate getJuridisch_start(){return juridisch_start;}
-    public void setJuridisch_start(LocalDate juridisch_start) {this.juridisch_start = juridisch_start;}
-
-    public LocalDate getJuridisch_eind(){return juridisch_eind;}
-    public void setJuridisch_eind(LocalDate juridisch_eind) {this.juridisch_eind = juridisch_eind;}
-
-    public LocalDate getApotheek_start(){return apotheek_start;}
-    public void setApotheek_start(LocalDate apotheek_start) {this.apotheek_start = apotheek_start;}
-
-    public LocalDate getApotheek_eind(){return apotheek_eind;}
-    public void setApotheek_eind(LocalDate apotheek_eind) {this.apotheek_eind = apotheek_eind;}
-
-    public LocalDate getMetc_start(){return metc_start;}
-    public void setMetc_start(LocalDate metc_start) {this.metc_start = metc_start;}
-
-    public LocalDate getMetc_eind(){return metc_eind;}
-    public void setMetc_eind(LocalDate metc_eind) {this.metc_eind = metc_eind;}
-
-    public LocalDate getLab_start(){return lab_start;}
-    public void setLab_start(LocalDate lab_start) {this.lab_start = lab_start;}
-
-    public LocalDate getLab_eind(){return lab_eind;}
-    public void setLab_eind(LocalDate lab_eind) {this.lab_eind = lab_eind;}
-
-    public Integer getGeincludeerde_kinderen(){return geincludeerde_kinderen;}
-    public void setGeincludeerde_kinderen(Integer geincludeerdeKinderen) {this.geincludeerde_kinderen = geincludeerdeKinderen;}
-
-    public Integer getOpgenomen_kinderen(){return opgenomen_kinderen;}
-    public void setOpgenomen_kinderen(Integer opgenomen_kinderen) {this.opgenomen_kinderen = opgenomen_kinderen;}
-
-    public String getReden_weigering(){return reden_weigering;}
-    public void setReden_weigering(String reden_weigering) {this.reden_weigering = reden_weigering;}
-
 
 }

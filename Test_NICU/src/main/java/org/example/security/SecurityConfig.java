@@ -12,21 +12,39 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+/**
+ * Beveiligingsconfiguratie voor de website.
+ * Maakt gebruik van verschillende rollen om verschillende toegangen te verlenen.
+ *
+ * @author Anne Beumer
+ * @version 1.0
+ * @since 09-05-2025
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     private final CustomUserDetailsService userDetailsService;
     private final CorsConfigurationSource corsConfigurationSource;
 
-
+    /**
+     * Constructor die de userdeatils service en cors configuratie regelt.
+     * @param userDetailsService service voor gebruikersauthenticatie
+     * @param corsConfigurationSource configuratie voor CORS-instellingen
+     */
     public SecurityConfig(CustomUserDetailsService userDetailsService, CorsConfigurationSource corsConfigurationSource){
         this.userDetailsService = userDetailsService;
         this.corsConfigurationSource = corsConfigurationSource;
     }
 
+    /**
+     * Configureert een beveiligingsfilter voor all HTTP verzoeken.
+     * @param http de httpsecruity configuratie
+     * @return het configureerde beveiligingsfilter
+     * @throws Exception bij configuratie fouten
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        //ToDo aan Charlotte vragen of dit oke is
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors(cors -> cors.configurationSource(corsConfigurationSource));
 
@@ -56,11 +74,21 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Biedt een bean aan voorwachtwoordversleuteling
+     * @return een BCRyptPasswordEncoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Biedt een bean voor  authenticatie gebruik
+     * @param authenticationConfiguration spring authenticatie configuratie
+     * @return een autheticatie manager
+     * @throws Exception bij foute configuratie
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
         return authenticationConfiguration.getAuthenticationManager();

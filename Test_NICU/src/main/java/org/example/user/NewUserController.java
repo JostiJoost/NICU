@@ -10,6 +10,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+/**
+ * Rest controller voor het beheren van studiegebruikers binnen de admin inlog.
+ *
+ * @author Anne Beumer
+ * @version 1.0
+ * @since 16-05-2025
+ */
 @RestController
 @RequestMapping("api/users")
 public class NewUserController {
@@ -21,6 +28,12 @@ public class NewUserController {
     @Autowired
     private StudyRepository studyRepository;
 
+    /**
+     * Maakt een nieuwe studiegebruiker aan met een automatisch gegenereerd wachtwoord.
+     *
+     * @param dto userCreationDTO met studienaam en fasekeuzes
+     * @return een createdUserResponse met gebruikersnaam en gegenereerd wachtwoord.
+     */
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserCreationDTO dto){
 
@@ -57,6 +70,12 @@ public class NewUserController {
         return ResponseEntity.ok(new CreatedUserResponse(username, password));
     }
 
+    /**
+     * Reset het wachtwoord van een bestaande gebruiker en retourneert het nieuwe wachtwoord
+     *
+     * @param username gebruikersnaam van het account
+     * @return een JSON response met gebruikersnaam en nieuw wachtwoord
+     */
     @PutMapping("/reset-password/{username}")
     public ResponseEntity<?> resetPassword(@PathVariable String username){
         Optional<User> optionalUser = userRepository.findByUsername(username);
@@ -78,6 +97,11 @@ public class NewUserController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Geeft een lijst terug van alle gebruikersnamen en hun rollen
+     *
+     * @return JSON lijst van gebruikers met gebruikersnaam en rol
+     */
     @GetMapping
     public ResponseEntity<?> getAllUsers() {
         List<Map<String, String>> users = userRepository.findAll().stream()
@@ -92,6 +116,12 @@ public class NewUserController {
         return ResponseEntity.ok(users);
     }
 
+    /**
+     * Genereert een willekeurig wachtwoord van opgegeven lengte.
+     *
+     * @param lengte aantal tekens
+     * @return willekeurig wachtwoord
+     */
     private String generateRandomPassword(int lengte){
         String mogelijkeChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%&*";
         StringBuilder sb = new StringBuilder();
@@ -102,6 +132,9 @@ public class NewUserController {
         return sb.toString();
     }
 
+    /**
+     * Bevat een response na het aanmaken van een gebruiker, zodat de gebruikersnaam en wachtwoord teruggegeven worden aan de frontend.
+     */
     public static class CreatedUserResponse{
         public String username;
         public String password;

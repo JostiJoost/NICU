@@ -9,11 +9,21 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+/**
+ * Startpunt van de Spring Boot toepassing
+ * Start de applicatie op de standaard browser
+ *
+ * @author Anne Beumer en Joost Goddijn
+ * @version 1.0
+ * @since 09-05-2025
+ */
 @SpringBootApplication
 public class Main extends SpringBootServletInitializer {
 
+    /**
+     * Main method die de Spring Boot applicatie opstart.
+     * @param args args
+     */
     public static void main(String[] args) {
 
         //BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -28,6 +38,12 @@ public class Main extends SpringBootServletInitializer {
         //DatabaseQuery.select();
     }
 
+    /**
+     * Probeert de standaard browser te openen met de opgegeven url.
+     * Zou moeten werken op zowel Windows als macOS.
+     *
+     * @param url de URL die geopend moet worden
+     */
     private static void openBrowser(String url) {
         try {
             String os = System.getProperty("os.name").toLowerCase();
