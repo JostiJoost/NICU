@@ -97,8 +97,7 @@
 }
 
 .sidebar-title > span {
-    display: inline;
-    cursor: pointer;
+    display: none;
 }
 
 .sidebar-sublist{
@@ -179,6 +178,28 @@
 .logout-link:hover{
     background-color: white;
     text-decoration: underline;
+}
+
+@media screen and (max-width: 992px) {
+    #sidebar {
+        left: -260px
+    }
+
+    #sidebar.sidebar-responsive {
+        left: 0;
+        box-shadow: 0 0 10px;
+    }
+
+    .menu-icon {
+        display: inline;
+        cursor: pointer;
+    }
+
+    .sidebar-title > span {
+        display: inline;
+        cursor: pointer;
+    }
+
 }
 
 

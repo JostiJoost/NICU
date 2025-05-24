@@ -159,18 +159,6 @@ body {
             "header"
             "main";
     }
-
-    #sidebar {
-        display: none;
-    }
-
-    .menu-icon {
-        display: inline;
-    }
-
-    .sidebar-title > span {
-        display: inline;
-    }
 }
 
 /* small <= 768px */
