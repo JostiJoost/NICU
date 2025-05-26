@@ -1,8 +1,5 @@
-
-// POGING TOT DYNAMISCHE DATA
-
-let stackedBarChartInstance = null;
-
+const centra = ["AUMC", "EMCR", "ISALA", "LUMC", "MMC", "MUMC", "RUMC", "UMCG", "WKZ"];
+let geselecteerdeStudie = null;
 // ---------- KLEUREN GENEREREN -----------
 
 function kleurenGenereren(aantal) {
@@ -13,89 +10,6 @@ function kleurenGenereren(aantal) {
     }
     return kleuren;
 }
-
-
-// POGING TOT STACKED BAR CHART
-
-function stackedBarChart(doorlooptijden) {
-    if (stackedBarChartInstance) {
-        stackedBarChartInstance.destroy();
-    }
-    document.querySelector("#stacked-bar-chart").innerHTML = "";
-
-
-    var stackedBarChartOptions = {
-        series: [{
-            name: 'Juridisch',
-            data: doorlooptijden.juridisch
-        }, {
-            name: 'Apotheek',
-            data: doorlooptijden.apotheek
-        }, {
-            name: 'METC',
-            data: doorlooptijden.metc
-        }, {
-            name: 'Laboratorium',
-            data: doorlooptijden.lab
-        }],
-        chart: {
-            type: 'bar',
-            height: 350,
-            stacked: true,
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                dataLabels: {
-                    total: {
-                        enabled: true,
-                        offsetX: 0,
-                        style: {
-                            fontSize: '13px',
-                            fontWeight: 900
-                        }
-                    }
-                }
-            },
-        },
-        stroke: {
-            width: 1,
-            colors: ['#fff']
-        },
-        xaxis: {
-            categories: centra,
-            labels: {
-                formatter: function (val) {
-                    return val
-                }
-            }
-        },
-        yaxis: {
-            title: {
-                text: undefined
-            },
-        },
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return val
-                }
-            }
-        },
-        fill: {
-            opacity: 1
-        },
-        legend: {
-            position: 'top',
-            horizontalAlign: 'left',
-            offsetX: 40
-        }
-    };
-
-    stackedBarChartInstance = new ApexCharts(document.querySelector("#stacked-bar-chart"), stackedBarChartOptions);
-    stackedBarChartInstance.render();
-}
-
 
 function verschilDatum(datum1, datum2) {
     if (!datum1 || !datum2) {
@@ -108,26 +22,20 @@ function verschilDatum(datum1, datum2) {
     }
 }
 
+async function laadJson(url) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Fout bij ophalen...");
+        return await response.json();
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
 async function laadDataInclusie(naamStudie, naamCentrum, ID) {
     try {
-        const studie = naamStudie;
-        const centrum = naamCentrum;
-        const url = `http://localhost:8080/api/aantal_geincludeerd/${studie}/${centrum}`;
-        const response = await fetch(url);
-        if (!response.ok) {
-            if (response.status === 404) {
-                console.warn(`Geen data voor ${naamStudie} - ${naamCentrum}`);
-                document.getElementById(ID).textContent = "0";
-            }
-            throw new Error(`Fout bij ophalen (status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        if (!data || data.length === 0) {
-            document.getElementById(ID).textContent = "0";
-        } else {
-            document.getElementById(ID).textContent = data;
-        }
+        const data = await laadJson(`http://localhost:8080/api/aantal_geincludeerd/${naamStudie}/${naamCentrum}`);
+        document.getElementById(ID).textContent = (data && data.length > 0) ? data : "0";
     } catch (error) {
         console.log(`Fout bij ophalen data`, error.message);
         document.getElementById(ID).textContent = "0";
@@ -142,7 +50,7 @@ async function verzamelDoorlooptijden() {
 
     for (const centrum of centra) {
         try {
-            const data = await laadDataStudie(geselecteerdeStudie, centrum);
+            const data = await laadJson(`http://localhost:8080/api/studie/${geselecteerdeStudie}/${centrum}`);
             const studie = (data && data.length > 0) ? data[0] : {};
 
             juridisch.push(verschilDatum(studie.juridisch_start, studie.juridisch_eind));
@@ -221,10 +129,7 @@ function chartRenderen(id, titel, data, kleur) {
 }
 
 async function gemiddeldeGrafieken() {
-    const response = await fetch(`http://localhost:8080/api/studie/doorlooptijden`);
-    if (!response.ok) throw new Error("Fout bij ophalen...")
-
-    const data = await response.json();
+    const data = await laadJson(`http://localhost:8080/api/studie/doorlooptijden`);
 
     const soorten = ['Juridisch', 'Apotheek', 'METC', 'Lab'];
     const kleuren = ["#008FFB", "#00E396", "#FEB019", "#FF4560"];
@@ -274,10 +179,7 @@ function doorloopRenderen(soort, titel, gemiddelde, studie, kleur) {
 }
 
 async function grafieken() {
-    const response = await fetch(`http://localhost:8080/api/studie/doorlooptijden`);
-    if (!response.ok) throw new Error("Fout bij ophalen...")
-
-    const data = await response.json();
+    const data = await laadJson(`http://localhost:8080/api/studie/doorlooptijden`);
     const studieData = await verzamelDoorlooptijden();
     const soorten = ['Juridisch', 'Apotheek', 'METC', 'Lab'];
     const kleuren = ["#008FFB", "#00E396", "#FEB019", "#FF4560"];
@@ -292,30 +194,10 @@ async function grafieken() {
 
 gemiddeldeGrafieken();
 
-async function laadDataStudie(naamStudie, naamCentrum) {
-    try {
-        const studie = naamStudie;
-        const centrum = naamCentrum;
-        const url = `http://localhost:8080/api/studie/${studie}/${centrum}`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Fout bij ophalen...")
-
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        alert("Fout bij ophalen: " + error.message);
-        console.log(error.message);
-    }
-}
 
 async function laadGroupedBar() {
-    const response = await fetch(`http://localhost:8080/api/studie/studies`);
-    if (!response.ok) throw new Error("Fout bij ophalen...")
-    const studies = await response.json();
-
-    const response2 = await fetch(`http://localhost:8080/api/studie/doorlooptijden`)
-    if (!response2.ok) throw new Error("Fout bij ophalen...")
-    const data = await response2.json()
+    const studies = await laadJson(`http://localhost:8080/api/studie/studies`);
+    const data = await laadJson(`http://localhost:8080/api/studie/doorlooptijden`);
 
     const series = studies.map(studie => {
         return {
@@ -358,25 +240,6 @@ async function laadGroupedBar() {
     groupedBarChart.render()
 }
 
-
-
-const centra = ["AUMC", "EMCR", "ISALA", "LUMC", "MMC", "MUMC", "RUMC", "UMCG", "WKZ"];
-let geselecteerdeStudie = null;
-
-async function laadInclusionChart(naamStudie) {
-    try {
-        const url = `http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/studie/${naamStudie}`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Fout bij ophalen...")
-
-        return await response.json();
-    } catch (error) {
-        alert("Fout bij ophalen: " + error.message);
-        console.log(error.message);
-    }
-}
-
-
 function populateStudieDropdown(studies) {
     const select = document.getElementById("studieSelect")
 
@@ -396,16 +259,13 @@ function populateStudieDropdown(studies) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    fetch(`http://localhost:8080/api/studie/studies`)
-        .then(response => response.json())
-        .then(data => {
-            populateStudieDropdown(data);
-        })
-        .catch(error => {
-            console.error("Fout bij ophalen studies: ", error);
-        });
-
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const data = await laadJson(`http://localhost:8080/api/studie/studies`);
+        populateStudieDropdown(data);
+    } catch (error) {
+        console.error("Fout bij ophalen studies: ", error);
+    }
 });
 
 function totaleDoorlooptijdBerekenen(data) {
@@ -440,11 +300,9 @@ function totaleDoorlooptijdBerekenen(data) {
 
 async function laadInitiatiedatum(studie) {
     try {
-        const response = await fetch(`http://localhost:8080/api/studie/initiatiedatum/${studie}`);
-        if (!response.ok) throw new Error("Fout bij ophalen data...")
         let deelnemendeCentra = 0;
         const serie = [];
-        const data = await response.json();
+        const data = await laadJson(`http://localhost:8080/api/studie/initiatiedatum/${studie}`);
         for (const datum of data) {
             deelnemendeCentra++;
             serie.push({ x: datum, y: deelnemendeCentra});
@@ -471,7 +329,7 @@ async function herlaadDashboard() {
         stackedBarChart(doorlooptijden);
     });
 
-    laadInclusionChart(geselecteerdeStudie).then((data) => {
+    laadJson(`http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/studie/${geselecteerdeStudie}`).then((data) => {
         const centra = [...new Set(data.map(item => item.naamCentrum))];
         const series = centra.map(centrum => ({
             name: centrum,
@@ -484,7 +342,6 @@ async function herlaadDashboard() {
         }));
 
         document.querySelector("#line-chart").innerHTML = "";
-
         var lineChart = new ApexCharts(document.querySelector("#line-chart"), {
             series: series,
             chart: { height: 350, type: 'line', toolbar: { show: false } },
@@ -500,7 +357,7 @@ async function herlaadDashboard() {
         lineChart.render();
     });
 
-    laadInclusionChart(geselecteerdeStudie).then((data) => {
+    laadJson(`http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/studie/${geselecteerdeStudie}`).then((data) => {
         const centra = [...new Set(data.map(item => item.naamCentrum))];
         const series = centra.map(centrum => {
             const centrumData = data.filter(item => item.naamCentrum === centrum);
@@ -515,7 +372,6 @@ async function herlaadDashboard() {
         });
 
         document.querySelector("#line-chart-2").innerHTML = "";
-
         var lineChartRelatief = new ApexCharts(document.querySelector("#line-chart-2"), {
             series: series,
             chart: {
@@ -545,8 +401,9 @@ async function herlaadDashboard() {
         });
         lineChartRelatief.render();
     });
+
     document.querySelector("#totale-doorlooptijd").innerHTML = "";
-    laadInclusionChart(geselecteerdeStudie).then(async (data) => {
+    laadJson(`http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/studie/${geselecteerdeStudie}`).then(async (data) => {
         const serie = totaleDoorlooptijdBerekenen(data);
         const serieDeelnemend = await laadInitiatiedatum(geselecteerdeStudie);
         console.log("serieDeelnemend: ", serieDeelnemend);
@@ -592,10 +449,6 @@ async function herlaadDashboard() {
 
     })
     grafieken();
-
-
 }
 
-
 console.log("Script werkt! ");
-

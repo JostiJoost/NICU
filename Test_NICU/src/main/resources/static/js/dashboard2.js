@@ -9,6 +9,17 @@ function kleurenGenereren(aantal) {
     return kleuren;
 }
 
+async function laadJson(url) {
+    try {
+        const response = await fetch(url)
+        if (!response.ok) throw new Error("Fout bij ophalen...")
+        return await response.json();
+    } catch (error) {
+        console.error(error.message);
+        throw error;
+    }
+}
+
 function populateCentrumDropdown(centra) {
     const select = document.getElementById("centrumSelect")
 
@@ -28,29 +39,19 @@ function populateCentrumDropdown(centra) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    fetch(`http://localhost:8080/api/studie/centra`)
-        .then(response => response.json())
-        .then(data => {
-            populateCentrumDropdown(data);
-        })
-        .catch(error => {
-            console.error("Fout bij ophalen centra: ", error);
-        });
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const data = await laadJson(`http://localhost:8080/api/studie/centra`);
+        populateCentrumDropdown(data);
+    } catch (error) {
+        console.error("Fout bij ophalen centra: ", error);
+    }
 });
 
 async function laadGroupedBar() {
-    const response = await fetch(`http://localhost:8080/api/studie/centra`);
-    if (!response.ok) throw new Error("Fout bij ophalen...");
-    const centra = await response.json();
-
-    const response2 = await fetch(`http://localhost:8080/api/studie/studies`);
-    if (!response2.ok) throw new Error("Fout bij ophalen...");
-    const studies = await response2.json();
-
-    const response3 = await fetch(`http://localhost:8080/api/studie/doorlooptijden`);
-    if (!response3.ok) throw new Error("Fout bij ophalen...");
-    const data = await response3.json();
+    const centra = await laadJson(`http://localhost:8080/api/studie/centra`);
+    const studies = await laadJson(`http://localhost:8080/api/studie/studies`);
+    const data = await laadJson(`http://localhost:8080/api/studie/doorlooptijden`);
 
     const series = centra.map(centrum => {
         return {
@@ -162,10 +163,7 @@ function chartRenderen(id, data, studieData = null, kleur, soort) {
 }
 
 async function laadDoorlooptijdGrafieken(toonStudieData = false , studies) {
-    const response = await fetch(`http://localhost:8080/api/studie/doorlooptijden`);
-    if (!response.ok) throw new Error("Fout bij ophalen...");
-
-    const data = await response.json();
+    const data = await laadJson(`http://localhost:8080/api/studie/doorlooptijden`);
     const studieData = toonStudieData ? await verzamelDoorlooptijden(studies) : null;
 
     const soorten = ['Juridisch', 'Apotheek', 'METC', 'Lab'];
@@ -184,19 +182,6 @@ async function laadDoorlooptijdGrafieken(toonStudieData = false , studies) {
 }
 
 laadDoorlooptijdGrafieken(false, "");
-
-
-async function laadStudies(naamCentrum) {
-    try {
-        const respons = await fetch(`http://localhost:8080/api/studie/${naamCentrum}/studies`)
-        if (!respons.ok) throw new Error("Fout bij ophalen...")
-
-        return await respons.json();
-    } catch (error) {
-        alert("Fout bij ophalen: " + error.message);
-        console.log(error.message);
-    }
-}
 
 function kaartenMaken(studies) {
     const id = document.getElementById("study-cards");
@@ -221,22 +206,8 @@ function kaartenMaken(studies) {
 
 async function laadDataInclusie(naamStudie, naamCentrum) {
     try {
-        const url = `http://localhost:8080/api/aantal_geincludeerd/${naamStudie}/${naamCentrum}`;
-        const response = await fetch(url);
-        if (!response.ok) {
-            if (response.status === 404) {
-                console.warn(`Geen data voor ${naamCentrum} - ${naamStudie}`);
-                document.getElementById(`aantal-${naamStudie}`).textContent = "0";
-            }
-            throw new Error(`Fout bij ophalen (status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        if (!data || data.length === 0) {
-            document.getElementById(`aantal-${naamStudie}`).textContent = "0";
-        } else {
-            document.getElementById(`aantal-${naamStudie}`).textContent = data;
-        }
+        const data = await laadJson(`http://localhost:8080/api/aantal_geincludeerd/${naamStudie}/${naamCentrum}`);
+        document.getElementById(`aantal-${naamStudie}`).textContent = (data && data.length > 0) ? data : "0";
     } catch (error) {
         console.log(`Fout bij ophalen data`, error.message);
         document.getElementById(`aantal-${naamStudie}`).textContent = "0";
@@ -251,9 +222,8 @@ async function verzamelDoorlooptijden(studies) {
 
     for (const studie of studies) {
         try {
-            const data = await laadDataStudie(studie, geselecteerdCentrum);
+            const data = await laadJson(`http://localhost:8080/api/studie/${studie}/${geselecteerdCentrum}`);
             const studieData = (data && data.length > 0) ? data[0] : {};
-            console.log("Geselecteerde velden: ", studieData, geselecteerdCentrum);
             juridisch.push(verschilDatum(studieData.juridisch_start, studieData.juridisch_eind));
             apotheek.push(verschilDatum(studieData.apotheek_start, studieData.apotheek_eind));
             metc.push(verschilDatum(studieData.metc_start, studieData.metc_eind));
@@ -273,20 +243,6 @@ async function verzamelDoorlooptijden(studies) {
         metc: metc,
         lab: lab
     };
-}
-
-async function laadDataStudie(naamStudie, naamCentrum) {
-    try {
-        const url = `http://localhost:8080/api/studie/${naamStudie}/${naamCentrum}`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Fout bij ophalen...")
-
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        alert("Fout bij ophalen: " + error.message);
-        console.log(error.message);
-    }
 }
 
 function verschilDatum(datum1, datum2) {
@@ -376,22 +332,9 @@ function stackedBarChart(doorlooptijden, studies) {
     stackedBarChartInstance.render();
 }
 
-async function laadInclusionChart(naamCentrum) {
-    try {
-        const url = `http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/centrum/${naamCentrum}`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Fout bij ophalen...")
-
-        return await response.json();
-    } catch (error) {
-        alert("Fout bij ophalen: " + error.message);
-        console.log(error.message);
-    }
-}
-
 async function herlaadDashboard() {
     if (!geselecteerdCentrum) return;
-    let studies = await laadStudies(geselecteerdCentrum);
+    let studies = await laadJson(`http://localhost:8080/api/studie/${geselecteerdCentrum}/studies`);
     console.log("Gekozen studies: ", studies);
     kaartenMaken(studies);
 
@@ -403,7 +346,7 @@ async function herlaadDashboard() {
         stackedBarChart(doorlooptijden, studies);
     });
 
-    laadInclusionChart(geselecteerdCentrum).then((data) => {
+    laadJson(`http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/centrum/${geselecteerdCentrum}`).then((data) => {
         const series = studies.map(studie => {
             console.log("Data: ", data);
             const studieData = data.filter(item => item.naamStudie === studie);
@@ -450,6 +393,4 @@ async function herlaadDashboard() {
 
         laadDoorlooptijdGrafieken(true, studies);
     });
-
-
 }
