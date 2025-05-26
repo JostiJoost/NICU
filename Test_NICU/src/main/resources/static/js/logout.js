@@ -1,3 +1,9 @@
+/**
+ * Script wat de logout van de applicatie verzorgd
+ * @author Anne Beumer
+ * @version 1.0
+ * @since 22-05-2025
+ * */
 document.addEventListener("DOMContentLoaded", () => {
 
     const profielIcoon = document.getElementById("profielIcoon");

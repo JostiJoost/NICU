@@ -1,7 +1,22 @@
-const centra = ["AUMC", "EMCR", "ISALA", "LUMC", "MMC", "MUMC", "RUMC", "UMCG", "WKZ"];
-let geselecteerdeStudie = null;
-// ---------- KLEUREN GENEREREN -----------
+/**
+ * ---------- DASHBOARD PER STUDIE ----------
+ * Dit dashboard geeft de gebruiker inzichten voor alle centra. Daarnaast kan er een keuze worden gemaakt voor één
+ * studie.
+ * @author Joost Goddijn
+ * @version 1.0
+ * @since 26-05-2025
+ * */
 
+const centra = ["AUMC", "EMCR", "ISALA", "LUMC", "MMC", "MUMC", "RUMC", "UMCG", "WKZ"];
+
+let geselecteerdeStudie = null;
+
+/**
+ * Functie om kleuren te generen. Kleuren worden gelijkwaardig verdeeld over de kleuren schaal. Wordt gebruikt voor
+ * het geven aan kleur van grafieken die een variabele lengte kunnen hebben. Bijvoorbeeld aantal studies
+ * @param aantal - Het aantal kleuren dat moet worden gegenereerd
+ * @returns - De lijst met kleurcodes
+ * */
 function kleurenGenereren(aantal) {
     const kleuren = [];
     for (let i = 0; i < aantal; i++) {
@@ -11,6 +26,12 @@ function kleurenGenereren(aantal) {
     return kleuren;
 }
 
+/**
+ * Functie die het verschil tussen twee datums berekend in dagen
+ * @param datum1 - De eerste datum
+ * @param datum2 - De tweede datum
+ * @returns - Het verschil tussen de twee datums in dagen
+ * */
 function verschilDatum(datum1, datum2) {
     if (!datum1 || !datum2) {
         return 0;
@@ -22,6 +43,11 @@ function verschilDatum(datum1, datum2) {
     }
 }
 
+/**
+ * Functie die JSON output ophaald aan de hand van een URL
+ * @param url - De URL waar de JSON output te vinden is
+ * @returns - De JSON output
+ * */
 async function laadJson(url) {
     try {
         const response = await fetch(url);
@@ -32,6 +58,12 @@ async function laadJson(url) {
     }
 }
 
+/**
+ * Functie die het meest recente aantal inclusies van een bepaald centrum voor een bepaalde studie in het dashboard zet
+ * @param naamStudie - De studie waarvan de inclusies worden opgezocht
+ * @param naamCentrum - Het centrum waarvan de inclusies worden opgezocht
+ * @param ID - Het HTML id van de card waarin het aantal inclusies wordt getoond
+ * */
 async function laadDataInclusie(naamStudie, naamCentrum, ID) {
     try {
         const data = await laadJson(`http://localhost:8080/api/aantal_geincludeerd/${naamStudie}/${naamCentrum}`);
@@ -42,6 +74,10 @@ async function laadDataInclusie(naamStudie, naamCentrum, ID) {
     }
 }
 
+/**
+ * Functie die voor alle centra, alle soorten doorlooptijden ophaalt van een geselecteerde studie
+ * @returns - De doorlooptijden van elk centrum van de geselecteerde studie per soort
+ * */
 async function verzamelDoorlooptijden() {
     let juridisch = [];
     let apotheek = [];
@@ -73,6 +109,12 @@ async function verzamelDoorlooptijden() {
     };
 }
 
+/**
+ * Verzamelt gemiddelde doorlooptijden voor elk centrum van een bepaalde doorlooptijd soort
+ * @param data - De data waarover de gemiddeldes worden berekent
+ * @param soort - De soort doorlooptijd waarover het gemiddelde wordt berekent
+ * @returns - Alle gemiddelde doorlooptijden van de gegeven soort per centrum. Op alfabetische volgorde van centrum
+ * */
 function verzamelDoorlooptijdSoort(data, soort) {
     const start = `start${soort}`;
     const eind = `eind${soort}`;
@@ -96,9 +138,15 @@ function verzamelDoorlooptijdSoort(data, soort) {
     }));
 }
 
-function chartRenderen(id, titel, data, kleur) {
-    const series = data.map(d => Math.round(d.gemiddelde * 10) / 10);
-    const xas = data.map(d => d.centrum);
+/**
+ * Rendert een bar chart van de gemiddelde doorlooptijd per soort
+ * @param id - Het HTML id van de chart
+ * @param data - De data die de chart weergeeft
+ * @param kleur - De kleuren van de chart
+ * */
+function chartRenderen(id, data, kleur) {
+    const series = data.map(item => Math.round(item.gemiddelde * 10) / 10);
+    const xas = data.map(item => item.centrum);
 
     const options = {
         series: [{
@@ -123,11 +171,13 @@ function chartRenderen(id, titel, data, kleur) {
         },
         colors: [`${kleur}`]
     }
-    const ID = `#gem-chart-${id}`;
     chartInstance = new ApexCharts(document.querySelector(`#gem-chart-${id}`), options);
     chartInstance.render();
 }
 
+/**
+ * Controller functie die het maken van de gemiddelde doorlooptijd grafiek aanstuurt
+ * */
 async function gemiddeldeGrafieken() {
     const data = await laadJson(`http://localhost:8080/api/studie/doorlooptijden`);
 
@@ -136,14 +186,21 @@ async function gemiddeldeGrafieken() {
     let i = 0;
     soorten.forEach(soort => {
         const gemiddelden = verzamelDoorlooptijdSoort(data, soort);
-        chartRenderen(soort, `Gemiddelde doorlooptijd - ${soort}`, gemiddelden, kleuren[i]);
+        chartRenderen(soort, gemiddelden, kleuren[i]);
         i++;
     });
 }
 
-function doorloopRenderen(soort, titel, gemiddelde, studie, kleur) {
-    const series = gemiddelde.map(d => Math.round(d.gemiddelde * 10) / 10);
-    const xas = gemiddelde.map(d => d.centrum);
+/**
+ * Functie die de doorlooptijd per soort barchart genereert
+ * @param soort - De soort doorlooptijd die wordt gerendert
+ * @param gemiddelde - De data van de gemiddelde doorlooptijd
+ * @param studie - De data van de studie specifieke doorlooptijd
+ * @param kleur - De kleuren van de barchart
+ * */
+function doorloopRenderen(soort, gemiddelde, studie, kleur) {
+    const series = gemiddelde.map(item => Math.round(item.gemiddelde * 10) / 10);
+    const xas = gemiddelde.map(item => item.centrum);
 
     const ID = `#chart-${soort}`;
     document.querySelector(ID).innerHTML = "";
@@ -178,6 +235,9 @@ function doorloopRenderen(soort, titel, gemiddelde, studie, kleur) {
     chartInstance.render();
 }
 
+/**
+ * Controller functie die het maken van de barcharts per soort per studie aanstuurt
+ * */
 async function grafieken() {
     const data = await laadJson(`http://localhost:8080/api/studie/doorlooptijden`);
     const studieData = await verzamelDoorlooptijden();
@@ -186,7 +246,7 @@ async function grafieken() {
     let i = 0;
     soorten.forEach(soort => {
         const gemiddelden = verzamelDoorlooptijdSoort(data, soort);
-        doorloopRenderen(soort, `Doorlooptijd ${soort} per centrum`, gemiddelden, studieData[soort.toLowerCase()], kleuren[i]);
+        doorloopRenderen(soort, gemiddelden, studieData[soort.toLowerCase()], kleuren[i]);
         i++;
     })
 
@@ -194,7 +254,9 @@ async function grafieken() {
 
 gemiddeldeGrafieken();
 
-
+/**
+ * Functie die een grouped-barchart genereert waarin voor elk centrum voor elke studie de doorlooptijd staat
+ * */
 async function laadGroupedBar() {
     const studies = await laadJson(`http://localhost:8080/api/studie/studies`);
     const data = await laadJson(`http://localhost:8080/api/studie/doorlooptijden`);
@@ -203,7 +265,7 @@ async function laadGroupedBar() {
         return {
             name: studie,
             data: centra.map(centrum => {
-                const item = data.find(d => d.centrum === centrum && d.studie === studie);
+                const item = data.find(i => i.centrum === centrum && i.studie === studie);
                 if (!item) return 0;
                 return verschilDatum(item.startdatum, item.initiatiedatum);
             })
@@ -240,6 +302,10 @@ async function laadGroupedBar() {
     groupedBarChart.render()
 }
 
+/**
+ * Functie die het dropdown keuze menu vult om een keuze voor een studie te maken
+ * @param studies - De studies die in het dropdown menu moeten komen
+ * */
 function populateStudieDropdown(studies) {
     const select = document.getElementById("studieSelect")
 
@@ -268,7 +334,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-function totaleDoorlooptijdBerekenen(data) {
+/**
+ * Functie die data aanlevert voor de grafiek die het totale aantal inclusies door de tijd laat zien
+ * @param data - De data waarover de cumulatieve inclusie door de tijd wordt verzameld
+ * @returns - Een lijst met datums en totale aantal inclusies op die datum. Gesorteerd op datum
+ * */
+function inclusiesCumulatief(data) {
     const datums = [...new Set(data.map(item => item.datum))]
         .sort((a, b) => new Date(a) - new Date(b));
     const centraData = [...new Set(data.map(item => item.naamCentrum))];
@@ -286,7 +357,7 @@ function totaleDoorlooptijdBerekenen(data) {
     for (const datum of datums) {
         for (const centrum of centraData) {
             const centrumData = dataPerCentrum[centrum];
-            const entryOpDatum = centrumData.find(d => d.datum === datum);
+            const entryOpDatum = centrumData.find(item => item.datum === datum);
             if (entryOpDatum) {
                 laatsteWaarde[centrum] = entryOpDatum.geincludeerd;
             }
@@ -298,6 +369,12 @@ function totaleDoorlooptijdBerekenen(data) {
     return serie;
 }
 
+/**
+ * Functie die data aanlevert voor de grafiek die laat zien hoeveel centra actief deelnemen aan een studie
+ * op een bepaald moment in de tijd
+ * @param studie - De studie waarvoor de data wordt aangeleverd
+ * @returns - een lijst met datums en het aantal deelnemende centra op die datum
+ * */
 async function laadInitiatiedatum(studie) {
     try {
         let deelnemendeCentra = 0;
@@ -317,6 +394,10 @@ async function laadInitiatiedatum(studie) {
 
 laadGroupedBar();
 
+/**
+ * Functie om elementen uit het dashboard opnieuw te laden. Daarnaast worden er in deze functie ook enkele
+ * grafieken gegenereerd
+ * */
 async function herlaadDashboard() {
     if(!geselecteerdeStudie) return;
     centra.forEach(centrum => {
@@ -404,7 +485,7 @@ async function herlaadDashboard() {
 
     document.querySelector("#totale-doorlooptijd").innerHTML = "";
     laadJson(`http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/studie/${geselecteerdeStudie}`).then(async (data) => {
-        const serie = totaleDoorlooptijdBerekenen(data);
+        const serie = inclusiesCumulatief(data);
         const serieDeelnemend = await laadInitiatiedatum(geselecteerdeStudie);
         console.log("serieDeelnemend: ", serieDeelnemend);
         const totaleDoorlooptijd = new ApexCharts(document.querySelector("#totale-doorlooptijd"), {

@@ -1,3 +1,13 @@
+/**
+ * Het script waarmee de studie gegevens kunnen worden ingevuld. Daarnaast worden de reeds ingevulde gegevens getoond
+ * @author Anne Beumer
+ * @version 1.0
+ * @since 24-05-2025
+ * */
+
+/**
+ * Script wat aan de hand van rollen en rechten de juiste velden aan de gebruiker toont in het formulier
+ * */
 document.addEventListener('DOMContentLoaded', async function(){
     const studieSelectie = document.getElementById('studieSelectie');
     const centrumSelectie = document.getElementById('centrumSelectie');
@@ -51,6 +61,10 @@ document.addEventListener('DOMContentLoaded', async function(){
         document.getElementById(id).style.display = zichtbaar ? 'block' : 'none';
     }
 
+    /**
+     * Functie die het formulier vult met data die al in de database stond
+     * @param studieNaam - De naam van de studie waarvoor het formulier wordt ingevuld
+     * */
     async function updateFormVelden({studieNaam = null, vanuitStudie = false} ={}){
         try{
             if(!studieNaam) studieNaam = studieSelectie.value;
@@ -98,6 +112,11 @@ document.addEventListener('DOMContentLoaded', async function(){
         }
     }
 
+    /**
+     * Functie die de waarde van een HTML item aanpast
+     * @param id - Het HTML id van de aan te passen waarde
+     * @param value - De waarde waarnaar het HTML item moet worden aangepast
+     * */
     function setFieldValue(id, value){
         if(value !== null && value !== undefined){
             document.getElementById(id).value = value;
@@ -105,6 +124,9 @@ document.addEventListener('DOMContentLoaded', async function(){
     }
 });
 
+/**
+ * Script om de database up te daten met data uit het formulier nadat deze is ingevuld
+ * */
 document.getElementById('studieForm').addEventListener('submit', async function(event) {
     event.preventDefault();
 

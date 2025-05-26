@@ -1,5 +1,15 @@
+/**
+ * Script wat het mogelijk maakt voor de gebruiker om wachtwoorden van accounts te resetten
+ * @author Anne Beumer
+ * @version 1.0
+ * @since 22-05-2025
+ * */
+
 let selectedUser = null;
 
+/**
+ * Script wat alle huidige gebruikers ophaalt
+ * */
 document.addEventListener("DOMContentLoaded", async () => {
     try{
         const response = await fetch("/api/users",{
@@ -33,6 +43,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
+/**
+ * Functie die een nieuw wachtwoord genereerd
+ * @param username - De gebruikersnaam waarvan het wachtwoord moet worden gereset
+ * */
 async function resetPassword(username){
     if(!confirm(`Weet u zeker dat u een nieuw wachtwoord wilt aanvragen voor ${username}?`)){
         return;
@@ -54,6 +68,11 @@ async function resetPassword(username){
     }
 }
 
+/**
+ * Functie die een pop up toont met het nieuwe wachtwoord
+ * @param username - De gebruikersnaam van het account met een nieuw wachtwoord
+ * @param newPassword - Het nieuwe wachtwoord
+ * */
 function openPopup(username, newPassword){
     selectedUser = username;
     document.getElementById("resetPasswordUsername").innerText = `Voor: ${username}`;
@@ -61,12 +80,20 @@ function openPopup(username, newPassword){
     document.getElementById("resetPassword").style.display = "flex";
 }
 
+/**
+ * Functie wat de pop up van het nieuwe wachtwoord weer sluit
+ * */
 function closePopup(){
     document.getElementById("resetPassword").style.display = "none";
     document.getElementById("resetPasswordUsername").innerText = "";
     document.getElementById("generatedPassword").innerText = "";
 }
 
+/**
+ * Functie die de rol van de gebruiker terug geeft
+ * @param role - De rol van de gebruiker
+ * @returns - De rul in een tekst format
+ * */
 function translateRole(role){
     switch (role){
         case "ROLE_STUDIE": return "Studie";

@@ -1,5 +1,20 @@
+/**
+ * ---------- DASHBOARD PER CENTRUM ----------
+ * Dit dashboard geeft de gebruiker inzichten voor alle studies. Daarnaast kan er een keuze worden gemaakt voor één
+ * centrum.
+ * @author Joost Goddijn
+ * @version 1.0
+ * @since  26-05-2025
+ * */
+
 let geselecteerdCentrum = null;
 
+/**
+ * Functie om kleuren te generen. Kleuren worden gelijkwaardig verdeeld over de kleuren schaal. Wordt gebruikt voor
+ * het geven aan kleur van grafieken die een variabele lengte kunnen hebben.
+ * @param aantal - Het aantal kleuren dat moet worden gegenereerd
+ * @returns - De lijst met kleurcodes
+ * */
 function kleurenGenereren(aantal) {
     const kleuren = [];
     for (let i = 0; i < aantal; i++) {
@@ -9,6 +24,11 @@ function kleurenGenereren(aantal) {
     return kleuren;
 }
 
+/**
+ * Functie die JSON output ophaald aan de hand van een URL
+ * @param url - De URL waar de JSON output te vinden is
+ * @returns - De JSON output
+ * */
 async function laadJson(url) {
     try {
         const response = await fetch(url)
@@ -20,6 +40,10 @@ async function laadJson(url) {
     }
 }
 
+/**
+ * Functie die het dropdown keuze menu vult om een keuze voor een centrum te maken
+ * @param centra - De centra die in het dropdown menu moeten komen
+ * */
 function populateCentrumDropdown(centra) {
     const select = document.getElementById("centrumSelect")
 
@@ -39,6 +63,9 @@ function populateCentrumDropdown(centra) {
     });
 }
 
+/**
+ * Stuk script wat als controller dient voor de keuze van het dropdown menu
+ * */
 document.addEventListener("DOMContentLoaded", async () => {
     try {
         const data = await laadJson(`http://localhost:8080/api/studie/centra`);
@@ -48,6 +75,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
+
+/**
+ * Functie die een grouped-barchart genereert waarin voor elke studie voor elk centrum de doorlooptijd staat
+ * */
 async function laadGroupedBar() {
     const centra = await laadJson(`http://localhost:8080/api/studie/centra`);
     const studies = await laadJson(`http://localhost:8080/api/studie/studies`);
@@ -57,7 +88,7 @@ async function laadGroupedBar() {
         return {
             name: centrum,
             data: studies.map(studie => {
-                const item = data.find(d => d.studie === studie && d.centrum === centrum);
+                const item = data.find(i => i.studie === studie && i.centrum === centrum);
                 if (!item) return 0;
                 return verschilDatum(item.startdatum, item.initiatiedatum);
             })
@@ -98,6 +129,13 @@ async function laadGroupedBar() {
 
 laadGroupedBar();
 
+
+/**
+ * Verzamelt gemiddelde doorlooptijden voor elke studie van een bepaalde doorlooptijd soort
+ * @param data - De data waarover de gemiddeldes worden berekent
+ * @param soort - De soort doorlooptijd waarover het gemiddelde wordt berekent
+ * @returns - Alle gemiddelde doorlooptijden van de gegeven soort per studie. Op alfabetische volgorde van studie
+ * */
 function verzamelDoorlooptijdSoort(data, soort) {
     const start = `start${soort}`;
     const eind = `eind${soort}`;
@@ -121,9 +159,17 @@ function verzamelDoorlooptijdSoort(data, soort) {
         }));
 }
 
+/**
+ * Functie die een barchart genereert
+ * @param id - Het HTML id van de barchart
+ * @param data - De data van de gemiddeldes per studie
+ * @param studieData - De data van de eventuele data van een bepaald centrum die naast het gemiddelde komt
+ * @param kleur - De kleur(en) van de chart
+ * @param soort - De soort doorlooptijd
+ * */
 function chartRenderen(id, data, studieData = null, kleur, soort) {
     const series =[{
-        data: data.map(d => Math.round(d.gemiddelde * 10) / 10),
+        data: data.map(item => Math.round(item.gemiddelde * 10) / 10),
         name: `Gemmiddelde doorlooptijd ${soort}`
     }];
 
@@ -135,7 +181,7 @@ function chartRenderen(id, data, studieData = null, kleur, soort) {
         document.querySelector(`#${id}`).innerHTML = "";
     }
 
-    const xas = data.map(d => d.studie);
+    const xas = data.map(item => item.studie);
 
     const options = {
         series: series,
@@ -162,6 +208,12 @@ function chartRenderen(id, data, studieData = null, kleur, soort) {
     chartInstance.render();
 }
 
+/**
+ * Controller functie die het maken van de barcharts aanstuurt
+ * @param toonStudieData - Een boolean die aangeeft of er bij het genereren ook data van een specifieke studie moet
+ * worden getoond
+ * @param studies - De studies waar het geselecteerde centrum aan mee doet
+ * */
 async function laadDoorlooptijdGrafieken(toonStudieData = false , studies) {
     const data = await laadJson(`http://localhost:8080/api/studie/doorlooptijden`);
     const studieData = toonStudieData ? await verzamelDoorlooptijden(studies) : null;
@@ -183,6 +235,10 @@ async function laadDoorlooptijdGrafieken(toonStudieData = false , studies) {
 
 laadDoorlooptijdGrafieken(false, "");
 
+/**
+ * Functie die kaarten genereert
+ * @param studies - De studies van het geselecteerde centrum die inclusies kunnen hebben
+ * */
 function kaartenMaken(studies) {
     const id = document.getElementById("study-cards");
     if (!id) return;
@@ -204,6 +260,11 @@ function kaartenMaken(studies) {
     })
 }
 
+/**
+ * Functie die de kaarten vult met data over het huidige aantal inclusies
+ * @param naamStudie - De studie waarvoor de inclusies worden getoond
+ * @param naamCentrum - Het centrum waarvoor de inclusies worden getoond
+ * */
 async function laadDataInclusie(naamStudie, naamCentrum) {
     try {
         const data = await laadJson(`http://localhost:8080/api/aantal_geincludeerd/${naamStudie}/${naamCentrum}`);
@@ -214,6 +275,11 @@ async function laadDataInclusie(naamStudie, naamCentrum) {
     }
 }
 
+/**
+ * Functie die alle soorten doorlooptijden verzamelt voor een lijst studies
+ * @param studies - De studies waarvoor de doorlooptijden worden verzameld
+ * @returns - Vier lijsten met data waar de doorlooptijden van de studies van een gekozen centrum in staan
+ * */
 async function verzamelDoorlooptijden(studies) {
     let juridisch = [];
     let apotheek = [];
@@ -245,6 +311,12 @@ async function verzamelDoorlooptijden(studies) {
     };
 }
 
+/**
+ * Functie die het verschil tussen twee datums berekent
+ * @param datum1 - De eerste datum
+ * @param datum2 - De tweede datum
+ * @returns - Het verschil tussen de twee datums in dagen
+ * */
 function verschilDatum(datum1, datum2) {
     if (!datum1 || !datum2) {
         return 0;
@@ -255,83 +327,9 @@ function verschilDatum(datum1, datum2) {
     }
 }
 
-function stackedBarChart(doorlooptijden, studies) {
-
-    document.querySelector("#stacked-bar-chart").innerHTML = "";
-
-
-    var stackedBarChartOptions = {
-        series: [{
-            name: 'Juridisch',
-            data: doorlooptijden.juridisch
-        }, {
-            name: 'Apotheek',
-            data: doorlooptijden.apotheek
-        }, {
-            name: 'METC',
-            data: doorlooptijden.metc
-        }, {
-            name: 'Laboratorium',
-            data: doorlooptijden.lab
-        }],
-        chart: {
-            type: 'bar',
-            height: 350,
-            stacked: true,
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                dataLabels: {
-                    total: {
-                        enabled: true,
-                        offsetX: 0,
-                        style: {
-                            fontSize: '13px',
-                            fontWeight: 900
-                        }
-                    }
-                }
-            },
-        },
-        stroke: {
-            width: 1,
-            colors: ['#fff']
-        },
-        xaxis: {
-            categories: studies,
-            labels: {
-                formatter: function (val) {
-                    return val
-                }
-            }
-        },
-        yaxis: {
-            title: {
-                text: undefined
-            },
-        },
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return val
-                }
-            }
-        },
-        fill: {
-            opacity: 1
-        },
-        legend: {
-            position: 'top',
-            horizontalAlign: 'left',
-            offsetX: 40
-        }
-    };
-
-    stackedBarChartInstance = new ApexCharts(document.querySelector("#stacked-bar-chart"), stackedBarChartOptions);
-    stackedBarChartInstance.render();
-}
-
+/**
+ * Functie die delen van het dashboard herlaadt. Genereert ook enkele grafieken
+ * */
 async function herlaadDashboard() {
     if (!geselecteerdCentrum) return;
     let studies = await laadJson(`http://localhost:8080/api/studie/${geselecteerdCentrum}/studies`);
@@ -341,10 +339,6 @@ async function herlaadDashboard() {
     studies.forEach(studie => {
         laadDataInclusie(studie, geselecteerdCentrum);
     })
-
-    verzamelDoorlooptijden(studies).then((doorlooptijden) => {
-        stackedBarChart(doorlooptijden, studies);
-    });
 
     laadJson(`http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/centrum/${geselecteerdCentrum}`).then((data) => {
         const series = studies.map(studie => {
