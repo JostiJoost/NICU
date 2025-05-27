@@ -1,5 +1,6 @@
 /* ---------- CSS SCRIPT DASHBOARD ---------- */
-/* Verzorgt de visuele weergave van de drie veschillende dashboards */
+/* Verzorgt de visuele weergave van de drie veschillende dashboards.
+Ten eerste wat algemene instellingen die onder andere de grid container bepaald. */
 body {
     margin: 0;
     padding: 0;
@@ -49,6 +50,7 @@ body {
 }
 
 /* ---------- HEADER ---------- */
+/* De instellingen voor alles wat onder de 'header' sectie van het HTML bestand valt. */
 .header {
     grid-area: header;
     height: 70px;
@@ -65,7 +67,8 @@ body {
 }
 
 /* ---------- MAIN ---------- */
-/* Regelt de weergave van alle elementen onder de 'main' sectie van het HTML bestand*/
+/* Regelt de weergave van alle elementen onder de 'main' sectie van het HTML bestand.
+Hier valt de weergave van grafieken en cards onder. */
 .main-container {
     grid-area: main;
     overflow-y: auto;

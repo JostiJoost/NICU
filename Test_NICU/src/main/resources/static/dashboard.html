@@ -8,12 +8,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <!-- ICONS -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-
+    <!-- CSS LINKS -->
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/sidebar.css">
 </head>
 <body>
     <div class="grid-container">
+        <!-- Bovenste balk van de pagina -->
         <header class="header">
             <div class="menu-icon" onclick="openSidebar()">
                 <span class="material-icons-outlined">menu</span>
@@ -33,6 +34,7 @@
 
         </header>
 
+        <!-- Sidebar met daarin de navigatie naar andere pagina's -->
         <aside id="sidebar">
             <div class="sidebar-title">
                 <div class="sidebar-brand">
@@ -48,13 +50,7 @@
                 <p class="font-weight-bold">DASHBOARD - PER STUDIE</p>
             </div>
 
-            <div class="main-select">
-                <label for="studieSelect" class="font-weight-bold">Kies een studie:</label>
-                <select id="studieSelect" class="text-primary">
-                    <option value="" disabled selected>-- Selecteer een studie --</option>
-                </select>
-            </div>
-
+            <!-- Eerste paar grafieken van het eerste dashboard -->
             <div class="charts">
 
                 <div class="charts-card">
@@ -84,6 +80,18 @@
 
             </div>
 
+            <div class="main-select">
+                <label for="studieSelect" class="font-weight-bold">Kies een studie:</label>
+                <select id="studieSelect" class="text-primary">
+                    <option value="" disabled selected>-- Selecteer een studie --</option>
+                </select>
+            </div>
+
+            <div class="main-title">
+                <p class="font-weight-bold">HUIDIGE AANTAL GEINCLUDEERD</p>
+            </div>
+
+            <!-- 'Kaarten' met daarin het huidige aantal inclusies per centrum -->
             <div class="main-cards">
 
                 <div class="card">
@@ -91,7 +99,7 @@
                         <p class="text-primary">AUMC</p>
                         <span class="material-icons-outlined text-blue">child_care</span>
                     </div>
-                    <span id="aantal-aumc" class="text-primary font-weight-bold">Laden...</span>
+                    <span id="aantal-aumc" class="text-primary font-weight-bold">Selecteer studie...</span>
                 </div>
 
                 <div class="card">
@@ -99,7 +107,7 @@
                         <p class="text-primary">EMCR</p>
                         <span class="material-icons-outlined text-blue">child_care</span>
                     </div>
-                    <span id="aantal-emcr" class="text-primary font-weight-bold">Laden...</span>
+                    <span id="aantal-emcr" class="text-primary font-weight-bold">Selecteer studie...</span>
                 </div>
 
                 <div class="card">
@@ -107,7 +115,7 @@
                         <p class="text-primary">ISALA</p>
                         <span class="material-icons-outlined text-blue">child_care</span>
                     </div>
-                    <span id="aantal-isala" class="text-primary font-weight-bold">Laden...</span>
+                    <span id="aantal-isala" class="text-primary font-weight-bold">Selecteer studie...</span>
                 </div>
 
                 <div class="card">
@@ -115,7 +123,7 @@
                         <p class="text-primary">LUMC</p>
                         <span class="material-icons-outlined text-blue">child_care</span>
                     </div>
-                    <span id="aantal-lumc" class="text-primary font-weight-bold">Laden...</span>
+                    <span id="aantal-lumc" class="text-primary font-weight-bold">Selecteer studie...</span>
                 </div>
 
                 <div class="card">
@@ -123,7 +131,7 @@
                         <p class="text-primary">MMC</p>
                         <span class="material-icons-outlined text-blue">child_care</span>
                     </div>
-                    <span id="aantal-mmc" class="text-primary font-weight-bold">Laden...</span>
+                    <span id="aantal-mmc" class="text-primary font-weight-bold">Selecteer studie...</span>
                 </div>
 
                 <div class="card">
@@ -131,7 +139,7 @@
                         <p class="text-primary">MUMC</p>
                         <span class="material-icons-outlined text-blue">child_care</span>
                     </div>
-                    <span id="aantal-mumc" class="text-primary font-weight-bold">Laden...</span>
+                    <span id="aantal-mumc" class="text-primary font-weight-bold">Selecteer studie...</span>
                 </div>
 
                 <div class="card">
@@ -139,7 +147,7 @@
                         <p class="text-primary">RUMC</p>
                         <span class="material-icons-outlined text-blue">child_care</span>
                     </div>
-                    <span id="aantal-rumc" class="text-primary font-weight-bold">Laden...</span>
+                    <span id="aantal-rumc" class="text-primary font-weight-bold">Selecteer studie...</span>
                 </div>
 
                 <div class="card">
@@ -147,7 +155,7 @@
                         <p class="text-primary">UMCG</p>
                         <span class="material-icons-outlined text-blue">child_care</span>
                     </div>
-                    <span id="aantal-umcg" class="text-primary font-weight-bold">Laden...</span>
+                    <span id="aantal-umcg" class="text-primary font-weight-bold">Selecteer studie...</span>
                 </div>
 
                 <div class="card">
@@ -155,11 +163,16 @@
                         <p class="text-primary">WKZ</p>
                         <span class="material-icons-outlined text-blue">child_care</span>
                     </div>
-                    <span id="aantal-wkz" class="text-primary font-weight-bold">Laden...</span>
+                    <span id="aantal-wkz" class="text-primary font-weight-bold">Selecteer studie...</span>
                 </div>
 
             </div>
 
+            <div class="main-title">
+                <p class="font-weight-bold">INCLUSIES</p>
+            </div>
+
+            <!-- Volgende paar grafieken van het eerste dashboard -->
             <div class="charts">
 
                 <div class="charts-card">
@@ -168,20 +181,23 @@
                 </div>
 
                 <div class="charts-card">
-                    <p class="charts-title">Doorlooptijd per centrum</p>
-                    <div id="stacked-bar-chart"></div>
-                </div>
-
-                <div class="charts-card">
-                    <p class="charts-title">Doorlooptijd per centrum door de tijd</p>
+                    <p class="charts-title">Inclusies per centrum door de tijd</p>
                     <div id="line-chart"></div>
                 </div>
 
                 <div class="charts-card">
-                    <p class="charts-title">Doorlooptijd per centrum zelfde startdatum</p>
+                    <p class="charts-title">Inclusies per centrum zelfde startdatum</p>
                     <div id="line-chart-2"></div>
                 </div>
 
+            </div>
+
+            <div class="main-title">
+                <p class="font-weight-bold">DOORLOOPTIJDEN</p>
+            </div>
+
+            <!-- Laatste paar grafieken van het eerste dashboard -->
+            <div class="charts">
                 <div class="charts-card">
                     <p class="charts-title">Doorlooptijd 'Juridisch' per centrum zelfde startdatum</p>
                     <div id="chart-Juridisch"></div>
@@ -201,16 +217,13 @@
                     <p class="charts-title">Doorlooptijd 'Laboratorium' per centrum zelfde startdatum</p>
                     <div id="chart-Lab"></div>
                 </div>
-
             </div>
         </main>
     </div>
 
-    <!-- Scripts -->
-
     <!-- Apex Charts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.5.0/apexcharts.min.js"></script>
-
+    <!-- JS LINKS -->
     <script src="js/dashboard.js"></script>
     <script src="js/sidebar.js" defer></script>
     <script src = "js/logout.js" ></script>

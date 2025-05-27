@@ -8,13 +8,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <!-- ICONS -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-
+  <!-- CSS LINKS -->
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/sidebar.css">
 
 </head>
 <body>
 <div class="grid-container">
+  <!-- Bovenste balk van de pagina -->
   <header class="header">
     <div class="menu-icon" onclick="openSidebar()">
       <span class="material-icons-outlined">menu</span>
@@ -34,6 +35,7 @@
 
   </header>
 
+  <!-- Sidebar met daarin de navigatie naar andere pagina's -->
   <aside id="sidebar">
     <div class="sidebar-title">
       <div class="sidebar-brand">
@@ -50,13 +52,7 @@
       <p class="font-weight-bold">DASHBOARD - PROTOCOLLEN</p>
     </div>
 
-    <div class="main-select">
-      <label for="centrumSelect" class="font-weight-bold">Kies een centrum:</label>
-      <select id="centrumSelect" class="text-primary">
-        <option value="" disabled selected>-- Selecteer een centrum --</option>
-      </select>
-    </div>
-
+    <!-- Eerste paar grafieken van het dashboard 'protocollen' -->
     <div class="charts">
 
       <div class="charts-card">
@@ -86,7 +82,24 @@
 
     </div>
 
+    <div class="main-select">
+      <label for="centrumSelect" class="font-weight-bold">Kies een centrum:</label>
+      <select id="centrumSelect" class="text-primary">
+        <option value="" disabled selected>-- Selecteer een centrum --</option>
+      </select>
+    </div>
+
+    <!-- 'Kaarten' met daarin de totale doorlooptijd van een protocol -->
+    <div class="main-title">
+      <p class="font-weight-bold">DOORLOOPTIJD PER PROTOCOL</p>
+    </div>
+
     <div class="main-cards" id="centrum-cards"></div>
+
+    <!-- Laatste paar grafieken van het dashboard 'protocollen' -->
+    <div class="main-title">
+      <p class="font-weight-bold">DOORLOOPTIJDEN</p>
+    </div>
 
     <div class="charts">
 
@@ -110,8 +123,9 @@
   </main>
 </div>
 
+<!-- Script Apex Charts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.5.0/apexcharts.min.js"></script>
-
+<!-- JS LINKS -->
 <script src="js/dashboard3.js"></script>
 <script src="js/sidebar.js"></script>
 <script src = "js/logout.js"></script>

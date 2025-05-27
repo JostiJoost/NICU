@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <!-- ICONS -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <!-- CSS LINKS -->
   <link rel="stylesheet" href="css/sidebar.css">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/dashboard.css">
@@ -15,6 +16,7 @@
 </head>
 <body>
 <div class ="grid-container">
+  <!-- Bovenste balk van de pagina -->
   <header class="header">
     <div class="menu-icon" onclick="openSidebar()">
       <span class="material-icons-outlined">menu</span>
@@ -32,6 +34,7 @@
     </div>
 
   </header>
+<!-- Sidebar met daarin de navigatie naar andere pagina's -->
 <aside id="sidebar">
   <div class="sidebar-title">
     <div class="sidebar-brand">
@@ -43,6 +46,7 @@
 </aside>
 
 <main class = "main-container">
+  <!-- Formulier voor het invullen van data over studies -->
   <form id="studieForm">
     <h1>Nieuwe studie gegevens invoeren</h1>
     <label>Naam centrum: </label>
@@ -113,7 +117,7 @@
 
     <label>Reden van weigering: </label>
     <select id="reden" name="reden_weigering" >
-      <option value=""> -- Selecteer een centrum -- </option>
+      <option value=""> -- Selecteer een reden -- </option>
       <option>Vergeten dokter</option>
       <option>Ouders willen geen onderzoek</option>
       <option>Taal niet machtig</option>
@@ -124,6 +128,7 @@
 
   </form>
 </main>
+  <!-- JS LINKS -->
   <script src="js/invulPagStudie.js"></script>
   <script src="js/sidebar.js"></script>
   <script src = "js/logout.js"></script>

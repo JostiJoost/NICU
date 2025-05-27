@@ -8,13 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <!-- ICONS -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-
+    <!-- CSS LINKS -->
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/sidebar.css">
 
 </head>
 <body>
 <div class="grid-container">
+    <!-- Bovenste balk van de pagina -->
     <header class="header">
         <div class="menu-icon" onclick="openSidebar()">
             <span class="material-icons-outlined">menu</span>
@@ -34,6 +35,7 @@
 
     </header>
 
+    <!-- Sidebar met daarin de navigatie naar andere pagina's -->
     <aside id="sidebar">
         <div class="sidebar-title">
             <div class="sidebar-brand">
@@ -49,13 +51,7 @@
             <p class="font-weight-bold">DASHBOARD - PER CENTRUM</p>
         </div>
 
-        <div class="main-select">
-            <label for="centrumSelect" class="font-weight-bold">Kies een centrum:</label>
-            <select id="centrumSelect" class="text-primary">
-                <option value="" disabled selected>-- Selecteer een centrum --</option>
-            </select>
-        </div>
-
+        <!-- Eerste paar grafieken van het tweede dashboard -->
         <div class="charts">
 
             <div class="charts-card">
@@ -85,15 +81,26 @@
 
         </div>
 
+        <div class="main-select">
+            <label for="centrumSelect" class="font-weight-bold">Kies een centrum:</label>
+            <select id="centrumSelect" class="text-primary">
+                <option value="" disabled selected>-- Selecteer een centrum --</option>
+            </select>
+        </div>
+
+        <div class="main-title">
+            <p class="font-weight-bold">HUIDIGE AANTAL GEINCLUDEERD</p>
+        </div>
+        <!-- 'Kaarten' met daarin het huidige aantal inclusies per studie -->
         <div class="main-cards" id="study-cards"></div>
 
+        <!-- Tweede paar grafieken van het tweede dashboard -->
+        <div class="main-title">
+            <p class="font-weight-bold">DOORLOOPTIJDEN</p>
+        </div>
 
         <div class="charts">
 
-            <div class="charts-card">
-                <p class="charts-title">Doorlooptijd per studie zelfde startdatum</p>
-                <div id="line-chart-2"></div>
-            </div>
 
             <div class="charts-card">
                 <p class="charts-title">Doorlooptijd 'Juridisch' per studie zelfde startdatum</p>
@@ -116,14 +123,27 @@
             </div>
 
         </div>
+
+        <!-- Laatste grafiek van het tweede dashboard -->
+        <div class="main-title">
+            <p class="font-weight-bold">INCLUSIES</p>
+        </div>
+
+        <div class="charts">
+
+            <div class="charts-card">
+                <p class="charts-title">Inclusies per studie zelfde startdatum</p>
+                <div id="line-chart-2"></div>
+            </div>
+
+        </div>
     </main>
 </div>
 
-<!-- Scripts -->
 
 <!-- Apex Charts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.5.0/apexcharts.min.js"></script>
-
+<!-- JS LINKS -->
 <script src="js/dashboard2.js"></script>
 <script src="js/sidebar.js"></script>
 <script src = "js/logout.js"></script>

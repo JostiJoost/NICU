@@ -1,23 +1,5 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a id="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
 
-
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 
 <p align="center">
 Isa Berwald, Anne Beumer, Joost Goddijn, Maggie Schepman, Irene Spijkerman
@@ -29,7 +11,7 @@ Isa Berwald, Anne Beumer, Joost Goddijn, Maggie Schepman, Irene Spijkerman
 <br />
 <div align="center">
   <a href="https://github.com/JostiJoost/NICU">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.png" alt="Logo" width=50%>
   </a>
 
 <h3 align="center">Benchmark tool N3</h3>
@@ -43,35 +25,7 @@ Isa Berwald, Anne Beumer, Joost Goddijn, Maggie Schepman, Irene Spijkerman
 
 
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#over-dit-project">About The Project</a>
-      <ul>
-        <li><a href="#gemaakt-met">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
-
-
-
-<!-- ABOUT THE PROJECT -->
+<!-- OVER DIT PROJECT -->
 ## Over dit project
 
 Dit project is tot stand gekomen in samenwerking met de Neonatale Intensive Care Unit (NICU) van het Amsterdam UMC. De NICU in Amsterdam is aangesloten bij het neonatologie netwerk (N3). Bij dit netwerk zijn naast het AUMC nog 8 andere centra aangesloten.
@@ -103,14 +57,14 @@ Naast studies moest er ook data over protocollen aan het dashboard worden toegev
 
 Deze stappen vertellen je hoe je lokaal aan de slag kan gaan met dit project.
 
-### Prerequisites
+### Vereisten
 
 * Van te voren moet de database worden overgezet naar een gewenste server
 * Java 17 of hoger
 * [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 * Internet verbinding om de Maven dependencies op te halen
 
-### Installation
+### Installatie
  
 1. Clone de repository naar een lokale repository
    ```sh
@@ -128,7 +82,7 @@ Deze stappen vertellen je hoe je lokaal aan de slag kan gaan met dit project.
 
 
 <!-- USAGE EXAMPLES -->
-## Usage
+## Gebruik
 
 Zodra de applicatie is gestart en de webpagina is geopend kunnen gebruikers inloggen met hun account.
 Hiervoor dient springsecurity goed geconfigureerd te zijn en moeten de users in de database zijn opgenomen.
@@ -169,34 +123,17 @@ Hiervoor dient springsecurity goed geconfigureerd te zijn en moeten de users in 
 
 
 <!-- ROADMAP -->
-## Roadmap
+## Nog te doen
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
-
-See the [open issues](https://github.com/JostiJoost/NICU/issues) for a full list of proposed features (and known issues).
+- [ ] Tab voor admin om gegevens van centra in te voeren en aan te passen
+- [ ] Verwerken van de gegevens van centra in de data om te corrigeren voor grootte van centra
+- [ ] Mogelijkheid voor gebruikers om zelf hun wachtwoord te wijzigen
+- [ ] Meer redenen van weigering toevoegen
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Top contributors:
 
@@ -215,24 +152,9 @@ Manager:
 <!-- CONTACT -->
 ## Contact
 
-Twitter...
-
 Project Link: [https://github.com/JostiJoost/NICU](https://github.com/JostiJoost/NICU)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* []()
-* []()
-* []()
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com
-[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com 

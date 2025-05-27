@@ -1,3 +1,4 @@
+/* Script om de sidebar vorm te geven die in elk scherm zichtbaar is */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
 
 *{
@@ -131,7 +132,7 @@
 }
 
 /* ----------- Profiel icoon ---------- */
-
+/* CSS voor het profiel icoon rechts bovenin het scherm om uit te loggen */
 
 
 .profile-container{
@@ -180,6 +181,7 @@
     text-decoration: underline;
 }
 
+/* CSS script om de sidebar te verbergen wanneer het scherm te klein wordt*/
 @media screen and (max-width: 992px) {
     #sidebar {
         left: -260px
