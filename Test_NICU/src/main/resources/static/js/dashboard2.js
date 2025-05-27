@@ -8,6 +8,8 @@
  * */
 
 let geselecteerdCentrum = null;
+const NAARDAGEN = 1000 * 60 * 60 * 24;
+const GRADEN = 360;
 
 /**
  * Functie om kleuren te generen. Kleuren worden gelijkwaardig verdeeld over de kleuren schaal. Wordt gebruikt voor
@@ -18,10 +20,26 @@ let geselecteerdCentrum = null;
 function kleurenGenereren(aantal) {
     const kleuren = [];
     for (let i = 0; i < aantal; i++) {
-        const kleur = Math.round((360 / aantal) * i);
+        const kleur = Math.round((GRADEN / aantal) * i);
         kleuren.push(`hsl(${kleur}, 70%, 50%`)
     }
     return kleuren;
+}
+
+/**
+ * Functie die het verschil tussen twee datums berekent
+ * @param datum1 - De eerste datum
+ * @param datum2 - De tweede datum
+ * @returns - Het verschil tussen de twee datums in dagen
+ * */
+function verschilDatum(datum1, datum2) {
+    if (!datum1 || !datum2) {
+        return 0;
+    } else {
+        const startDatum = new Date(datum1);
+        const eindDatum = new Date(datum2);
+        return (eindDatum - startDatum) / (NAARDAGEN);
+    }
 }
 
 /**
@@ -309,22 +327,6 @@ async function verzamelDoorlooptijden(studies) {
         metc: metc,
         lab: lab
     };
-}
-
-/**
- * Functie die het verschil tussen twee datums berekent
- * @param datum1 - De eerste datum
- * @param datum2 - De tweede datum
- * @returns - Het verschil tussen de twee datums in dagen
- * */
-function verschilDatum(datum1, datum2) {
-    if (!datum1 || !datum2) {
-        return 0;
-    } else {
-        const startDatum = new Date(datum1);
-        const eindDatum = new Date(datum2);
-        return (eindDatum - startDatum) / (1000 * 60 * 60 * 24);
-    }
 }
 
 /**

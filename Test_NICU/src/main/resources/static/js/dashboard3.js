@@ -8,6 +8,8 @@
  * */
 
 let geselecteerdCentrum = null;
+const NAARDAGEN = 1000 * 60 * 60 * 24;
+const GRADEN = 360;
 
 /**
  * Functie die het dropdown keuze menu vult om een keuze voor een centrum te maken
@@ -40,7 +42,7 @@ function populateCentrumDropdown(centra) {
 function kleurenGenereren(aantal) {
     const kleuren = [];
     for (let i = 0; i < aantal; i++) {
-        const kleur = Math.round((360 / aantal) * i);
+        const kleur = Math.round((GRADEN / aantal) * i);
         kleuren.push(`hsl(${kleur}, 70%, 50%`)
     }
     return kleuren;
@@ -143,7 +145,7 @@ function verschilDatums(datum1, datum2) {
     } else {
         const startDatum = new Date(datum1);
         const eindDatum = new Date(datum2);
-        return (eindDatum - startDatum) / (1000 * 60 * 60 * 24);
+        return (eindDatum - startDatum) / (NAARDAGEN);
     }
 }
 

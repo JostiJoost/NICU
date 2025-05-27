@@ -8,6 +8,8 @@
  * */
 
 const centra = ["AUMC", "EMCR", "ISALA", "LUMC", "MMC", "MUMC", "RUMC", "UMCG", "WKZ"];
+const NAARDAGEN = 1000 * 60 * 60 * 24;
+const GRADEN = 360;
 
 let geselecteerdeStudie = null;
 
@@ -20,7 +22,7 @@ let geselecteerdeStudie = null;
 function kleurenGenereren(aantal) {
     const kleuren = [];
     for (let i = 0; i < aantal; i++) {
-        const kleur = Math.round((360 / aantal) * i);
+        const kleur = Math.round((GRADEN / aantal) * i);
         kleuren.push(`hsl(${kleur}, 70%, 50%`)
     }
     return kleuren;
@@ -38,8 +40,7 @@ function verschilDatum(datum1, datum2) {
     } else {
         const startDatum = new Date(datum1);
         const eindDatum = new Date(datum2);
-        const verschil = (eindDatum - startDatum) / (1000 * 60 * 60 * 24);
-        return verschil;
+        return (eindDatum - startDatum) / (NAARDAGEN);
     }
 }
 
