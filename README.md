@@ -11,7 +11,7 @@ Isa Berwald, Anne Beumer, Joost Goddijn, Maggie Schepman, Irene Spijkerman
 <br />
 <div align="center">
   <a href="https://github.com/JostiJoost/NICU">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.png" alt="Logo" width=50%>
   </a>
 
 <h3 align="center">Benchmark tool N3</h3>
@@ -25,35 +25,7 @@ Isa Berwald, Anne Beumer, Joost Goddijn, Maggie Schepman, Irene Spijkerman
 
 
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#over-dit-project">About The Project</a>
-      <ul>
-        <li><a href="#gemaakt-met">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
-
-
-
-<!-- ABOUT THE PROJECT -->
+<!-- OVER DIT PROJECT -->
 ## Over dit project
 
 Dit project is tot stand gekomen in samenwerking met de Neonatale Intensive Care Unit (NICU) van het Amsterdam UMC. De NICU in Amsterdam is aangesloten bij het neonatologie netwerk (N3). Bij dit netwerk zijn naast het AUMC nog 8 andere centra aangesloten.
@@ -85,14 +57,14 @@ Naast studies moest er ook data over protocollen aan het dashboard worden toegev
 
 Deze stappen vertellen je hoe je lokaal aan de slag kan gaan met dit project.
 
-### Prerequisites
+### Vereisten
 
 * Van te voren moet de database worden overgezet naar een gewenste server
 * Java 17 of hoger
 * [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 * Internet verbinding om de Maven dependencies op te halen
 
-### Installation
+### Installatie
  
 1. Clone de repository naar een lokale repository
    ```sh
@@ -110,7 +82,7 @@ Deze stappen vertellen je hoe je lokaal aan de slag kan gaan met dit project.
 
 
 <!-- USAGE EXAMPLES -->
-## Usage
+## Gebruik
 
 Zodra de applicatie is gestart en de webpagina is geopend kunnen gebruikers inloggen met hun account.
 Hiervoor dient springsecurity goed geconfigureerd te zijn en moeten de users in de database zijn opgenomen.
@@ -151,7 +123,7 @@ Hiervoor dient springsecurity goed geconfigureerd te zijn en moeten de users in 
 
 
 <!-- ROADMAP -->
-## Roadmap
+## Nog te doen
 
 - [ ] Tab voor admin om gegevens van centra in te voeren en aan te passen
 - [ ] Verwerken van de gegevens van centra in de data om te corrigeren voor grootte van centra
