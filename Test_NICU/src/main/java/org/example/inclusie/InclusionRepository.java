@@ -11,7 +11,7 @@ import java.util.Optional;
  * Repository voor toegang tot de Inclusion entiteit
  *
  * @author Anne Beumer en Joost Goddijn
- * @version 1.0
+ * @version 1.5, 20-05-2025
  * @since 14-05-2025
  */
 @Repository

@@ -8,7 +8,7 @@ import lombok.Setter;
  * De DTO bevat allen de relevante en veilige velden, dus bewust geen wachtwoord.
  *
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.0, 23-05-2025
  * @since 23-05-2025
  */
 public class UserDTO {

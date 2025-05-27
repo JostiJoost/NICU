@@ -14,7 +14,7 @@ import java.net.URI;
  * Start de applicatie op de standaard browser
  *
  * @author Anne Beumer en Joost Goddijn
- * @version 1.0
+ * @version 1.4, 22-05-2025
  * @since 09-05-2025
  */
 @SpringBootApplication
@@ -31,11 +31,8 @@ public class Main extends SpringBootServletInitializer {
         //String encodedPassword = encoder.encode(rawPassword);
         //System.out.println(encodedPassword);
 
-        //DatabaseQuery.select();
         SpringApplication.run(Main.class, args);
         openBrowser("http://localhost:8080/login.html");
-        //DatabaseQuery.insert();
-        //DatabaseQuery.select();
     }
 
     /**

@@ -16,7 +16,7 @@ import java.util.List;
  * Deze service haalt gebruikersgegevens op uit de database via de userRepository en zet deze om in een bruikbaar object voor Spring Security.
  *
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.2, 15-05-2025
  * @since 09-05-2025
  */
 @Service

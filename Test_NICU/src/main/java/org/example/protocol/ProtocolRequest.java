@@ -7,7 +7,7 @@ import lombok.Setter;
  * DTO voor het opslaan van een protocol samen met een tegenlezer
  *
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.2, 15-05-2025
  * @since 14-05-2025
  */
 public class ProtocolRequest {

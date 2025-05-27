@@ -1,7 +1,7 @@
 /**
  * Script wat het mogelijk maakt voor de gebruiker om wachtwoorden van accounts te resetten
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.0, 22-05-2025
  * @since 22-05-2025
  * */
 

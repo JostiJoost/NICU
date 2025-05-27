@@ -9,7 +9,7 @@ import java.time.LocalDate;
  *Entiteit die een studie representeert binnen een specifiek centrum.
  *
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.2, 15-05-2025
  * @since 09-05-2025
  */
 @Entity

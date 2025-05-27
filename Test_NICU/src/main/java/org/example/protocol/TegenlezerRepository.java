@@ -8,7 +8,7 @@ import java.util.List;
  * Repository voor het beteren van tegenlezer entiteit
  *
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.2, 15-05-2025
  * @since 14-05-2025
  */
 public interface TegenlezerRepository extends JpaRepository<Tegenlezer, TegenlezerId> {

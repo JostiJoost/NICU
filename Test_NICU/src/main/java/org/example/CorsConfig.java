@@ -13,7 +13,7 @@ import java.util.List;
  * Zonder deze class krijg je bij lokale ontwikkeling veel foutmeldingen doordat de frontend en backend op verschillend poorten runnen.
  *
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.2, 15-05-2025
  * @since 12-05-2025
  */
 @Configuration

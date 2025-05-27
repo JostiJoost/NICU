@@ -10,7 +10,7 @@ import lombok.Setter;
  * Maakt gebruik van Lombok Getters en Setters.
  *
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.2, 15-05-2025
  * @since 14-05-2025
  */
 @Entity

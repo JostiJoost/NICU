@@ -18,7 +18,7 @@ import java.util.Optional;
  * Rest controller voor het ophalen van gebruikersinformatie, studies en doorlooptijd gegevens op basis van rol en authenticatie.
  *
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.3, 22-05-2025
  * @since 15-05-2025
  */
 @RestController

@@ -3,8 +3,8 @@
  * Dit dashboard geeft de gebruiker inzichten voor alle centra. Daarnaast kan er een keuze worden gemaakt voor één
  * studie.
  * @author Joost Goddijn
- * @version 1.0
- * @since 26-05-2025
+ * @version 1.10, 26-05-2025
+ * @since 14-05-2025
  * */
 
 const centra = ["AUMC", "EMCR", "ISALA", "LUMC", "MMC", "MUMC", "RUMC", "UMCG", "WKZ"];

@@ -3,8 +3,8 @@
  * soorten doorlooptijden er zijn voor deze studie. Vervolgens wordt er automatisch een gebruikersnaam en wachtwoord
  * aangemaakt voor deze studie.
  * @author Anne Beumer
- * @version 1.0
- * @since 17-05-2025
+ * @version 1.3, 17-05-2025
+ * @since 15-05-2025
  * */
 
 

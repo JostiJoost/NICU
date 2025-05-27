@@ -1,8 +1,8 @@
 /**
  * Het script waarmee de studie gegevens kunnen worden ingevuld. Daarnaast worden de reeds ingevulde gegevens getoond
  * @author Anne Beumer
- * @version 1.0
- * @since 24-05-2025
+ * @version 1.5, 24-05-2025
+ * @since 14-05-2025
  * */
 
 /**

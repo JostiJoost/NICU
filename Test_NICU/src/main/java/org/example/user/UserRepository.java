@@ -9,7 +9,7 @@ import java.util.List;
  * Spring genereert automatisch de queries.
  *
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.4, 22-05-2025
  * @since 09-15-2025
  */
 public interface UserRepository extends JpaRepository<User, Long>{
