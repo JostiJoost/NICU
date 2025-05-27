@@ -1,3 +1,13 @@
+/**
+ * Het script waarmee de protocol gegevens kunnen worden ingevuld. Daarnaast kan reeds ingevulde data worden getoond
+ * @author Anne Beumer
+ * @version 1.0
+ * @since 15-05-2025
+ * */
+
+/**
+ * Script om data uit de database op te halen en in het formulier te tonen.
+ * */
 document.addEventListener('DOMContentLoaded', async function(){
     const selectElement = document.getElementById('protocolSelectie');
     const nieuwProtocol = document.getElementById('nieuwProtocol');
@@ -63,6 +73,9 @@ document.addEventListener('DOMContentLoaded', async function(){
         });
     } catch(error){ console.error('Fout bij ophalen protocollen:', error)}
 
+    /**
+     * Script om data van het formulier op te slaan en in de database te overschrijven
+     * */
     document.getElementById('protocolForm').addEventListener('submit', async function(e){
         e.preventDefault();
         let naamProtocol;
@@ -110,6 +123,9 @@ document.addEventListener('DOMContentLoaded', async function(){
         }
     });
 
+    /**
+     * Script om een protocol te verwijderen uit de database
+     * */
     verwijderButton.addEventListener('click', async function(){
         const naam = selectElement.value;
 
@@ -130,11 +146,19 @@ document.addEventListener('DOMContentLoaded', async function(){
         }
     });
 
+    /**
+     * Functie om gegevens uit het formulier op te halen
+     * @param id - Het HTML id waaruit de waarde wordt gehaald
+     * @returns - De waarde als die er is, anders wordt null gereturned
+     * */
     function getValueOrNull(id){
         const el = document.getElementById(id);
         return el && el.value.trim() !== "" ? el.value : null;
     }
 
+    /**
+     * Functie om het hele formulier leeg te maken
+     * */
     function clearForm(){
         [
             'centrumSelectie', 'datumAanvraag', 'naamPenvoerder', 'functiePenvoerder', 'datumEersteVersie', 'datumAccordering', 'centrumTegenlezer', 'naamTegenlezer', 'functieTegenlezer'
@@ -144,6 +168,10 @@ document.addEventListener('DOMContentLoaded', async function(){
         });
     }
 
+    /**
+     * Functie om het formulier te vullen met data uit de database
+     * @param data - De data waaruit de gegevens worden gehaald om het formulier mee te vullen
+     * */
     function fillForm(data){
         const p = data.protocol;
         const t = data.tegenlezer || {};
@@ -159,6 +187,11 @@ document.addEventListener('DOMContentLoaded', async function(){
         setValue('functieTegenlezer', t.functieTegenlezer);
     }
 
+    /**
+     * Functie om de waarde van een HTML item aan te passen
+     * @param id - Het HTML id van het aan te passen item
+     * @param value - De waarde waarneer het HTML item moet worden aangepast
+     * */
     function setValue(id, value){
         const el = document.getElementById(id);
         if(el) el.value = value ?? "";

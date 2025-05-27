@@ -1,3 +1,9 @@
+/**
+ * Script wat de inlogpagina van de applicatie verzorgd
+ * @author Anne Beumer
+ * @version 1.0
+ * @since 22-05-2025
+ * */
     const params = new URLSearchParams(window.location.search);
     const errorMessage = document.getElementById('error-message');
 

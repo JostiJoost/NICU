@@ -1,3 +1,13 @@
+/**
+ * Script om nieuwe studies aan te maken als Admin. Mogelijkheid om zelf een studienaam te kiezen en te kiezen welke
+ * soorten doorlooptijden er zijn voor deze studie. Vervolgens wordt er automatisch een gebruikersnaam en wachtwoord
+ * aangemaakt voor deze studie.
+ * @author Anne Beumer
+ * @version 1.0
+ * @since 17-05-2025
+ * */
+
+
 document.getElementById('nieuwStudieForm').addEventListener('submit', async function(e){
     e.preventDefault();
 
