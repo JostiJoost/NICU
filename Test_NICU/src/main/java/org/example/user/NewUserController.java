@@ -14,7 +14,7 @@ import java.util.*;
  * Rest controller voor het beheren van studiegebruikers binnen de admin inlog.
  *
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.2, 22-05-2025
  * @since 16-05-2025
  */
 @RestController

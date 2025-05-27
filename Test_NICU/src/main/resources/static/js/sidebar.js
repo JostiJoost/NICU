@@ -1,9 +1,9 @@
 /**
  * Script wat de sidebar aanstuurt. Regelt welke delen van de sidebar zichtbaar zijn afhankelijk van de rol
  * van de gebruiker. Stuurt de gebruiker door naar andere HTML pagina's
- * @author Anne Beumer
- * @version 1.0
- * @since 24-05-2025
+ * @author Anne Beumer en Joost Goddijn
+ * @version 1.5, 24-05-2025
+ * @since 15-05-2025
  * */
 
 document.addEventListener('DOMContentLoaded', function () {

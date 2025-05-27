@@ -10,8 +10,8 @@ import java.time.LocalDate;
  * Voor het retourneren van de meest recente inclusiegegevens naar de frontend
  *
  * @author Joost Goddijn
- * @version 1.0
- * @since 15-05-205
+ * @version 1.2, 19-05-2025
+ * @since 15-05-2025
  */
 public class InclusionDTO {
 

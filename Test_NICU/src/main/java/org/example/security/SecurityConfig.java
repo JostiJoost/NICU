@@ -17,7 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
  * Maakt gebruik van verschillende rollen om verschillende toegangen te verlenen.
  *
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.4. 22-05-2025
  * @since 09-05-2025
  */
 @Configuration

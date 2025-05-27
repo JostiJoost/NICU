@@ -1,8 +1,8 @@
 /**
  * Het script waarmee de protocol gegevens kunnen worden ingevuld. Daarnaast kan reeds ingevulde data worden getoond
  * @author Anne Beumer
- * @version 1.0
- * @since 15-05-2025
+ * @version 1.2, 15-05-2025
+ * @since 14-05-2025
  * */
 
 /**

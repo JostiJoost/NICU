@@ -9,7 +9,7 @@ import java.util.List;
  * Rest controller voor het beheren en ophalen van inclusie gegevens per studie en centrum.
  *
  * @author Anne Beumer en Joost Goddijn
- * @version 1.0
+ * @version 1.4, 24-05-2025
  * @since 14-05-2025
  */
 @RestController

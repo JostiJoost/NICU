@@ -3,8 +3,8 @@
  * Dit dashboard geeft de gebruiker inzichten voor alle studies. Daarnaast kan er een keuze worden gemaakt voor één
  * centrum.
  * @author Joost Goddijn
- * @version 1.0
- * @since  26-05-2025
+ * @version 1.3
+ * @since  19-05-2025
  * */
 
 let geselecteerdCentrum = null;

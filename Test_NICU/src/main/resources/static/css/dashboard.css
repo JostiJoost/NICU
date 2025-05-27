@@ -1,3 +1,5 @@
+/* ---------- CSS SCRIPT DASHBOARD ---------- */
+/* Verzorgt de visuele weergave van de drie veschillende dashboards */
 body {
     margin: 0;
     padding: 0;
@@ -63,6 +65,7 @@ body {
 }
 
 /* ---------- MAIN ---------- */
+/* Regelt de weergave van alle elementen onder de 'main' sectie van het HTML bestand*/
 .main-container {
     grid-area: main;
     overflow-y: auto;
@@ -147,7 +150,10 @@ body {
 }
 
 
-/* ----------- MEDIA QUERRIES ---------- */
+/* ---------- MEDIA QUERRIES ---------- */
+/* zorgt ervoor dat grafieken anders worden gepositioneert als
+    het scherm te klein wordt.
+ */
 
 
 /* medium <= 992px */

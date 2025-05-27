@@ -9,7 +9,7 @@ import java.io.Serializable;
  *De class implementeer Serializable aangezien dat verplicht is voor sleutel classes
  *
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.2, 15-05-2025
  * @since 09-05-2025
  */
 public class StudyId implements Serializable{

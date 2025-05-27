@@ -9,7 +9,7 @@ import java.time.LocalDate;
  * DTO voor het weergeven van belangrijke datumvelden van een protocol.
  *
  * @author Joost Goddijn
- * @version 1.0
+ * @version 1.0, 22-05-2025
  * @since 22-05-2025
  */
 public class ProtocolDTO {

@@ -18,8 +18,8 @@ import java.util.List;
  * Rest controller voor het beheren vna studiegegevens.
  *
  * @author Anne Beumer en Joost Goddijn
- * @version 1.0
- * @since 16-05-2025
+ * @version 1.5, 20-05-2025
+ * @since 14-05-2025
  */
 @RestController
 @RequestMapping("/api/studie")

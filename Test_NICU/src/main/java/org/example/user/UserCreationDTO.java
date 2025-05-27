@@ -4,8 +4,8 @@ package org.example.user;
  * DTO voor het aanmaken van een nieuwe studiegebruiker. Voor het ontvangen van gebruikersdata vanuit de frontend of API.
  *
  * @author Anne Beumer
- * @version 1.0
- * @since 19-05-2025
+ * @version 1.0, 17-05-2025
+ * @since 17-05-2025
  */
 public class UserCreationDTO {
 

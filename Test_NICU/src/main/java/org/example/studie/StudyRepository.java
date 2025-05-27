@@ -14,7 +14,7 @@ import java.util.Optional;
  * Maakt gebruik van zowel Spring dat JPA voor het generen van sql query's als aangepaste queries
  *
  * @author Anne Beumer en Joost Goddijn
- * @version 1.0
+ * @version 1.7, 22-05-2025
  * @since 09-05-2025
  */
 @Repository

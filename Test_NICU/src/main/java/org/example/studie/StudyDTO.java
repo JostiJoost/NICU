@@ -9,7 +9,7 @@ import java.time.LocalDate;
  * DTO voor het overdragen van studiegegevens.
  *
  * @author Anne Beumer en Joost Goddijn
- * @version 1.0
+ * @version 1.2, 21-05-2025
  * @since 20-05-2025
  */
 public class StudyDTO {

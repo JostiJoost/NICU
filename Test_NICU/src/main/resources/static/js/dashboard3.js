@@ -3,8 +3,8 @@
  * Dit dashboard geeft de gebruiker inzichten voor de protocollen zoals aantal en doorlooptijd per centrum. Daarnaast
  * de mogelijkheid om per centrum de specifieke doorlooptijd van een protocol te zien
  * @author Joost Goddijn
- * @version 1.0
- * @since 26-05-2025
+ * @version 1.2
+ * @since 22-05-2025
  * */
 
 let geselecteerdCentrum = null;

@@ -14,7 +14,7 @@ import java.util.List;
  * Gekoppeld aan de users tabel in de database.
  *
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.3, 17-05-2025
  * @since 09-05-2025
  */
 @Entity

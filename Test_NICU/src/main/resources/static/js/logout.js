@@ -1,7 +1,7 @@
 /**
  * Script wat de logout van de applicatie verzorgd
  * @author Anne Beumer
- * @version 1.0
+ * @version 1.0, 22-05-2025
  * @since 22-05-2025
  * */
 document.addEventListener("DOMContentLoaded", () => {

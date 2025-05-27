@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * De rest-controller die voor de API-endpoints zorgt van protocollen en tegenlezers.
  *
  * @author Anne Beumer en Joost Goddijn
- * @version 1.0
+ * @version 1.3, 22-05-2025
  * @since 14-05-2025
  */
 @RestController
