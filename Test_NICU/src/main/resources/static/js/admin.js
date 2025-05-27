@@ -46,9 +46,18 @@ document.getElementById('nieuwStudieForm').addEventListener('submit', async func
         document.getElementById('popupMessage').innerHTML = `Nieuwe studiegebruiker aangemaakt<br><br>
 Gebruikersnaam: <strong>${data.username}</strong> <br>
 \nWachtwoord: <strong>${data.password}</strong>`;
+
         document.getElementById('popup').style.display = 'flex';
-        document.getElementById('popupCloseButton').addEventListener('click', function(){
+
+        let popupBevestigd = false;
+        document.getElementById('popupCloseButton').addEventListener("click", function(e){
+            if(!popupBevestigd){
+                alert("Let op: Het wachtwoord is slechts eenmalig zichtbaar. Schrijf het ergens op voordat je sluit.");
+                popupBevestigd = true;
+                return;
+            }
             document.getElementById('popup').style.display = 'none';
+            popupBevestigd = false;
         });
         this.reset();
     } catch(err){
