@@ -129,6 +129,12 @@ document.addEventListener('DOMContentLoaded', async function(){
  * */
 document.getElementById('studieForm').addEventListener('submit', async function(event) {
     event.preventDefault();
+    const form = document.getElementById("studieForm");
+
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
 
     const inclusie_datum = document.getElementById('inclusie_datum').value;
 
