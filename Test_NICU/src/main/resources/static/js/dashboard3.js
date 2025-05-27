@@ -32,6 +32,21 @@ function populateCentrumDropdown(centra) {
 }
 
 /**
+ * Functie om kleuren te generen. Kleuren worden gelijkwaardig verdeeld over de kleuren schaal. Wordt gebruikt voor
+ * het geven aan kleur van grafieken die een variabele lengte kunnen hebben. Bijvoorbeeld aantal studies
+ * @param aantal - Het aantal kleuren dat moet worden gegenereerd
+ * @returns - De lijst met kleurcodes
+ * */
+function kleurenGenereren(aantal) {
+    const kleuren = [];
+    for (let i = 0; i < aantal; i++) {
+        const kleur = Math.round((360 / aantal) * i);
+        kleuren.push(`hsl(${kleur}, 70%, 50%`)
+    }
+    return kleuren;
+}
+
+/**
  * Stuk script wat als controller dient voor de keuze van het dropdown menu
  * */
 document.addEventListener("DOMContentLoaded", () => {
@@ -92,7 +107,8 @@ function renderProtocolPercentages(centra, data, id) {
                     }
                 }
             }
-        }
+        },
+        colors: kleurenGenereren(centra.length)
     }
     chartInstance = new ApexCharts(document.querySelector(`#${id}`), options);
     chartInstance.render();
@@ -183,8 +199,9 @@ function doorlooptijdBerekenen(data, type, soort) {
  * Functie die een barchart genereert. Laat de gemiddelde of precieze doorlooptijd zien
  * @param id - Het HTML id van de barchart
  * @param data - De data voor de barchart
+ * @param kleur - De kleur van de barchart
  * */
-function chartRenderen(id, data) {
+function chartRenderen(id, data, kleur) {
     document.querySelector(`#${id}`).innerHTML = "";
     const options = {
         series: [{
@@ -211,7 +228,8 @@ function chartRenderen(id, data) {
         },
         xaxis: {
             categories: data.map(item => item.name)
-        }
+        },
+        colors: [kleur]
     }
 
     chartInstance = new ApexCharts(document.querySelector(`#${id}`), options);
@@ -224,14 +242,14 @@ function chartRenderen(id, data) {
 async function dataGemiddelde(){
     const data = await laadJson(`http://localhost:8080/api/protocollen/datums`);
     const types = [
-        { type: "aanvraag-accordering", id: "gem-aanvraag-accordering" },
-        { type: "aanvraag-eerste", id: "gem-aanvraag-eerste"},
-        { type: "eerste-accordering", id: "gem-eerste-accordering"}
+        { type: "aanvraag-accordering", id: "gem-aanvraag-accordering", kleur: "#008FFB" },
+        { type: "aanvraag-eerste", id: "gem-aanvraag-eerste", kleur: "#00E396"},
+        { type: "eerste-accordering", id: "gem-eerste-accordering", kleur: "#FEB019"}
     ];
 
-    types.forEach(({ type, id }) => {
+    types.forEach(({ type, id, kleur }) => {
         const doorlooptijden = doorlooptijdBerekenen(data, type, "centrum");
-        chartRenderen(id, doorlooptijden);
+        chartRenderen(id, doorlooptijden, kleur);
     })
 }
 
@@ -242,14 +260,14 @@ async function dataDoorlooptijd() {
     let data = await laadJson(`http://localhost:8080/api/protocollen/datums`);
     data = data.filter(item => item.naamCentrum === geselecteerdCentrum)
     const types = [
-        { type: "aanvraag-accordering", id: "aanvraag-accordering" },
-        { type: "aanvraag-eerste", id: "aanvraag-eerste"},
-        { type: "eerste-accordering", id: "eerste-accordering"}
+        { type: "aanvraag-accordering", id: "aanvraag-accordering", kleur: "#008FFB" },
+        { type: "aanvraag-eerste", id: "aanvraag-eerste", kleur: "#00E396" },
+        { type: "eerste-accordering", id: "eerste-accordering", kleur: "#FEB019"}
     ];
 
-    types.forEach(({ type, id }) => {
+    types.forEach(({ type, id, kleur }) => {
         const doorlooptijden = doorlooptijdBerekenen(data, type, "protocol");
-        chartRenderen(id, doorlooptijden);
+        chartRenderen(id, doorlooptijden, kleur);
     })
 }
 

@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Wachtwoordbeheer</title>
+    <!-- ICONS -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <!-- CSS LINKS -->
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
 <div class ="grid-container">
+    <!-- Bovenste balk van de pagina -->
     <header class="header">
         <div class="menu-icon" onclick="openSidebar()">
             <span class="material-icons-outlined">menu</span>
@@ -27,6 +30,7 @@
         </div>
 
     </header>
+    <!-- Sidebar met daarin de navigatie naar andere pagina's -->
     <aside id="sidebar">
         <div class="sidebar-title">
             <div class="sidebar-brand">
@@ -37,6 +41,7 @@
         <ul class ="sidebar-list" id="sidebarMenu"></ul>
     </aside>
 
+    <!-- Lijst met alle gebruikers -->
     <main class="main-container">
         <div id="userList" class="card">
             <h1>Wachtwoordbeheer</h1>
@@ -44,6 +49,7 @@
     </main>
 </div>
 
+<!-- Wachtwoord resetten -->
 <div id="resetPassword" class="popup" style="display: none;">
     <div class="popup-content">
         <h2>Reset wachtwoord</h2>
@@ -56,6 +62,7 @@
     </div>
 </div>
 
+<!-- JS LINKS -->
 <script src="js/sidebar.js"></script>
 <script src="js/wachtwoordbeheer.js"></script>
 <script src="js/logout.js"></script>

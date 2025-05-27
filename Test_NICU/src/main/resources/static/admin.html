@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <!-- ICONS -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <!-- CSS LINKS -->
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/sidebar.css">
@@ -14,6 +15,7 @@
 </head>
 <body>
 <div class ="grid-container">
+    <!-- Bovenste balk van de pagina -->
     <header class="header">
         <div class="menu-icon" onclick="openSidebar()">
             <span class="material-icons-outlined">menu</span>
@@ -31,6 +33,7 @@
         </div>
 
     </header>
+    <!-- Sidebar met daarin de navigatie naar andere pagina's -->
     <aside id="sidebar">
         <div class="sidebar-title">
             <div class="sidebar-brand">
@@ -41,6 +44,7 @@
         <ul class ="sidebar-list" id="sidebarMenu"></ul>
     </aside>
 
+    <!-- Daadwerkelijke formulier voor het aanmaken van een nieuwe studie -->
     <main class = "main-container">
         <form id="nieuwStudieForm">
             <h1>Maak een nieuwe studie aan</h1>
@@ -75,6 +79,7 @@
 
         </div>
     </main>
+    <!-- JS LINKS -->
     <script src="js/sidebar.js"></script>
     <script src="js/admin.js"></script>
     <script src = "js/logout.js"></script>

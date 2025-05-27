@@ -67,7 +67,8 @@ async function laadJson(url) {
 async function laadDataInclusie(naamStudie, naamCentrum, ID) {
     try {
         const data = await laadJson(`http://localhost:8080/api/aantal_geincludeerd/${naamStudie}/${naamCentrum}`);
-        document.getElementById(ID).textContent = (data && data.length > 0) ? data : "0";
+        console.log("Data: ", data)
+        document.getElementById(ID).textContent = (data && true) ? data : "0";
     } catch (error) {
         console.log(`Fout bij ophalen data`, error.message);
         document.getElementById(ID).textContent = "0";
@@ -403,11 +404,6 @@ async function herlaadDashboard() {
     centra.forEach(centrum => {
         const id = `aantal-${centrum.toLocaleLowerCase()}`;
         laadDataInclusie(geselecteerdeStudie, centrum, id);
-    });
-
-    document.querySelector("#stacked-bar-chart").innerHTML = "";
-    verzamelDoorlooptijden().then((doorlooptijden) => {
-        stackedBarChart(doorlooptijden);
     });
 
     laadJson(`http://localhost:8080/api/aantal_geincludeerd/chart/inclusies/studie/${geselecteerdeStudie}`).then((data) => {

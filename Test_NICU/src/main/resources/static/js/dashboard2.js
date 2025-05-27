@@ -268,7 +268,7 @@ function kaartenMaken(studies) {
 async function laadDataInclusie(naamStudie, naamCentrum) {
     try {
         const data = await laadJson(`http://localhost:8080/api/aantal_geincludeerd/${naamStudie}/${naamCentrum}`);
-        document.getElementById(`aantal-${naamStudie}`).textContent = (data && data.length > 0) ? data : "0";
+        document.getElementById(`aantal-${naamStudie}`).textContent = (data && true) ? data : "0";
     } catch (error) {
         console.log(`Fout bij ophalen data`, error.message);
         document.getElementById(`aantal-${naamStudie}`).textContent = "0";
