@@ -112,7 +112,13 @@
     <input type="number" id="opgenomen_kinderen" name="opgenomen_kinderen" min="0"> <br/> <br/>
 
     <label>Reden van weigering: </label>
-    <textarea id="reden" name="reden_weigering" maxlength="255" rows="4" placeholder="Geef een reden (max. 255 tekens) ..."></textarea>
+    <select id="reden" name="reden_weigering" >
+      <option value=""> -- Selecteer een centrum -- </option>
+      <option>Vergeten dokter</option>
+      <option>Ouders willen geen onderzoek</option>
+      <option>Taal niet machtig</option>
+      <option>Bang voor bijwerkingen</option>
+    </select> <br/>
 
     <button type="submit">Opslaan</button>
 
