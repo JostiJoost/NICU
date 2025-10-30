@@ -49,6 +49,24 @@
   <!-- Formulier voor het invullen van data over studies -->
   <form id="studieForm">
     <h1>Nieuwe studie gegevens invoeren</h1>
+
+    <!-- ========== Excel uploadsectie ========== -->
+    <section id="excel-section" class="card p-3 mb-4">
+      <h2>Excel-gegevens uploaden</h2>
+
+      <div class="form-group">
+        <label for="excelFile">Kies een Excel-bestand (.xls of .xlsx):</label><br/>
+        <input type="file" id="excelFile" accept=".xls,.xlsx" class="inputfile" />
+      </div>
+
+      <br/> <button id="loadExcelBtn" class="btn btn-primary" disabled>Bevestig</button>
+
+      <div id="excelOutput" class="mt-3">
+        <em>Geen bestand geselecteerd.</em>
+      </div>
+    </section>
+    <!-- ========== Einde Excel uploadsectie ========== -->
+
     <label>Naam centrum: </label>
     <select id="centrumSelectie" name="centrum" required>
       <option value=""> -- Selecteer een centrum -- </option>

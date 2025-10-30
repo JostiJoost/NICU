@@ -1,16 +1,43 @@
 /**
  * Het script waarmee de studie gegevens kunnen worden ingevuld. Daarnaast worden de reeds ingevulde gegevens getoond
  * @author Anne Beumer
- * @version 1.5, 24-05-2025
+ * @version 1.6, 30-10-2025
  * @since 14-05-2025
- * */
+ */
 
 /**
  * Script wat aan de hand van rollen en rechten de juiste velden aan de gebruiker toont in het formulier
- * */
+ */
 document.addEventListener('DOMContentLoaded', async function(){
     const studieSelectie = document.getElementById('studieSelectie');
     const centrumSelectie = document.getElementById('centrumSelectie');
+
+    // ✅ Excel-uploadsectie
+    const excelInput = document.getElementById("excelFile");
+    const loadExcelBtn = document.getElementById("loadExcelBtn");
+    const excelOutput = document.getElementById("excelOutput");
+    let selectedExcelFile = null;
+
+    if (excelInput && loadExcelBtn) {
+        excelInput.addEventListener("change", (e) => {
+            selectedExcelFile = e.target.files[0];
+            if (selectedExcelFile) {
+                loadExcelBtn.disabled = false;
+                excelOutput.innerHTML = `<p><strong>Geselecteerd bestand:</strong> ${selectedExcelFile.name}</p>`;
+            } else {
+                loadExcelBtn.disabled = true;
+                excelOutput.innerHTML = "<em>Geen bestand geselecteerd.</em>";
+            }
+        });
+
+        loadExcelBtn.addEventListener("click", () => {
+            if (!selectedExcelFile) return;
+            loadExcelBtn.disabled = true;
+            excelOutput.innerHTML = "<em>Bezig met inladen...</em>";
+            readExcel(selectedExcelFile, excelOutput, loadExcelBtn);
+        });
+    }
+
     try{
         const response = await fetch('/api/user');
         if(!response.ok) throw new Error("Kon gebruikersinformatie niet ophalen");
@@ -39,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async function(){
             studieSelectie.removeAttribute('required');
 
             const studieResultaten = await fetch('/api/user/studienaam');
-            if(!studieResultaten.ok) throw new Error("Kon studienaamniet ophalen.")
+            if(!studieResultaten.ok) throw new Error("Kon studienaam niet ophalen.")
             const{juridisch, apotheek, metc, laboratorium} = await studieResultaten.json();
 
             toggleFase('juridischeFase', juridisch);
@@ -54,7 +81,7 @@ document.addEventListener('DOMContentLoaded', async function(){
         }
     }catch(err){
         console.error("Fout bij ophalen van studies: ", err);
-        alert("Fout bij ophalen van studie gegevens: " + err.message);
+        alert("Fout bij ophalen van studiegegevens: " + err.message);
     }
 
     function toggleFase(id, zichtbaar){
@@ -64,14 +91,14 @@ document.addEventListener('DOMContentLoaded', async function(){
     /**
      * Functie die het formulier vult met data die al in de database stond
      * @param studieNaam - De naam van de studie waarvoor het formulier wordt ingevuld
-     * */
+     */
     async function updateFormVelden({studieNaam = null, vanuitStudie = false} ={}){
         try{
             if(!studieNaam) studieNaam = studieSelectie.value;
             const centrumNaam = centrumSelectie.value;
             if(!studieNaam || !centrumNaam) return;
 
-            console.log("Fetch voo studie:", studieNaam, "en centrum:", centrumNaam);
+            console.log("Fetch voor studie:", studieNaam, "en centrum:", centrumNaam);
             const fasenResponse = await fetch(`/api/studie-fasen?studie=${encodeURIComponent(studieNaam)}`);
             if(!fasenResponse.ok){throw new Error("Fout bij ophalen fasen")};
             const{juridisch, apotheek, metc, laboratorium} = await fasenResponse.json();
@@ -108,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async function(){
 
         } catch(err){
             console.error("Fout bij inladen formuliergegevens: ", err);
-            alert("Fout bij laden van bestaande studie gegevens.");
+            alert("Fout bij laden van bestaande studiegegevens.");
         }
     }
 
@@ -116,17 +143,78 @@ document.addEventListener('DOMContentLoaded', async function(){
      * Functie die de waarde van een HTML item aanpast
      * @param id - Het HTML id van de aan te passen waarde
      * @param value - De waarde waarnaar het HTML item moet worden aangepast
-     * */
+     */
     function setFieldValue(id, value){
         if(value !== null && value !== undefined){
-            document.getElementById(id).value = value;
+            const el = document.getElementById(id);
+            if (el) el.value = value;
         }
     }
+
+    // ========== Excel helperfuncties ==========
+
+    function readExcel(file, output, loadExcelBtn) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: "array" });
+
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                renderExcelTable(jsonData, firstSheetName, output);
+                loadExcelBtn.disabled = false;
+
+                // TODO: stuur data naar backend zodra structuur bekend is
+                // sendExcelData(jsonData);
+
+            } catch (err) {
+                console.error("Fout bij lezen Excel:", err);
+                output.innerHTML = "<strong>Fout:</strong> kan bestand niet verwerken.";
+                loadExcelBtn.disabled = false;
+            }
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
+
+    function renderExcelTable(data, sheetName, output) {
+        if (!data || data.length === 0) {
+            output.innerHTML = "<em>Geen data gevonden in het werkblad.</em>";
+            return;
+        }
+
+        let html = `<h3>Inhoud van werkblad: ${sheetName}</h3><table class='table'>`;
+        data.forEach((row, i) => {
+            html += "<tr>";
+            row.forEach((cell) => {
+                html += i === 0 ? `<th>${cell ?? ""}</th>` : `<td>${cell ?? ""}</td>`;
+            });
+            html += "</tr>";
+        });
+        html += "</table>";
+        output.innerHTML = html;
+    }
+
+    /*
+    function sendExcelData(data) {
+        fetch('/api/uploadExcel', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.ok ? console.log("Excel-data succesvol verzonden") : console.error("Upload mislukt"))
+        .catch(err => console.error("Fout bij upload:", err));
+    }
+    */
 });
 
-/**
- * Script om de database up te daten met data uit het formulier nadat deze is ingevuld
- * */
+// =============================================================
+//  Formulierverzending blijft identiek
+// =============================================================
 document.getElementById('studieForm').addEventListener('submit', async function(event) {
     event.preventDefault();
     const form = document.getElementById("studieForm");
@@ -178,7 +266,11 @@ document.getElementById('studieForm').addEventListener('submit', async function(
     }
 
     try {
-        const response = await fetch('http://localhost:8080/api/studie', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(formData)});
+        const response = await fetch('http://localhost:8080/api/studie', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(formData)
+        });
         if(!response.ok) throw new Error("Fout bij opslaan...");
         alert("Studiegegevens succesvol opgeslagen!");
         this.reset();
