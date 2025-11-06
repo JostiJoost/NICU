@@ -49,6 +49,14 @@
   <!-- Formulier voor het invullen van data over studies -->
   <form id="studieForm">
     <h1>Nieuwe studie gegevens invoeren</h1>
+
+    <label id="naamStudieLabel">Naam studie: </label>
+    <select id="studieSelectie" name="studie" required>
+      <option value=""> -- Selecteer een studie -- </option>
+    </select> <br/>
+
+    <div id="adminContent" style="display:none">
+
     <label>Naam centrum: </label>
     <select id="centrumSelectie" name="centrum" required>
       <option value=""> -- Selecteer een centrum -- </option>
@@ -63,10 +71,6 @@
       <option>MMC</option>
     </select> <br/>
 
-    <label id="naamStudieLabel">Naam studie: </label>
-    <select id="studieSelectie" name="studie" required>
-      <option value=""> -- Selecteer een studie -- </option>
-    </select> <br/>
     <h2>Inclusie gegevens invoeren</h2>
 
     <!-- ========== Excel uploadsectie ========== -->
@@ -145,6 +149,8 @@
     </div> <br/>
 
     <button type="submit">Opslaan</button>
+
+    </div>
 
   </form>
 </main>

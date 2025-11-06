@@ -38,29 +38,75 @@ document.addEventListener('DOMContentLoaded', async function(){
         });
     }
 
-    try{
+    try {
         const response = await fetch('/api/user');
-        if(!response.ok) throw new Error("Kon gebruikersinformatie niet ophalen");
+        if (!response.ok) throw new Error("Kon gebruikersinformatie niet ophalen");
         const gebruiker = await response.json();
         const role = gebruiker.role;
         window.ingelogdeStudie = gebruiker.studie;
-        console.log("Ingelogde studie: ", gebruiker.studie);
+        console.log("Ingelogde studie:", gebruiker.studie);
 
-        if(role === 'ROLE_ADMIN'){
+        // haal één keer referenties op (niet opnieuw binnen blok)
+        const adminContent = document.getElementById('adminContent');
+        const adminGateMsg = document.getElementById('adminGateMsg');
+        const loadExcelBtn = document.getElementById('loadExcelBtn');
+
+        if (role === 'ROLE_ADMIN') {
+            // Toon de studiekeuze dropdown
             document.getElementById('studieSelectie').style.display = 'block';
+
+            // Haal alle beschikbare studies op
             const studiesResultaten = await fetch('/api/user-studies');
-            if(!studiesResultaten.ok) {throw new Error("Kon studies niet ophalen.")}
+            if (!studiesResultaten.ok) throw new Error("Kon studies niet ophalen.");
             const studies = await studiesResultaten.json();
-            for(const s of studies){
-                const optie = document.createElement('option')
+
+            // Vul de dropdown met opties
+            for (const s of studies) {
+                const optie = document.createElement('option');
                 optie.value = s;
                 optie.textContent = s;
                 studieSelectie.appendChild(optie);
             }
-            studieSelectie.addEventListener("change", updateFormVelden);
-            centrumSelectie.addEventListener("change", updateFormVelden);
 
-        }else if(role === 'ROLE_STUDIE'){
+            // --- Form verbergen tot er een studie is gekozen ---
+            if (adminContent) adminContent.style.display = 'none';
+            if (loadExcelBtn) loadExcelBtn.disabled = true;
+
+            // Wanneer admin een studie kiest → form zichtbaar maken
+            studieSelectie.addEventListener('change', () => {
+                const gekozen = studieSelectie.value && studieSelectie.value.trim().length > 0;
+                window.geselecteerdeStudie = gekozen ? studieSelectie.value : null;
+
+                if (gekozen) {
+                    // Toon de inhoud
+                    if (adminContent) adminContent.style.display = 'block';
+                    if (loadExcelBtn) loadExcelBtn.disabled = false;
+
+                    // Laad direct bestaande data voor deze studie
+                    if (typeof updateFormVelden === 'function') {
+                        updateFormVelden({studieNaam: studieSelectie.value, vanuitStudie: true});
+                    }
+                } else {
+                    // Verberg weer alles als dropdown leeg is
+                    if (adminContent) adminContent.style.display = 'none';
+                    if (loadExcelBtn) loadExcelBtn.disabled = true;
+                }
+            });
+
+            // Laad ook direct de form als de admin al een studie geselecteerd had
+            if (studieSelectie.value) {
+                const evt = new Event('change');
+                studieSelectie.dispatchEvent(evt);
+            }
+
+            // Deze listeners blijven zoals ze waren
+            studieSelectie.addEventListener("change", updateFormVelden);
+            if (centrumSelectie) {
+                centrumSelectie.addEventListener("change", updateFormVelden);
+            }
+
+
+    }else if(role === 'ROLE_STUDIE'){
             document.getElementById('studieSelectie').style.display = 'none';
             document.getElementById('naamStudieLabel').style.display = 'none';
             studieSelectie.removeAttribute('required');
