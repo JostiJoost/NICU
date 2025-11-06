@@ -156,21 +156,10 @@ document.addEventListener('DOMContentLoaded', async function(){
     function readExcel(file, output, loadExcelBtn) {
         const reader = new FileReader();
 
-        const isCSV = file.name.toLowerCase().endsWith(".csv");
-
         reader.onload = function (e) {
             try {
-                let workbook;
-
-                if (isCSV) {
-                    // CSV-bestand als tekst inlezen
-                    const csvData = e.target.result;
-                    workbook = XLSX.read(csvData, { type: "string" });
-                } else {
-                    // Excel-bestand (xls/xlsx)
-                    const data = new Uint8Array(e.target.result);
-                    workbook = XLSX.read(data, { type: "array" });
-                }
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: "array" });
 
                 const firstSheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[firstSheetName];
@@ -179,24 +168,18 @@ document.addEventListener('DOMContentLoaded', async function(){
                 renderExcelTable(jsonData, firstSheetName, output);
                 loadExcelBtn.disabled = false;
 
-                // eventueel later naar backend sturen
+                // TODO: stuur data naar backend zodra structuur bekend is
                 // sendExcelData(jsonData);
 
             } catch (err) {
-                console.error("Fout bij lezen van bestand:", err);
+                console.error("Fout bij lezen Excel:", err);
                 output.innerHTML = "<strong>Fout:</strong> kan bestand niet verwerken.";
                 loadExcelBtn.disabled = false;
             }
         };
 
-        // Gebruik juiste leesmethode
-        if (isCSV) {
-            reader.readAsText(file);
-        } else {
-            reader.readAsArrayBuffer(file);
-        }
+        reader.readAsArrayBuffer(file);
     }
-
 
     function renderExcelTable(data, sheetName, output) {
         if (!data || data.length === 0) {

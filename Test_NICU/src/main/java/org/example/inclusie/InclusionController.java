@@ -69,4 +69,25 @@ public class InclusionController {
         InclusionDTO dto = new InclusionDTO(inclusion.getNaam_studie(), inclusion.getNaam_centrum(), inclusion.getDatum(), inclusion.getGeincludeerd());
         return ResponseEntity.ok(dto);
     }
+
+    @PostMapping("/fromExcel")
+    public ResponseEntity<String> uploadFromExcelJson(@RequestBody List<InclusionDTO> inclusieData) {
+        if (inclusieData == null || inclusieData.isEmpty()) {
+            return ResponseEntity.badRequest().body("Geen inclusiedata ontvangen");
+        }
+
+        List<Inclusion> inclusies = inclusieData.stream()
+                .map(dto -> {
+                    Inclusion i = new Inclusion();
+                    i.setNaam_studie(dto.getNaamStudie());
+                    i.setNaam_centrum(dto.getNaamCentrum());
+                    i.setDatum(dto.getDatum());
+                    i.setGeincludeerd(dto.getGeincludeerd());
+                    return i;
+                })
+                .toList();
+
+        inclusionRepository.saveAll(inclusies);
+        return ResponseEntity.ok("Inclusiedata opgeslagen: " + inclusies.size());
+    }
 }
