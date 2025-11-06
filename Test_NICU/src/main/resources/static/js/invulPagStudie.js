@@ -155,30 +155,143 @@ document.addEventListener('DOMContentLoaded', async function(){
 
     function readExcel(file, output, loadExcelBtn) {
         const reader = new FileReader();
+        const fileExt = file.name.split('.').pop().toLowerCase();
 
         reader.onload = function (e) {
             try {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, { type: "array" });
+                let workbook;
+
+                if (fileExt === "csv") {
+                    // CSV-bestand: lees als tekst
+                    const text = e.target.result;
+                    workbook = XLSX.read(text, { type: "string" });
+                } else {
+                    // Excel-bestand: lees als arraybuffer
+                    const data = new Uint8Array(e.target.result);
+                    workbook = XLSX.read(data, { type: "array" });
+                }
 
                 const firstSheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[firstSheetName];
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-                renderExcelTable(jsonData, firstSheetName, output);
                 loadExcelBtn.disabled = false;
 
-                // TODO: stuur data naar backend zodra structuur bekend is
-                // sendExcelData(jsonData);
+                // Verwerk data (bijvoorbeeld inclusies)
+                const inclusies = processExcelData(jsonData, window.ingelogdeStudie);
+                if (inclusies.length > 0) {
+                    sendExcelDataToBackend(inclusies);
+                } else {
+                    console.warn("Geen inclusies gevonden in het bestand.");
+                    output.innerHTML = `<em>Bestand geladen, maar geen inclusies gevonden.</em>`;
+                }
 
             } catch (err) {
-                console.error("Fout bij lezen Excel:", err);
+                console.error("Fout bij lezen Excel/CSV:", err);
                 output.innerHTML = "<strong>Fout:</strong> kan bestand niet verwerken.";
                 loadExcelBtn.disabled = false;
             }
         };
 
-        reader.readAsArrayBuffer(file);
+        if (fileExt === "csv") {
+            reader.readAsText(file);           // CSV → tekst
+        } else {
+            reader.readAsArrayBuffer(file);    // Excel → arraybuffer
+        }
+    }
+
+    function processExcelData(jsonData, studieNaam) {
+        if (!jsonData || jsonData.length < 2) {
+            console.warn("Geen bruikbare data in Excel.");
+            return [];
+        }
+
+        console.log("Gelezen JSON-data:", jsonData);
+        console.log("Header-rij:", jsonData[0]);
+        // Zoek kolomnamen
+        const headers = jsonData[0].map(h => h.toString().trim().toLowerCase());
+        const dateIdx = headers.findIndex(h => h.includes("participant") && h.includes("date"));
+        const siteIdx = headers.findIndex(h => h.includes("site") && h.includes("abbreviation"));
+
+        if (dateIdx === -1 || siteIdx === -1) {
+            alert("Excel mist vereiste kolommen: 'participant creation date' of 'site abbreviation'");
+            return [];
+        }
+
+        // Verzamel tellingen per centrum+datum
+        const counts = {};
+
+        for (let i = 1; i < jsonData.length; i++) {
+            const row = jsonData[i];
+            const dateVal = row[dateIdx];
+            const siteVal = row[siteIdx];
+            if (!dateVal || !siteVal) continue;
+
+            let datum;
+            try {
+                if (typeof dateVal === "number") {
+                    // Excel stores dates as number of days since 1900-01-01
+                    const excelEpoch = new Date(1899, 11, 30); // Excel zero date
+                    datum = new Date(excelEpoch.getTime() + dateVal * 86400000);
+                } else if (typeof dateVal === "string") {
+                    // Handle strings like "8-8-2025" or "02-02-2025"
+                    const parts = dateVal.split(/[-/]/);
+                    if (parts.length === 3) {
+                        const [d, m, y] = parts.map(p => parseInt(p, 10));
+                        datum = new Date(y, m - 1, d);
+                    } else {
+                        datum = new Date(Date.parse(dateVal));
+                    }
+                } else {
+                    continue;
+                }
+
+                if (isNaN(datum.getTime())) continue; // skip invalid dates
+            } catch (e) {
+                console.warn("Kon datum niet lezen:", dateVal);
+                continue;
+            }
+
+            const formattedDate = datum.toISOString().split("T")[0];
+            const centrum = siteVal.toString().trim();
+
+            const key = `${centrum}|${formattedDate}`;
+            counts[key] = (counts[key] || 0) + 1;
+        }
+
+        // Zet om naar lijst van inclusies
+        const inclusies = Object.entries(counts).map(([key, geincludeerd]) => {
+            const [centrum, datum] = key.split("|");
+            return {
+                naamStudie: studieNaam,
+                naamCentrum: centrum,
+                datum,
+                geincludeerd
+            };
+        });
+
+        console.log("Verwerkte inclusies:", inclusies);
+        return inclusies;
+    }
+
+    async function sendExcelDataToBackend(inclusies, output) {
+        try {
+            const response = await fetch("/api/aantal_geincludeerd/fromExcel", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(inclusies)
+            });
+            if (!response.ok) throw new Error("Upload mislukt");
+            const text = await response.text();
+            alert("Inclusies opgeslagen! " + text);
+            excelOutput.innerHTML = `<span style="color:green;">Data succesvol ingeladen (${inclusies.length} regels) </span>`;
+            loadExcelBtn.disabled = false;
+        } catch (err) {
+            console.error("Fout bij upload:", err);
+            alert("Fout bij upload: " + err.message);
+            excelOutput.innerHTML = `<span style="color:red;">Fout bij upload: ${err.message}</span>`;
+            loadExcelBtn.disabled = false;
+        }
     }
 
     function renderExcelTable(data, sheetName, output) {
