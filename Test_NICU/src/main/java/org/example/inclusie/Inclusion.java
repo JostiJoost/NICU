@@ -39,6 +39,7 @@ public class Inclusion {
      */
     @Getter
     @Setter
+    @Id
     LocalDate datum;
 
     /**

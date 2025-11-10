@@ -224,7 +224,8 @@ document.addEventListener('DOMContentLoaded', async function(){
                 loadExcelBtn.disabled = false;
 
                 // Verwerk data (bijvoorbeeld inclusies)
-                const inclusies = processExcelData(jsonData, window.ingelogdeStudie);
+                const studieNaam = window.ingelogdeStudie || window.geselecteerdeStudie;
+                const inclusies = processExcelData(jsonData, studieNaam);
                 if (inclusies.length > 0) {
                     sendExcelDataToBackend(inclusies);
                 } else {
@@ -244,6 +245,13 @@ document.addEventListener('DOMContentLoaded', async function(){
         } else {
             reader.readAsArrayBuffer(file);    // Excel → arraybuffer
         }
+    }
+
+    function formatDateToISO(date) {
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0'); // maanden 0-11
+        const dd = String(date.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
     }
 
     function processExcelData(jsonData, studieNaam) {
@@ -277,10 +285,9 @@ document.addEventListener('DOMContentLoaded', async function(){
             try {
                 if (typeof dateVal === "number") {
                     // Excel stores dates as number of days since 1900-01-01
-                    const excelEpoch = new Date(1899, 11, 30); // Excel zero date
+                    const excelEpoch = new Date(1899, 11, 30);
                     datum = new Date(excelEpoch.getTime() + dateVal * 86400000);
                 } else if (typeof dateVal === "string") {
-                    // Handle strings like "8-8-2025" or "02-02-2025"
                     const parts = dateVal.split(/[-/]/);
                     if (parts.length === 3) {
                         const [d, m, y] = parts.map(p => parseInt(p, 10));
@@ -298,7 +305,7 @@ document.addEventListener('DOMContentLoaded', async function(){
                 continue;
             }
 
-            const formattedDate = datum.toISOString().split("T")[0];
+            const formattedDate = formatDateToISO(datum);
             const centrum = siteVal.toString().trim();
 
             const key = `${centrum}|${formattedDate}`;
