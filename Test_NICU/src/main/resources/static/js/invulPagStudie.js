@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', async function(){
         // haal één keer referenties op (niet opnieuw binnen blok)
         const adminContent = document.getElementById('adminContent');
         const adminGateMsg = document.getElementById('adminGateMsg');
-        const loadExcelBtn = document.getElementById('loadExcelBtn');
 
         if (role === 'ROLE_ADMIN') {
             // Toon de studiekeuze dropdown
@@ -110,6 +109,8 @@ document.addEventListener('DOMContentLoaded', async function(){
             document.getElementById('studieSelectie').style.display = 'none';
             document.getElementById('naamStudieLabel').style.display = 'none';
             studieSelectie.removeAttribute('required');
+
+            if (adminContent) adminContent.style.display = 'block';
 
             const studieResultaten = await fetch('/api/user/studienaam');
             if(!studieResultaten.ok) throw new Error("Kon studienaam niet ophalen.")
